@@ -392,6 +392,7 @@ object AppUtils {
         }
     }
 
+
     abstract class DiffAdapter<T>(
         open val items: MutableList<T>,
         val comparison: (first: T, second: T) -> Boolean = { first, second ->

@@ -50,12 +50,12 @@
             android:title="@string/pref_category_links">
 
         <Preference
-                android:title="@string/github"
-                android:icon="@drawable/ic_github_logo"
-                app:summary="https://github.com/MhmdIbrahim1">
+            android:title="@string/github"
+            android:icon="@drawable/ic_github_logo"
+            app:summary="https://github.com/MhmdIbrahim1">
             <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/MhmdIbrahim1" />
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MhmdIbrahim1" />
         </Preference>
 
 
