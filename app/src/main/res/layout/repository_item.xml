@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/is_adult"
                 android:textColor="@color/adultColor"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:visibility="visible" />
 
         </LinearLayout>

@@ -31,8 +31,8 @@ import java.io.InputStreamReader
 
 class InAppUpdater {
     companion object {
-        const val GITHUB_USER_NAME = "recloudstream"
-        const val GITHUB_REPO = "cloudstream"
+        const val GITHUB_USER_NAME = "MhmdIbrahim1"
+        const val GITHUB_REPO = "MoStream"
 
         const val LOG_TAG = "InAppUpdater"
 
@@ -206,7 +206,7 @@ class InAppUpdater {
         private suspend fun Activity.downloadUpdate(url: String): Boolean {
             try {
                 Log.d(LOG_TAG, "Downloading update: $url")
-                val appUpdateName = "CloudStream"
+                val appUpdateName = "MoStream"
                 val appUpdateSuffix = "apk"
 
                 // Delete all old updates

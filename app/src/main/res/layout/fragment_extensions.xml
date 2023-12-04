@@ -221,6 +221,7 @@
         android:text="@string/add_repository"
         android:textColor="?attr/textColor"
         android:translationY="-80dp"
+        android:visibility="gone"
         app:icon="@drawable/ic_baseline_add_24"
         tools:ignore="ContentDescription" />
 

@@ -408,14 +408,14 @@
 
         The app is purely for educational and personal use.
 
-        CloudStream 3 does not host any content on the app, and has no control over what media is put up or taken down.
-        CloudStream 3 functions like any other search engine, such as Google. CloudStream 3 does not host, upload or
+        MoStream does not host any content on the app, and has no control over what media is put up or taken down.
+        MoStream functions like any other search engine, such as Google. MoStream does not host, upload or
         manage any videos, films or content. It simply crawls, aggregates and displayes links in a convenient,
         user-friendly interface.
 
         It merely scrapes 3rd-party websites that are publicly accessable via any regular web browser. It is the
         responsibility of user to avoid any actions that might violate the laws governing his/her locality. Use
-        CloudStream 3 at your own risk.
+        MoStream at your own risk.
     </string>
     <string name="pref_category_bypass">ISP Bypasses</string>
     <string name="pref_category_links">Links</string>
@@ -572,7 +572,7 @@
     <string name="plugin_downloaded">Plugin Downloaded</string>
     <string name="plugin_deleted">Plugin Deleted</string>
     <string name="plugin_load_fail" formatted="true">Could not load %s</string>
-    <string name="is_adult">18+</string>
+    <string name="is_adult"> </string>
     <string name="batch_download_start_format" formatted="true">Started downloading %1$d %2$s…</string>
     <string name="batch_download_finish_format" formatted="true">Downloaded %1$d %2$s</string>
     <string name="batch_download_nothing_to_download_format" formatted="true">All %s already downloaded</string>

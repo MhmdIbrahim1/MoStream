@@ -15,12 +15,12 @@
         android:key="@string/display_sub_key"
         android:title="@string/display_subbed_dubbed_settings" />
 
-    <SwitchPreference
-        android:icon="@drawable/ic_baseline_extension_24"
-        android:key="@string/enable_nsfw_on_providers_key"
-        android:summary="@string/apply_on_restart"
-        android:title="@string/enable_nsfw_on_providers"
-        app:defaultValue="false" />
+<!--    <SwitchPreference-->
+<!--        android:icon="@drawable/ic_baseline_extension_24"-->
+<!--        android:key="@string/enable_nsfw_on_providers_key"-->
+<!--        android:summary="@string/apply_on_restart"-->
+<!--        android:title="@string/enable_nsfw_on_providers"-->
+<!--        app:defaultValue="false" />-->
 
     <Preference
         android:icon="@drawable/baseline_network_ping_24"

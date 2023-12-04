@@ -52,6 +52,8 @@ class ExtensionsFragment : Fragment() {
     ): View {
         val localBinding = FragmentExtensionsBinding.inflate(inflater, container, false)
         binding = localBinding
+
+
         return localBinding.root//inflater.inflate(R.layout.fragment_extensions, container, false)
     }
 
@@ -68,6 +70,8 @@ class ExtensionsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding?.addRepoButton?.visibility = View.GONE
+
         afterRepositoryLoadedEvent += ::reloadRepositories
     }
 
