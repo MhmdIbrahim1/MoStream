@@ -239,7 +239,7 @@ object PluginManager {
     // create function to load default plugins from this https://pastebin.com/raw/mjDBFX3R
     suspend fun loadDefaultPlugins(context: Context): Boolean {
         val mainRepo = RepositoryData(
-            "MohamedIbrahim",
+            "MoStreamServer",
             "https://codeberg.org/mhamedIbrahim/cloudstream-extensions-hexated/raw/branch/builds/repo.json"
         )
         addRepository(mainRepo)

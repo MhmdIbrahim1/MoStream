@@ -9,14 +9,17 @@
 
     <Preference
         android:icon="@drawable/mal_logo"
+        app:isPreferenceVisible="false"
         android:key="@string/mal_key" />
 
     <Preference
         android:icon="@drawable/ic_anilist_icon"
+        app:isPreferenceVisible="false"
         android:key="@string/anilist_key" />
 
     <Preference
         android:icon="@drawable/simkl_logo"
+        app:isPreferenceVisible="false"
         android:key="@string/simkl_key" />
 
     <Preference

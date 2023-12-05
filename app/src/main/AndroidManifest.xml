@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- unless you only use cs3 as a player for downloaded stuff, you need this -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Downloads -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Downloads on low api devices -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> <!-- Plugin API -->
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" /> <!-- Plugin API -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- some dependency needs this -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- Used for player vertical slide -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- Used for app update -->
@@ -14,15 +16,10 @@
     <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" /> <!-- Used for Android TV watch next -->
     <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" /> <!-- Used for updates without prompt -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Used for update service -->
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-
-    <!-- Required for getting arbitrary Aniyomi packages  -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" /> <!-- Required for getting arbitrary Aniyomi packages -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <!-- Fixes android tv fuckery -->
+        tools:ignore="QueryAllPackagesPermission" /> <!-- Fixes android tv fuckery -->
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
@@ -36,24 +33,25 @@
         <package android:name="is.xyz.mpv" />
     </queries>
 
-    <!-- Without the large heap Exoplayer buffering gets reset due to OOM. -->
-    <!--TODO https://stackoverflow.com/questions/41799732/chromecast-button-not-visible-in-android-->
     <application
         android:name=".AcraApplication"
         android:allowBackup="true"
-        android:enableOnBackInvokedCallback="true"
         android:appCategory="video"
         android:banner="@mipmap/ic_banner"
-        android:fullBackupContent="@xml/backup_descriptor"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:icon="@mipmap/ic_launcher_foreground"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
+        <activity
+            android:name=".LoginRegisterActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
@@ -67,11 +65,11 @@
             android:name=".ui.player.DownloadedPlayerActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
             android:exported="true"
+            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="userLandscape"
             android:supportsPictureInPicture="true"
-            android:taskAffinity="com.lagradost.cloudstream3.downloadedplayer"
-            android:launchMode="singleTask">
+            android:taskAffinity="com.lagradost.cloudstream3.downloadedplayer">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -142,7 +140,7 @@
             <!--
             Allow opening from continue watching with intents: cloudstreamsearch://1234
             Used on Android TV Watch Next
-             -->
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -151,7 +149,6 @@
 
                 <data android:scheme="cloudstreamcontinuewatching" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -164,22 +161,22 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.account.AccountSelectActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden"
             android:exported="true">
             <intent-filter android:exported="true">
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.EasterEggMonke"
             android:exported="true" />
@@ -194,19 +191,19 @@
         </receiver>
 
         <service
-            android:foregroundServiceType="dataSync"
             android:name=".services.VideoDownloadService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <activity
             android:name=".ui.ControllerActivity"
             android:exported="false" />
 
         <service
-            android:foregroundServiceType="dataSync"
             android:name=".utils.PackageInstallerService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

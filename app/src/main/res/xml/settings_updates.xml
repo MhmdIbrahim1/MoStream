@@ -58,7 +58,7 @@
     <PreferenceCategory
         android:title="@string/pref_category_extensions">
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:icon="@drawable/ic_baseline_extension_24"
             android:key="@string/auto_update_plugins_key"
             android:title="@string/automatic_plugin_updates" />
