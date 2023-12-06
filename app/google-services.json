@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "923568583796",
+    "project_id": "mostream-58260",
+    "storage_bucket": "mostream-58260.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923568583796:android:243c9fe4604fd1546e8d21",
+        "android_client_info": {
+          "package_name": "com.lagradost.cloudstream3.prerelease.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjB6o1ZLJhmUNYwfJfd7ACHcAT3v604yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.firebase.FirebaseApp
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall
 import com.lagradost.cloudstream3.plugins.PluginManager
@@ -99,11 +100,11 @@ class ExceptionHandler(val errorFile: File, val onError: (() -> Unit)) :
     }
 
 }
-
 class AcraApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         //NativeCrashHandler.initCrashHandler()
         ExceptionHandler(filesDir.resolve("last_error")) {
             val intent = context!!.packageManager.getLaunchIntentForPackage(context!!.packageName)
@@ -112,6 +113,7 @@ class AcraApplication : Application() {
             exceptionHandler = it
             Thread.setDefaultUncaughtExceptionHandler(it)
         }
+
     }
 
     override fun attachBaseContext(base: Context?) {

@@ -281,6 +281,7 @@ var app = Requests(responseParser = object : ResponseParser {
     defaultHeaders = mapOf("user-agent" to USER_AGENT)
 }
 
+
 class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
     companion object {
         const val TAG = "MAINACT"

@@ -734,6 +734,13 @@
     <string name="skip_startup_account_select_pref">Skip account selection at startup</string>
     <string name="use_default_account">Use Default Account</string>
     <string name="welcome_back_admin">Hi Again</string>
-    <string name="email">email\n</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="sign_up">SignUp</string>
+    <string name="don_t_have_an_account">Don’t have an account?</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_enter_your_data_to_login">Please Enter Your Data To Login</string>
+    <string name="forgot_password">Forget Paswword</string>
+    <string name="hint_password">password</string>
+    <string name="hint_email">email</string>
 </resources>

@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.lagradost.cloudstream3.prerelease",
+  "variantName": "prereleaseRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 28363740,
+      "versionName": "4.2.1-PRE",
+      "outputFile": "app-prerelease-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

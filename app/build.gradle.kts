@@ -5,10 +5,12 @@ import java.io.ByteArrayOutputStream
 import java.net.URL
 
 plugins {
+    kotlin("android")
     id("com.android.application")
     id("com.google.devtools.ksp")
-    id("kotlin-android")
     id("org.jetbrains.dokka")
+    id("com.google.gms.google-services")
+
 }
 
 val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
@@ -155,6 +157,17 @@ dependencies {
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    //splashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
+    // Firebase
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.7.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
+
+    // coroutines with firebase
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 
     // Android Core & Lifecycle
     implementation("androidx.core:core-ktx:1.12.0")
@@ -227,6 +240,12 @@ dependencies {
     implementation("androidx.work:work-runtime:2.8.1")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("com.github.Blatzar:NiceHttp:0.4.4") // HTTP Lib
+
+    //circular image
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation ("com.airbnb.android:lottie:6.1.0")
+
 }
 
 tasks.register("androidSourcesJar", Jar::class) {

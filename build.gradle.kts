@@ -8,6 +8,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.1.4")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.9.10")
+        classpath("com.google.gms:google-services:4.3.15")
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
@@ -24,6 +25,7 @@ allprojects {
 plugins {
     id("com.google.devtools.ksp") version "1.9.20-1.0.14" apply false
     id("org.jetbrains.kotlin.android") version "1.9.20" apply false
+
 }
 
 tasks.register<Delete>("clean") {
