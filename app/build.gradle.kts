@@ -13,8 +13,12 @@ plugins {
 
 }
 
-val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-val prereleaseStoreFile: File? = File(tmpFilePath).listFiles()?.first()
+//val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+//val prereleaseStoreFile: File? = File(tmpFilePath).listFiles()?.firstOrNull()
+//
+//if (prereleaseStoreFile == null) {
+//    throw GradleException("Keystore file not found in the specified directory: $tmpFilePath")
+//}
 
 fun String.execute() = ByteArrayOutputStream().use { baot ->
     if (project.exec {
@@ -44,14 +48,13 @@ android {
 
     signingConfigs {
         create("prerelease") {
-            if (prereleaseStoreFile != null) {
-                storeFile = file(prereleaseStoreFile)
-                storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
-            }
+            storeFile = file("D:\\MoStream\\mostreamkey.jks")
+            storePassword = "147369"
+            keyAlias = "key0"
+            keyPassword = "147369"
         }
     }
+
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"

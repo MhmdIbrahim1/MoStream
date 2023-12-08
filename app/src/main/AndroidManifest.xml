@@ -118,7 +118,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="mostreamplayer" />
+                <data android:scheme="cloudstreamplayer" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -126,7 +126,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="mostreamapp" />
+                <data android:scheme="cloudstreamapp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -134,7 +134,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="mostreamrepo" />
+                <data android:scheme="cloudstreamrepo" />
             </intent-filter>
 
             <!-- Allow searching with intents: cloudstreamsearch://Your%20Name -->
@@ -144,13 +144,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="mostreamsearch" />
+                <data android:scheme="cloudstreamsearch" />
             </intent-filter>
 
             <!--
             Allow opening from continue watching with intents: cloudstreamsearch://1234
             Used on Android TV Watch Next
-            -->
+             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -159,6 +159,7 @@
 
                 <data android:scheme="cloudstreamcontinuewatching" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -170,6 +171,7 @@
                     android:pathPrefix="/"
                     android:scheme="https" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.account.AccountSelectActivity"

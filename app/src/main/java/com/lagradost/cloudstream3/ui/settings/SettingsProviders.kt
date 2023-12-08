@@ -76,10 +76,11 @@ class SettingsProviders : PreferenceFragmentCompat() {
         }
 
         getPref(R.string.prefer_media_type_key)?.setOnPreferenceClickListener {
-            val names = enumValues<TvType>().sorted().map { it.name }
-            val default =
-                enumValues<TvType>().sorted().filter { it != TvType.NSFW }.map { it.ordinal }
-            val defaultSet = default.map { it.toString() }.toSet()
+            val selectedTvTypes = listOf(TvType.Movie, TvType.TvSeries, TvType.Anime, TvType.Live, TvType.Documentary)
+            val names = selectedTvTypes.map { it.name }
+
+            val defaultSet = selectedTvTypes.map { it.ordinal.toString() }.toSet()
+
             val currentList = try {
                 settingsManager.getStringSet(getString(R.string.prefer_media_type_key), defaultSet)
                     ?.map {
@@ -87,15 +88,16 @@ class SettingsProviders : PreferenceFragmentCompat() {
                     }
             } catch (e: Throwable) {
                 null
-            } ?: default
+            } ?: selectedTvTypes.map { it.ordinal }
 
             activity?.showMultiDialog(
                 names,
                 currentList,
                 getString(R.string.preferred_media_settings),
-                {}) { selectedList ->
+                {}
+            ) { selectedList ->
                 settingsManager.edit().putStringSet(
-                    this.getString(R.string.prefer_media_type_key),
+                    getString(R.string.prefer_media_type_key),
                     selectedList.map { it.toString() }.toMutableSet()
                 ).apply()
                 DataStoreHelper.currentHomePage = null
@@ -104,6 +106,7 @@ class SettingsProviders : PreferenceFragmentCompat() {
 
             return@setOnPreferenceClickListener true
         }
+
 
         getPref(R.string.provider_lang_key)?.setOnPreferenceClickListener {
             activity?.getApiProviderLangSettings()?.let { current ->

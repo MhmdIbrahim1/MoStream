@@ -1,4 +1,4 @@
-package com.lagradost.cloudstream3
+package com.lagradost.cloudstream3.ui.loginregister
 
 import android.app.Activity
 import android.content.Context
@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 
 class LoginRegisterActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginRegiesterBinding.inflate(layoutInflater) }
-//
-//    // Manually provide dependencies here
+
+    // Manually provide dependencies here
 //    private val firebaseAuth = FirebaseAuth.getInstance()
-//
-//    // Create LoginViewModel manually with provided dependencies
+
+    // Create LoginViewModel manually with provided dependencies
 //    private val viewModel = LoginViewModel(firebaseAuth)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +107,5 @@ class LoginRegisterActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-//
-//
 //    }
 }

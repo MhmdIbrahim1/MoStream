@@ -48,8 +48,9 @@ class SetupFragmentMedia : Fragment() {
 
             val arrayAdapter =
                 ArrayAdapter<String>(ctx, R.layout.sort_bottom_single_choice)
+            val selectedTvTypes = listOf(TvType.Movie, TvType.TvSeries, TvType.Anime, TvType.Live, TvType.Documentary)
+            val names = selectedTvTypes.map { it.name }
 
-            val names = enumValues<TvType>().sorted().map { it.name }
             val selected = mutableListOf<Int>()
 
             arrayAdapter.addAll(names)

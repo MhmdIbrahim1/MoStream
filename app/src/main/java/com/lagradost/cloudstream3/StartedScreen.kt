@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieDrawable
 import com.google.firebase.FirebaseApp
 import com.lagradost.cloudstream3.databinding.ActivityStartedScreenBinding
+import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 
 
 class StartedScreen : AppCompatActivity() {
@@ -26,7 +27,7 @@ class StartedScreen : AppCompatActivity() {
         lottieAnimationView.playAnimation()
 
         Handler(Looper.myLooper()!!).postDelayed({
-            startActivity(Intent(this@StartedScreen, LoginRegisterActivity::class.java))
+            startActivity(Intent(this@StartedScreen, AccountSelectActivity::class.java))
             finish()
         }, 3000)
 

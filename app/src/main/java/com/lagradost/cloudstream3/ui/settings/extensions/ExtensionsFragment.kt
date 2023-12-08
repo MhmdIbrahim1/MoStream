@@ -72,6 +72,7 @@ class ExtensionsFragment : Fragment() {
         super.onResume()
         binding?.addRepoButton?.visibility = View.GONE
 
+
         afterRepositoryLoadedEvent += ::reloadRepositories
     }
 
@@ -132,6 +133,7 @@ class ExtensionsFragment : Fragment() {
                         false
                     )
                 )
+
             }, { repo ->
                 // Prompt user before deleting repo
                 main {

@@ -1,6 +1,7 @@
 package com.lagradost.cloudstream3.ui.settings.extensions
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -74,15 +75,18 @@ class RepoAdapter(
             repositoryData: RepositoryData
         ) {
             val isPrebuilt = PREBUILT_REPOSITORIES.contains(repositoryData)
-            val drawable =
-                if (isSetup) R.drawable.netflix_download else R.drawable.ic_baseline_delete_outline_24
+            val drawable = R.drawable.netflix_download
+//                if (isSetup) R.drawable.netflix_download else R.drawable.ic_baseline_delete_outline_24
+            // hide delete button if prebuilt repo
+
             when (binding) {
                 is RepositoryItemTvBinding -> {
                     binding.apply {
-                        // Only shows icon if on setup or if it isn't a prebuilt repo.
-                        // No delete buttons on prebuilt repos.
-                        if (!isPrebuilt || isSetup) {
+                        // Only show icon if in setup and not a prebuilt repo.
+                        if (isSetup && isPrebuilt) {
                             actionButton.setImageResource(drawable)
+                        } else {
+                            actionButton.visibility = View.GONE
                         }
 
                         actionButton.setOnClickListener {
@@ -99,10 +103,11 @@ class RepoAdapter(
 
                 is RepositoryItemBinding -> {
                     binding.apply {
-                        // Only shows icon if on setup or if it isn't a prebuilt repo.
-                        // No delete buttons on prebuilt repos.
-                        if (!isPrebuilt || isSetup) {
+                        // Only show icon if in setup, or if it isn't a prebuilt repo.
+                        if (isSetup || isPrebuilt) {
                             actionButton.setImageResource(drawable)
+                        } else {
+                            actionButton.visibility = View.GONE
                         }
 
                         actionButton.setOnClickListener {

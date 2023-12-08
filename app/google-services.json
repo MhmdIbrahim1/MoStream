@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:923568583796:android:243c9fe4604fd1546e8d21",
         "android_client_info": {
-          "package_name": "com.lagradost.cloudstream3.prerelease.debug"
+          "package_name": "com.lagradost.cloudstream3.prerelease"
         }
       },
       "oauth_client": [],
