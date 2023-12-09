@@ -22,4 +22,5 @@
     <dimen name="video_frame_width">1dp</dimen>
 
     <dimen name="account_select_linear_item_size">100dp</dimen>
+    <dimen name="logintextdim">17sp</dimen>
 </resources>
