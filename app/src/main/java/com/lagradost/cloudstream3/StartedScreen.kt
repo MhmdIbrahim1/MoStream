@@ -27,7 +27,7 @@ class StartedScreen : AppCompatActivity() {
         lottieAnimationView.playAnimation()
 
         Handler(Looper.myLooper()!!).postDelayed({
-            startActivity(Intent(this@StartedScreen, AccountSelectActivity::class.java))
+            startActivity(Intent(this@StartedScreen, LoginRegisterActivity::class.java))
             finish()
         }, 3000)
 

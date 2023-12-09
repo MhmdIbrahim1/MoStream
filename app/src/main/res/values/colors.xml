@@ -89,7 +89,7 @@
     <color name="colorTestFail">#ea596e</color>
 
     <color name="textBoardColor">#C67A89A4</color>
-    <color name="cyanText">#0888C1</color>
+    <color name="loginText">#0451CD</color>
     <color name="background_buttom_card">#1DA1F2</color>
 
 </resources>
