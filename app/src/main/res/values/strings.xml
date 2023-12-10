@@ -475,7 +475,7 @@
     <string name="login_format" formatted="true">%1$s %2$s</string>
     <string name="account">account</string>
     <string name="logout">Log out</string>
-    <string name="login">Log in</string>
+    <string name="login">Login</string>
     <string name="switch_account">Switch account</string>
     <string name="add_account">Add account</string>
     <string name="create_account">Create account</string>
@@ -740,9 +740,9 @@
     <string name="don_t_have_an_account">Don’t have an account?</string>
     <string name="welcome">Welcome</string>
     <string name="please_enter_your_data_to_login">Please Enter Your Data To Login</string>
-    <string name="forgot_password">Forget Paswword</string>
-    <string name="hint_password">password</string>
-    <string name="hint_email">email</string>
+    <string name="forgot_password">Forget Password</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
