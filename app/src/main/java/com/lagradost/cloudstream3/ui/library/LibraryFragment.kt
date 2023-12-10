@@ -7,7 +7,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import android.view.ViewGroup.FOCUS_AFTER_DESCENDANTS
 import android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS
 import android.view.animation.AlphaAnimation
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -25,10 +23,8 @@ import androidx.core.view.allViews
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.viewpager2.widget.ViewPager2
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lagradost.cloudstream3.APIHolder
 import com.lagradost.cloudstream3.APIHolder.allProviders
@@ -442,6 +438,8 @@ class LibraryFragment : Fragment() {
                             tab.view.nextFocusDownId = R.id.search_result_root
 
                             tab.view.setOnClickListener {
+                                libraryViewModel.currentPage = position // updating selected library tab position
+
                                 val currentItem =
                                     binding?.viewpager?.currentItem ?: return@setOnClickListener
                                 val distance = abs(position - currentItem)
@@ -452,6 +450,7 @@ class LibraryFragment : Fragment() {
                                 binding?.searchBar?.setExpanded(true)
                             }
                         }.attach()
+
                     }
                 }
 

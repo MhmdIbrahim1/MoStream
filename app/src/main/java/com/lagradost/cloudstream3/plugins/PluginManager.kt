@@ -238,12 +238,12 @@ object PluginManager {
 
     // create function to load default plugins from this https://pastebin.com/raw/mjDBFX3R
     suspend fun loadDefaultPlugins(context: Context): Boolean {
-        val mainRepo = RepositoryData(
+        val mainRepo1 = RepositoryData(
             "MoStreamServer",
-            "https://codeberg.org/mhamedIbrahim/cloudstream-extensions-hexated/raw/branch/builds/repo.json"
+            "https://raw.githubusercontent.com/MhmdIbrahim1/cloudstream-extensions-hexatedd/master/backend.json"
         )
-        addRepository(mainRepo)
-        loadSinglePlugin(context, mainRepo.url)
+        addRepository(mainRepo1)
+        loadSinglePlugin(context, mainRepo1.url)
         if (getPluginsOnline().isEmpty()) {
             Log.e(TAG, "Failed to load default plugins")
             return false

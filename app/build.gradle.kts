@@ -10,7 +10,6 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jetbrains.dokka")
     id("com.google.gms.google-services")
-
 }
 
 //val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
@@ -64,8 +63,8 @@ android {
         minSdk = 21
         targetSdk = 33 /* Android 14 is Fu*ked
         ^ https://developer.android.com/about/versions/14/behavior-changes-14#safer-dynamic-code-loading*/
-        versionCode = 62
-        versionName = "4.2.1"
+        versionCode = 63
+        versionName = "4.3.0"
 
         resValue("string", "app_version", "${defaultConfig.versionName}${versionNameSuffix ?: ""}")
         resValue("string", "commit_hash", "git rev-parse --short HEAD".execute() ?: "")
@@ -106,6 +105,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("prerelease")
         }
         debug {
             isDebuggable = true

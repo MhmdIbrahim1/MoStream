@@ -118,6 +118,7 @@ data class ResultData(
     val plotText: UiText,
     val apiName: UiText,
     val ratingText: UiText?,
+    val contentRatingText: UiText?,
     val vpnText: UiText?,
     val metaText: UiText?,
     val durationText: UiText?,
@@ -249,6 +250,7 @@ fun LoadResponse.toResultData(repo: APIRepository): ResultData {
         apiName = txt(apiName),
         ratingText = rating?.div(1000f)
             ?.let { if (it <= 0.1f) null else txt(R.string.rating_format, it) },
+        contentRatingText = txt(contentRating),
         vpnText = txt(
             when (repo.vpnStatus) {
                 VPNStatus.None -> null
@@ -1833,10 +1835,10 @@ class ResultViewModel2 : ViewModel() {
                             this.japName
                         ).filter { it.length > 2 }
                             .distinct().map {
-                            // this actually would be nice if we improved a bit as 3rd season == season 3 == III ect
+                                // this actually would be nice if we improved a bit as 3rd season == season 3 == III ect
                                 // right now it just removes the dubbed status
                                 it.lowercase().replace(Regex("""\(?[ds]ub(bed)?\)?(\s|$)""") , "").trim()
-                                            },
+                            },
                         TrackerType.getTypes(this.type),
                         this.year
                     )
@@ -2044,9 +2046,9 @@ class ResultViewModel2 : ViewModel() {
     }
 
     private fun postFavorites(loadResponse: LoadResponse) {
-            val id = loadResponse.getId()
-            val isFavorite = getFavoritesData(id) != null
-            _favoriteStatus.postValue(isFavorite)
+        val id = loadResponse.getId()
+        val isFavorite = getFavoritesData(id) != null
+        _favoriteStatus.postValue(isFavorite)
     }
 
     private fun postEpisodeRange(indexer: EpisodeIndexer?, range: EpisodeRange?) {

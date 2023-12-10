@@ -434,16 +434,16 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                     if (newStatus == null) return@toggleSubscriptionStatus
 
                     val message = if (newStatus) {
-                            // Kinda icky to have this here, but it works.
-                            SubscriptionWorkManager.enqueuePeriodicWork(context)
-                            R.string.subscription_new
-                        } else {
-                            R.string.subscription_deleted
-                        }
+                        // Kinda icky to have this here, but it works.
+                        SubscriptionWorkManager.enqueuePeriodicWork(context)
+                        R.string.subscription_new
+                    } else {
+                        R.string.subscription_deleted
+                    }
 
-                        val name = (viewModel.page.value as? Resource.Success)?.value?.title
-                            ?: txt(R.string.no_data).asStringNull(context) ?: ""
-                        CommonActivity.showToast(txt(message, name), Toast.LENGTH_SHORT)
+                    val name = (viewModel.page.value as? Resource.Success)?.value?.title
+                        ?: txt(R.string.no_data).asStringNull(context) ?: ""
+                    CommonActivity.showToast(txt(message, name), Toast.LENGTH_SHORT)
                 }
             }
             resultFavorite.setOnClickListener {
@@ -677,6 +677,7 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                     resultMetaYear.setText(d.yearText)
                     resultMetaDuration.setText(d.durationText)
                     resultMetaRating.setText(d.ratingText)
+                    resultMetaContentRating.setText(d.contentRatingText)
                     resultCastText.setText(d.actorsText)
                     resultNextAiring.setText(d.nextAiringEpisode)
                     resultNextAiringTime.setText(d.nextAiringDate)
@@ -700,6 +701,11 @@ open class ResultFragmentPhone : FullScreenPlayer() {
 
                     resultCastItems.isGone = d.actors.isNullOrEmpty()
                     (resultCastItems.adapter as? ActorAdaptor)?.updateList(d.actors ?: emptyList())
+
+                    if (d.contentRatingText == null) {
+                        // If there is no rating to display, we don't want an empty gap
+                        resultMetaContentRating.width = 0
+                    }
 
                     if (syncModel.addSyncs(d.syncData)) {
                         syncModel.updateMetaAndUser()

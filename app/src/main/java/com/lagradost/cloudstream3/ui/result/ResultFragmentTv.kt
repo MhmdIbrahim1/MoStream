@@ -249,7 +249,7 @@ class ResultFragmentTv : Fragment() {
 
         binding?.apply {
             //episodesShadow.rotationX = 180.0f//if(episodesShadow.isRtl()) 180.0f else 0.0f
-            
+
             val leftListener: View.OnFocusChangeListener =
                 View.OnFocusChangeListener { _, hasFocus ->
                     if (!hasFocus) return@OnFocusChangeListener
@@ -826,6 +826,7 @@ class ResultFragmentTv : Fragment() {
                         resultMetaYear.setText(d.yearText)
                         resultMetaDuration.setText(d.durationText)
                         resultMetaRating.setText(d.ratingText)
+                        resultMetaContentRating.setText(d.contentRatingText)
                         resultCastText.setText(d.actorsText)
                         resultNextAiring.setText(d.nextAiringEpisode)
                         resultNextAiringTime.setText(d.nextAiringDate)
@@ -852,7 +853,7 @@ class ResultFragmentTv : Fragment() {
                         ).random()
                         //Change poster crop area to 20% from Top
                         backgroundPoster.cropYCenterOffsetPct = 0.20F
-                        
+
                         backgroundPoster.setImage(
                             d.posterBackgroundImage ?: UiImage.Drawable(error),
                             radius = 0,
@@ -865,6 +866,11 @@ class ResultFragmentTv : Fragment() {
                         (resultCastItems.adapter as? ActorAdaptor)?.updateList(
                             d.actors ?: emptyList()
                         )
+
+                        if (d.contentRatingText == null) {
+                            // If there is no rating to display, we don't want an empty gap
+                            resultMetaContentRating.width = 0
+                        }
                     }
 
                     is Resource.Loading -> {
