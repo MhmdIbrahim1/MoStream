@@ -53,6 +53,7 @@
                     tools:text="Hello world" />
             </LinearLayout>
 
+
             <TextView
                 android:id="@+id/settings_general"
 
@@ -103,6 +104,13 @@
                 style="@style/SettingsItem"
                 android:nextFocusUp="@id/settings_credits"
                 android:text="@string/extensions" />
+
+            <TextView
+                android:id="@+id/settings_logout"
+                style="@style/LogoutItem"
+                android:textColor="@color/colorPrimaryRed"
+                android:nextFocusUp="@id/settings_extensions"
+                android:text="@string/logout" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -82,7 +82,11 @@ object UIHelper {
                 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
     }
 
-    fun populateChips(view: ChipGroup?, tags: List<String>, @StyleRes style : Int = R.style.ChipFilled) {
+    fun populateChips(
+        view: ChipGroup?,
+        tags: List<String>,
+        @StyleRes style: Int = R.style.ChipFilled
+    ) {
         if (view == null) return
         view.removeAllViews()
         val context = view.context ?: return
@@ -178,7 +182,8 @@ object UIHelper {
     fun Activity?.navigate(@IdRes navigation: Int, arguments: Bundle? = null) {
         try {
             if (this is FragmentActivity) {
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
                 navHostFragment?.navController?.let {
                     it.navigate(navigation, arguments)
                 }
@@ -273,6 +278,27 @@ object UIHelper {
         if (url.isNullOrBlank()) return false
         this.setImage(
             UiImage.Image(url, headers, errorImageDrawable),
+            errorImageDrawable,
+            fadeIn,
+            radius,
+            sample,
+            colorCallback
+        )
+        return true
+    }
+
+    fun ImageView?.setImage(
+        url: Int?,
+        @DrawableRes
+        errorImageDrawable: Int? = null,
+        fadeIn: Boolean = true,
+        radius: Int = 0,
+        sample: Int = 3,
+        colorCallback: ((Palette) -> Unit)? = null
+    ): Boolean {
+        if (url == null) return false
+        this.setImage(
+            UiImage.Drawable(url),
             errorImageDrawable,
             fadeIn,
             radius,

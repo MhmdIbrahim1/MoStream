@@ -2,6 +2,7 @@ package com.lagradost.cloudstream3.ui.settings
 
 import android.app.UiModeManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -19,18 +20,27 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.lagradost.cloudstream3.LoginRegisterActivity
+import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.MainSettingsBinding
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.syncproviders.AccountManager.Companion.accountManagers
+import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 import com.lagradost.cloudstream3.ui.home.HomeFragment
+import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel.Companion.USER_COLLECTION
+import com.lagradost.cloudstream3.ui.loginregister.UserSign
+import com.lagradost.cloudstream3.utils.NetworkResult
 import com.lagradost.cloudstream3.utils.UIHelper.fixPaddingStatusbar
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
 import com.lagradost.cloudstream3.utils.UIHelper.toPx
 import java.io.File
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(),UserFetchCallback {
     companion object {
         var beneneCount = 0
 
@@ -191,19 +201,23 @@ class SettingsFragment : Fragment() {
 
         val isTrueTv = isTrueTvSettings()
 
-        for (syncApi in accountManagers) {
-            val login = syncApi.loginInfo()
-            val pic = login?.profilePicture ?: continue
-            if (binding?.settingsProfilePic?.setImage(
-                    pic,
-                    errorImageDrawable = HomeFragment.errorProfilePic
-                ) == true
-            ) {
-                binding?.settingsProfileText?.text = login.name
-                binding?.settingsProfile?.isVisible = true
-                break
-            }
-        }
+//        for (syncApi in accountManagers) {
+//            val login = syncApi.loginInfo()
+//            val pic = login?.profilePicture ?: continue
+//            if (binding?.settingsProfilePic?.setImage(
+//                    pic,
+//                    errorImageDrawable = HomeFragment.errorProfilePic
+//                ) == true
+//            ) {
+//                binding?.settingsProfileText?.text = login.name
+//                binding?.settingsProfile?.isVisible = true
+//                break
+//            }
+//        }
+        // set user image and name from firestore
+        getUser(this)
+
+
         binding?.apply {
             listOf(
                 settingsGeneral to R.id.action_navigation_global_to_navigation_settings_general,
@@ -225,10 +239,72 @@ class SettingsFragment : Fragment() {
                 }
             }
 
+            binding?.apply {
+                settingsLogout.setOnClickListener {
+                    logout()
+                }
+            }
+
             // Default focus on TV
             if (isTrueTv) {
                 settingsGeneral.requestFocus()
             }
         }
     }
+
+    private fun logout() {
+        FirebaseAuth.getInstance().signOut()
+        Intent(
+            requireActivity(),
+            LoginRegisterActivity::class.java
+        ).also { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        requireActivity().finish()
+    }
+
+    // fun to get the user information from firestore first name, last name, email
+    private fun getUser(callback: UserFetchCallback) {
+        callback.onLoading()
+        val auth = FirebaseAuth.getInstance()
+        val firestore = Firebase.firestore
+        firestore.collection(USER_COLLECTION).document(auth.uid!!)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    callback.onError(error.message.toString())
+                } else {
+                    val user = value?.toObject(UserSign::class.java)
+                    user?.let {
+                        callback.onSuccess(user)
+                    }
+                }
+            }
+    }
+
+    override fun onLoading() {
+        //nothing
+    }
+
+    override fun onSuccess(user: UserSign) {
+        binding?.settingsProfileText?.text = "${user.firstName} ${user.lastName}"
+        binding?.settingsProfile?.isVisible = true
+
+        // Initial random image
+        val initialProfilePic = HomeFragment.errorProfilePics.random()
+        binding?.settingsProfilePic?.setImage(initialProfilePic, errorImageDrawable = HomeFragment.errorProfilePic)
+
+        // Roll the image forwards once of the user clicks on it
+        binding?.settingsProfilePic?.setOnClickListener {
+            // Show a different random image from errorProfilePics list
+            val newProfilePic =HomeFragment.errorProfilePics.random()
+            binding?.settingsProfilePic?.setImage(newProfilePic, errorImageDrawable = HomeFragment.errorProfilePic)
+        }
+
+    }
+
+    override fun onError(errorMessage: String) {
+        //nothing
+    }
+
 }

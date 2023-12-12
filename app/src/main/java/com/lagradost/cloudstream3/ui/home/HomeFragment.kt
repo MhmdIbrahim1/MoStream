@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
         var currentSpan = 1
         val listHomepageItems = mutableListOf<SearchResponse>()
 
-        private val errorProfilePics = listOf(
+        val errorProfilePics = listOf(
             R.drawable.monke_benene,
             R.drawable.monke_burrito,
             R.drawable.monke_coco,
@@ -612,6 +612,8 @@ class HomeFragment : Fragment() {
                         homeMasterRecycler.isVisible = false
                         //home_loaded?.isVisible = false
                     }
+
+                    else -> {}
                 }
             }
         }

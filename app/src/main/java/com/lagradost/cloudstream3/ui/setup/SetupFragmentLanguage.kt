@@ -59,9 +59,9 @@ class SetupFragmentLanguage : Fragment() {
                 // Icons may crash on some weird android versions?
                 normalSafeApiCall {
                     val drawable = when {
-                        BuildConfig.DEBUG -> R.drawable.cloud_2_gradient_debug
-                        BuildConfig.BUILD_TYPE == "prerelease" -> R.drawable.cloud_2_gradient_beta
-                        else -> R.drawable.cloud_2_gradient
+                        BuildConfig.DEBUG -> R.drawable.login_logo
+                        BuildConfig.BUILD_TYPE == "prerelease" -> R.drawable.login_logo
+                        else -> R.drawable.login_logo
                     }
                     appIconImage.setImageDrawable(ContextCompat.getDrawable(ctx, drawable))
                 }
