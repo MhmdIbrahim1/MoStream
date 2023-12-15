@@ -280,7 +280,14 @@
     <string name="resize_zoom">تكبير</string>
     <string name="legal_notice">إخلاء مسؤولية</string>
     <string name="legal_notice_key" translatable="false">legal_notice_key</string>
-    <string name="legal_notice_text" translatable="false">Any legal issues regarding the content on this application should be taken up with the actual file hosts and providers themselves as we are not affiliated with them. In case of copyright infringement, please directly contact the responsible parties or the streaming websites. The app is purely for educational and personal use. CloudStream 3 does not host any content on the app, and has no control over what media is put up or taken down. CloudStream 3 functions like any other search engine, such as Google. CloudStream 3 does not host, upload or manage any videos, films or content. It simply crawls, aggregates and displayes links in a convenient, user-friendly interface. It merely scrapes 3rd-party websites that are publicly accessable via any regular web browser. It is the responsibility of user to avoid any actions that might violate the laws governing his/her locality. Use CloudStream 3 at your own risk.</string>
+    <string name="legal_notice_text" translatable="true">بخصوص أي مشاكل قانونية تتعلق بالمحتوى الموجود في هذا التطبيق:
+يُرجى التواصل مباشرةً مع مضيفي الملفات والخدمة الفعليين، حيث لا تربطنا بهم أي علاقة.
+في حال وجود مخالفة لحقوق الملكية الفكرية، يرجى الاتصال مباشرةً بالأطراف المسؤولة أو مواقع البث.
+هذا التطبيق مخصص فقط للأغراض التعليمية والشخصية.
+لا يستضيف MoStream أي محتوى على التطبيق، وليس له أي سيطرة على ما يتم تحميله أو حذفه من الوسائط.
+يعمل MoStream تمامًا مثل أي محرك بحث آخر، مثل Google. لا يستضيف ولا يحمّل ولا يدير أي مقاطع فيديو أو أفلام أو محتوى. بل يقوم ببساطة بفحص المواقع الخارجية وجمعها وعرض روابطها بطريقة مريحة وسهلة الاستخدام.
+يكتفي التطبيق باقتطاف البيانات من مواقع ويب خارجية متاحة للجميع من خلال أي متصفح ويب عادي. تقع مسؤولية تجنب أي إجراءات قد تنتهك القوانين الحاكمة لموقعك على عاتق المستخدم. استخدم MoStream على مسؤوليتك الخاصة.
+</string>
     <string name="category_general">عام</string>
     <string name="random_button_settings">زر العشوائي</string>
     <string name="random_button_settings_desc">إظهار زر العشوائي على الصفحة الرئيسية</string>

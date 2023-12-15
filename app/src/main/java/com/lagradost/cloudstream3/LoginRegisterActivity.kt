@@ -24,8 +24,6 @@ class LoginRegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Initialize FirebaseApp
-        FirebaseApp.initializeApp(this)
 
         setContentView(binding.root)
 

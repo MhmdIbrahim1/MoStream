@@ -44,8 +44,6 @@ class ExtensionsViewModel : ViewModel() {
     private val _pluginStats: MutableLiveData<PluginStats?> = MutableLiveData(null)
     val pluginStats: LiveData<PluginStats?> = _pluginStats
 
-    //TODO CACHE GET REQUESTS
-    // DO not use viewModelScope.launchSafe, it will ANR on slow internet
     fun loadStats() = ioSafe {
         val urls = (getKey<Array<RepositoryData>>(REPOSITORIES_KEY)
             ?: emptyArray()) + PREBUILT_REPOSITORIES

@@ -3,13 +3,19 @@ package com.lagradost.cloudstream3.ui.account
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.lagradost.cloudstream3.CommonActivity
 import com.lagradost.cloudstream3.CommonActivity.loadThemes
 import com.lagradost.cloudstream3.CommonActivity.showToast
+import com.lagradost.cloudstream3.LoginRegisterActivity
 import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.ActivityAccountSelectBinding
@@ -17,6 +23,7 @@ import com.lagradost.cloudstream3.mvvm.observe
 import com.lagradost.cloudstream3.ui.AutofitRecyclerView
 import com.lagradost.cloudstream3.ui.account.AccountAdapter.Companion.VIEW_TYPE_EDIT_ACCOUNT
 import com.lagradost.cloudstream3.ui.account.AccountAdapter.Companion.VIEW_TYPE_SELECT_ACCOUNT
+import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
 import com.lagradost.cloudstream3.utils.DataStoreHelper.accounts
 import com.lagradost.cloudstream3.utils.DataStoreHelper.selectedKeyIndex
@@ -78,6 +85,8 @@ class AccountSelectActivity : AppCompatActivity() {
         CommonActivity.init(this)
 
         val binding = ActivityAccountSelectBinding.inflate(layoutInflater)
+
+
         setContentView(binding.root)
 
         val recyclerView: AutofitRecyclerView = binding.accountRecyclerView

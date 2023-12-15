@@ -116,7 +116,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
         app:layout_constraintStart_toStartOf="parent"

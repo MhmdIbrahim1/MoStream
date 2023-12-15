@@ -57,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textStyle="bold"
         android:text="@string/app_layout_subtext">
 
     </TextView>
@@ -80,7 +81,7 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="-60dp"
-        android:gravity="bottom|end"
+        android:gravity="bottom|center"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
@@ -88,12 +89,14 @@
             style="@style/WhiteButton"
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
             android:text="@string/setup_done" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/prev_btt"
             style="@style/BlackButton"
             android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical|end"
             android:text="@string/previous" />
     </LinearLayout>

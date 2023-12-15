@@ -68,7 +68,7 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="-60dp"
-        android:gravity="bottom|end"
+        android:gravity="bottom|center"
         android:orientation="horizontal">
 
 <!--        <com.google.android.material.button.MaterialButton-->
@@ -81,6 +81,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/next_btt"
             style="@style/WhiteButton"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:text="@string/next" />
@@ -88,6 +89,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/prev_btt"
             style="@style/BlackButton"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:text="@string/previous" />

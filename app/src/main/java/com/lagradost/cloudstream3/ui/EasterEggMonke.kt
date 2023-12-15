@@ -91,7 +91,7 @@ class EasterEggMonke : AppCompatActivity() {
             R.drawable.monke_sob,
             R.drawable.monke_drink,
             R.drawable.benene,
-            R.drawable.ic_launcher_foreground
+            R.drawable.login_logo
         )
     }
 }

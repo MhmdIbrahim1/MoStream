@@ -751,4 +751,7 @@
     <string name="hint_last_name">Last Name</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="we_will_send_you_the_password_reset_link_to_your_email">We will send you the password reset link to your email</string>
+    <string name="send">Send</string>
 </resources>
