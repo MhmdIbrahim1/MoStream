@@ -57,8 +57,7 @@
 
     <PreferenceCategory
         android:title="@string/pref_category_extensions"
-        app:isPreferenceVisible="false"
-        >
+        app:isPreferenceVisible="false">
         <SwitchPreference
             android:defaultValue="true"
             android:icon="@drawable/ic_baseline_extension_24"
