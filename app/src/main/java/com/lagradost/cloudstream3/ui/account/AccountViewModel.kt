@@ -120,4 +120,5 @@ class AccountViewModel : ViewModel() {
             setAccount(account)
         }
     }
+
 }
