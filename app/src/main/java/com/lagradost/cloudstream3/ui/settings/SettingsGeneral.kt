@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceFragmentCompat
@@ -45,8 +46,14 @@ fun getCurrentLocale(context: Context): String {
     val res = context.resources
     // Change locale settings in the app.
     // val dm = res.displayMetrics
+
     val conf = res.configuration
-    return conf?.locale?.toString() ?: "en"
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        conf?.locales?.get(0)?.toString() ?: "en"
+    } else {
+        @Suppress("DEPRECATION")
+        conf?.locale?.toString() ?: "en"
+    }
 }
 
 // idk, if you find a way of automating this it would be great

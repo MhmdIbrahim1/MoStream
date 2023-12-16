@@ -147,9 +147,15 @@ class LibraryFragment : Fragment() {
         activity?.theme?.resolveAttribute(android.R.attr.textColor, searchExitIconColor, true)
         searchExitIcon?.setColorFilter(searchExitIconColor.data)
 
+        val searchCallback = Runnable {
+            val newText = binding?.mainSearch?.query?.toString() ?: return@Runnable
+            libraryViewModel.sort(ListSorting.Query, newText)
+        }
+
         binding?.mainSearch?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 libraryViewModel.sort(ListSorting.Query, query)
+
                 return true
             }
 
@@ -163,7 +169,6 @@ class LibraryFragment : Fragment() {
                     return true
                 }
 
-                libraryViewModel.sort(ListSorting.Query, newText)
                 return true
             }
         })

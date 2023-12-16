@@ -256,12 +256,12 @@ class SearchFragment : Fragment() {
 
                 builder.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-                val binding: HomeSelectMainpageBinding = HomeSelectMainpageBinding.inflate(
+                val selectMainpageBinding: HomeSelectMainpageBinding = HomeSelectMainpageBinding.inflate(
                     builder.layoutInflater,
                     null,
                     false
                 )
-                builder.setContentView(binding.root)
+                builder.setContentView(selectMainpageBinding.root)
                 builder.show()
                 builder.let { dialog ->
                     val isMultiLang = ctx.getApiProviderLangSettings().let { set ->
@@ -315,15 +315,22 @@ class SearchFragment : Fragment() {
                         arrayAdapter.notifyDataSetChanged()
                     }
 
-                    val selectedSearchTypes = DataStoreHelper.searchPreferenceTags
-
                     bindChips(
-                        binding.tvtypesChipsScroll.tvtypesChips,
+                        selectMainpageBinding.tvtypesChipsScroll.tvtypesChips,
                         selectedSearchTypes,
-                        TvType.values().toList()
+                        validAPIs.flatMap { api -> api.supportedTypes }.distinct()
                     ) { list ->
                         updateList(list)
+
+                        // refresh selected chips in main chips
+                        if (selectedSearchTypes.toSet() != list.toSet()) {
+                            selectedSearchTypes.clear()
+                            selectedSearchTypes.addAll(list)
+                            updateChips(binding?.tvtypesChipsScroll?.tvtypesChips, selectedSearchTypes)
+
+                        }
                     }
+
 
                     cancelBtt?.setOnClickListener {
                         dialog.dismissSafe()
@@ -343,6 +350,9 @@ class SearchFragment : Fragment() {
                     dialog.setOnDismissListener {
                         DataStoreHelper.searchPreferenceProviders = currentSelectedApis.toList()
                         selectedApis = currentSelectedApis
+
+                        // run search when dialog is close
+                        search(binding?.mainSearch?.query?.toString())
                     }
                     updateList(selectedSearchTypes.toList())
                 }
@@ -545,14 +555,14 @@ class SearchFragment : Fragment() {
         // SubtitlesFragment.push(activity)
         //searchViewModel.search("iron man")
         //(activity as AppCompatActivity).loadResult("https://shiro.is/overlord-dubbed", "overlord-dubbed", "Shiro")
-/*
-        (activity as AppCompatActivity?)?.supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.enter_anim,
-                R.anim.exit_anim,
-                R.anim.pop_enter,
-                R.anim.pop_exit)
-            .add(R.id.homeRoot, PlayerFragment.newInstance(PlayerData(0, null,0)))
-            .commit()*/
+        /*
+                (activity as AppCompatActivity?)?.supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_anim,
+                        R.anim.exit_anim,
+                        R.anim.pop_enter,
+                        R.anim.pop_exit)
+                    .add(R.id.homeRoot, PlayerFragment.newInstance(PlayerData(0, null,0)))
+                    .commit()*/
     }
 
 }
