@@ -148,6 +148,7 @@
     <string name="update_started">Update Started</string>
     <string name="stream">Stream</string>
     <string name="error_loading_links_toast">Error Loading Links</string>
+    <string name="links_reloaded_toast">Links Reloaded</string>
     <string name="download_storage_text">Internal Storage</string>
     <string name="app_dubbed_text">Dub</string>
     <string name="app_subbed_text">Sub</string>
@@ -583,7 +584,7 @@
     <string name="plugin">plugins</string>
     <string name="delete_repository_plugins">This will also delete all repository plugins</string>
     <string name="delete_repository">Delete repository</string>
-    <string name="setup_extensions_subtext">You Must Download the Source below By Clicking The Download Icon (MohamedIbrahim)</string>
+    <string name="setup_extensions_subtext">You Must Download the Source below By Clicking The Download Icon (MoStreamTestServer)</string>
     <string name="plugins_downloaded" formatted="true">Downloaded: %d</string>
     <string name="plugins_disabled" formatted="true">Disabled: %d</string>
     <string name="plugins_not_downloaded" formatted="true">Not downloaded: %d</string>

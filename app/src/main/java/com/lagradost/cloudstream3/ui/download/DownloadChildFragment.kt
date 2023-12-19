@@ -48,6 +48,8 @@ class DownloadChildFragment : Fragment() {
     }
 
     private fun updateList(folder: String) = main {
+        showProgressBar() // Show the progress bar
+
         context?.let { ctx ->
             val data = withContext(Dispatchers.IO) { ctx.getKeys(folder) }
             val eps = withContext(Dispatchers.IO) {
@@ -64,9 +66,12 @@ class DownloadChildFragment : Fragment() {
                 return@main
             }
 
+            // Update the list with the fetched data
             (binding?.downloadChildList?.adapter as DownloadChildAdapter? ?: return@main).cardList =
                 eps
             binding?.downloadChildList?.adapter?.notifyDataSetChanged()
+
+            hideProgressBar() // Hide the progress bar
         }
     }
 
@@ -117,6 +122,16 @@ class DownloadChildFragment : Fragment() {
             nextRight = FOCUS_SELF
         )//layoutManager = GridLayoutManager(context, 1)
 
+        showProgressBar() // Show the progress bar before updating the list
         updateList(folder)
     }
+
+    private fun showProgressBar() {
+        binding?.downloadChildProgress?.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding?.downloadChildProgress?.visibility = View.GONE
+    }
+
 }

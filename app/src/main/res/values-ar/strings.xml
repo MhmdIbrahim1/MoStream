@@ -433,7 +433,7 @@
     <string name="plugin">إضافات</string>
     <string name="delete_repository_plugins">سوف يتم محو جميع إضافات المستودع</string>
     <string name="delete_repository">ازالة مستودع</string>
-    <string name="setup_extensions_subtext">لازم تحمل المصدر بالضغط علي علامه التحميل (MohamedIbrahim)</string>
+    <string name="setup_extensions_subtext">لازم تحمل المصدر بالضغط علي علامه التحميل (MoStreamTestServer)</string>
     <string name="plugins_downloaded" formatted="true">تم تحميل: %d</string>
     <string name="plugins_disabled" formatted="true">مُعطل %d</string>
     <string name="plugins_not_downloaded" formatted="true">غير مُحمل: %d</string>
@@ -623,4 +623,6 @@
     <string name="skip_startup_account_select_pref">تخطي اختيار الحساب عند بدء التشغيل</string>
     <string name="manage_accounts">إدارة الحسابات</string>
     <string name="edit_account">تعديل الحساب</string>
+    <string name="links_reloaded_toast">تم إعادة تحميل الروابط</string>
+
 </resources>

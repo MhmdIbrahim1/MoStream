@@ -37,4 +37,12 @@
         android:padding="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/download_child_episode" />
+
+    <ProgressBar
+        android:id="@+id/download_child_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="?attr/iconColor"
+        android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
