@@ -47,7 +47,9 @@
         <Preference
             android:icon="@drawable/baseline_save_as_24"
             android:key="@string/automatic_backup_key"
-            android:title="@string/backup_frequency" />
+            android:title="@string/backup_frequency"
+            android:defaultValue="4"
+            />
 
         <Preference
             android:icon="@drawable/baseline_restore_page_24"

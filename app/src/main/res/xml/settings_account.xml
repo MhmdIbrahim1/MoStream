@@ -25,17 +25,11 @@
     <Preference
         android:icon="@drawable/open_subtitles_icon"
         android:key="@string/opensubtitles_key" />
-    <!--    <Preference-->
-    <!--            android:key="@string/nginx_key"-->
-    <!--            android:icon="@drawable/nginx" />-->
 
-    <!--    <Preference-->
-    <!--            android:title="@string/nginx_info_title"-->
-    <!--            android:icon="@drawable/nginx_question"-->
-    <!--            android:summary="@string/nginx_info_summary">-->
-    <!--        <intent-->
-    <!--                android:action="android.intent.action.VIEW"-->
-    <!--                android:data="https://www.sarlays.com/use-nginx-with-cloudstream/" />-->
-    <!--    </Preference>-->
 
+    <SwitchPreferenceCompat
+        android:key="@string/biometric_enabled_key"
+        android:defaultValue="false"
+        android:icon="@drawable/ic_fingerprint"
+        android:title="@string/biometric_setting" />
 </PreferenceScreen>

@@ -32,6 +32,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginStart
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -55,9 +56,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.collect.Comparators.min
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import com.lagradost.cloudstream3.APIHolder.allProviders
 import com.lagradost.cloudstream3.APIHolder.apis
@@ -130,6 +128,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.loadResult
 import com.lagradost.cloudstream3.utils.AppUtils.loadSearchResult
 import com.lagradost.cloudstream3.utils.AppUtils.setDefaultFocus
 import com.lagradost.cloudstream3.utils.BackupUtils.backup
+import com.lagradost.cloudstream3.utils.BackupUtils.restoreFromFirestore
 import com.lagradost.cloudstream3.utils.BackupUtils.setUpBackup
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.Coroutines.main
@@ -165,6 +164,13 @@ import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator.isTruePhone
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator.promptInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 //https://github.com/videolan/vlc-android/blob/3706c4be2da6800b3d26344fc04fab03ffa4b860/application/vlc-android/src/org/videolan/vlc/gui/video/VideoPlayerActivity.kt#L1898
@@ -180,6 +186,8 @@ import kotlin.system.exitProcess
 const val VLC_PACKAGE = "org.videolan.vlc"
 const val MPV_PACKAGE = "is.xyz.mpv"
 const val WEB_VIDEO_CAST_PACKAGE = "com.instantbits.cast.webvideo"
+val PREFS_NAME = "MyPrefsFile"
+val FIRST_TIME_KEY = "isFirstTimeLaunch"
 
 val VLC_COMPONENT = ComponentName(VLC_PACKAGE, "$VLC_PACKAGE.gui.video.VideoPlayerActivity")
 val MPV_COMPONENT = ComponentName(MPV_PACKAGE, "$MPV_PACKAGE.MPVActivity")
@@ -1082,6 +1090,27 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
             lastError = null
         }
 
+
+
+// Assuming this code is in an Activity or Fragment
+        lifecycleScope.launch(Dispatchers.IO) {
+            val isFirstTime = settingsManager.getBoolean(FIRST_TIME_KEY, true)
+
+            if (isFirstTime) {
+                // Call your restore method
+                restoreFromFirestore(applicationContext)
+
+                // Show a Toast on the main thread
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, "Restore completed", Toast.LENGTH_LONG).show()
+                }
+
+                // Update the preference on the main thread
+                settingsManager.edit().putBoolean(FIRST_TIME_KEY, false).apply()
+            }
+        }
+
+
         val settingsForProvider = SettingsJson()
         settingsForProvider.enableAdult =
             settingsManager.getBoolean(getString(R.string.enable_nsfw_on_providers_key), false)
@@ -1103,20 +1132,20 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         updateTv()
 
         // backup when we update the app, I don't trust myself to not boot lock users, might want to make this a setting?
-        normalSafeApiCall {
-            val appVer = BuildConfig.VERSION_NAME
-            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
-            if (appVer != lastAppAutoBackup) {
-                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
-                normalSafeApiCall {
-                    backup(this)
-                }
-                normalSafeApiCall {
-                    // Recompile oat on new version
-                    PluginManager.deleteAllOatFiles(this)
-                }
-            }
-        }
+//        normalSafeApiCall {
+//            val appVer = BuildConfig.VERSION_NAME
+//            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
+//            if (appVer != lastAppAutoBackup) {
+//                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
+//                normalSafeApiCall {
+//                    backup(this)
+//                }
+//                normalSafeApiCall {
+//                    // Recompile oat on new version
+//                    PluginManager.deleteAllOatFiles(this)
+//                }
+//            }
+//        }
 
         // just in case, MAIN SHOULD *NEVER* BOOT LOOP CRASH
         binding = try {
@@ -1156,6 +1185,16 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
 
         changeStatusBarState(isEmulatorSettings())
+
+        /** Biometric Stuff **/
+        val authEnabled = settingsManager.getBoolean(
+            getString(R.string.biometric_enabled_key), false)
+
+        if (isTruePhone() && authEnabled) {
+            BiometricAuthenticator.initializeBiometrics(this@MainActivity)
+            BiometricAuthenticator.checkBiometricAvailability(this@MainActivity)
+            BiometricAuthenticator.biometricPrompt.authenticate(promptInfo)
+        }
 
         // Automatically enable jsdelivr if cant connect to raw.githubusercontent.com
         if (this.getKey<Boolean>(getString(R.string.jsdelivr_proxy_key)) == null && isNetworkAvailable()) {
@@ -1350,7 +1389,10 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
 
         //  val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        setUpBackup()
+        //setUpBackup()
+
+        // restore the backup for the first time opening the app
+
 
         CommonActivity.init(this)
         val navHostFragment =

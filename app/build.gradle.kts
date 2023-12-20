@@ -249,6 +249,8 @@ dependencies {
 
     implementation ("com.airbnb.android:lottie:6.1.0")
 
+    implementation ("androidx.biometric:biometric:1.2.0-alpha05") // Fingerprint Authentication
+
 }
 
 tasks.register("androidSourcesJar", Jar::class) {

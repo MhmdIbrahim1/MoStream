@@ -3,6 +3,7 @@ package com.lagradost.cloudstream3.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,6 +11,10 @@ import androidx.annotation.WorkerThread
 import androidx.fragment.app.FragmentActivity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.lagradost.cloudstream3.AcraApplication.Companion.getActivity
 import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.R
@@ -35,15 +40,26 @@ import com.lagradost.cloudstream3.utils.DataStore.mapper
 import com.lagradost.cloudstream3.utils.DataStore.setKeyRaw
 import com.lagradost.cloudstream3.utils.UIHelper.checkWrite
 import com.lagradost.cloudstream3.utils.UIHelper.requestRW
-import com.lagradost.cloudstream3.utils.VideoDownloadManager.setupStream
-import okhttp3.internal.closeQuietly
-import java.io.OutputStream
-import java.io.PrintWriter
+import kotlinx.coroutines.tasks.await
 import java.lang.System.currentTimeMillis
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.firebase.firestore.ListenerRegistration
+
 
 object BackupUtils {
+
+
+    //
+    private const val FIRESTORE_USERS_COLLECTION_NAME = "users"
+    private const val FIRESTORE_BACKUP_COLLECTION_NAME = "backups"
+    private val auth = FirebaseAuth.getInstance()
+    private val firestoreUsers: CollectionReference by lazy {
+        Firebase.firestore.collection(FIRESTORE_USERS_COLLECTION_NAME)
+    }
+    private val firestore: CollectionReference by lazy {
+        firestoreUsers.document(auth.uid!!).collection(FIRESTORE_BACKUP_COLLECTION_NAME)
+    }
 
     /**
      * No sensitive or breaking data in the backup
@@ -83,12 +99,16 @@ object BackupUtils {
         @JsonProperty("_Float") val _Float: Map<String, Float>?,
         @JsonProperty("_Long") val _Long: Map<String, Long>?,
         @JsonProperty("_StringSet") val _StringSet: Map<String, Set<String>?>?,
-    )
+    ){
+        constructor() : this(null, null, null, null, null, null)
+    }
 
     data class BackupFile(
         @JsonProperty("datastore") val datastore: BackupVars,
         @JsonProperty("settings") val settings: BackupVars
-    )
+    ){
+        constructor() : this(BackupVars(null, null, null, null, null, null), BackupVars(null, null, null, null, null, null))
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun getBackup(context: Context?): BackupFile? {
@@ -152,8 +172,8 @@ object BackupUtils {
     fun backup(context: Context?) = ioSafe {
         if (context == null) return@ioSafe
 
-        var fileStream: OutputStream? = null
-        var printStream: PrintWriter? = null
+//        var fileStream: OutputStream? = null
+//        var printStream: PrintWriter? = null
         try {
             if (!context.checkWrite()) {
                 showToast(R.string.backup_failed, Toast.LENGTH_LONG)
@@ -165,12 +185,16 @@ object BackupUtils {
             val ext = "txt"
             val displayName = "CS3_Backup_${date}"
             val backupFile = getBackup(context)
-            val stream = setupStream(context, displayName, null, ext, false)
+//            // Save to local storage
+//            val stream = setupStream(context, displayName, null, ext, false)
+//            fileStream = stream.openNew()
+//            printStream = PrintWriter(fileStream)
+//            printStream.print(mapper.writeValueAsString(backupFile))
 
-            fileStream = stream.openNew()
-            printStream = PrintWriter(fileStream)
-            printStream.print(mapper.writeValueAsString(backupFile))
-
+            // Save to Firestore
+            if (backupFile != null) {
+                saveToFirestore(backupFile)
+            }
             showToast(
                 R.string.backup_success,
                 Toast.LENGTH_LONG
@@ -186,8 +210,8 @@ object BackupUtils {
                 logError(e)
             }
         } finally {
-            printStream?.closeQuietly()
-            fileStream?.closeQuietly()
+//            printStream?.closeQuietly()
+//            fileStream?.closeQuietly()
         }
     }
 
@@ -229,6 +253,7 @@ object BackupUtils {
 
     fun FragmentActivity.restorePrompt() {
         runOnUiThread {
+            // Try local restore first
             try {
                 restoreFileSelector?.launch(
                     arrayOf(
@@ -256,4 +281,59 @@ object BackupUtils {
             setKeyRaw(it.key, it.value, isEditingAppSettings)
         }
     }
+
+    @WorkerThread
+    fun saveToFirestore(backupFile: BackupFile) = ioSafe {
+        try {
+            // Add the backup file as a document in the Firestore collection
+            firestore.add(backupFile).await()
+            showToast(R.string.backup_success, Toast.LENGTH_LONG)
+        } catch (e: Exception) {
+            logError(e)
+            showToast(txt(R.string.backup_failed_error_format, e.toString()), Toast.LENGTH_LONG)
+        }
+    }
+
+    fun FragmentActivity.restoreFromFirestore(context: Context?): ListenerRegistration? {
+        if (context == null) return null
+
+        return firestore.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                logError(e)
+                runOnUiThread {
+                    showToast(txt(R.string.restore_failed_error_format, e.toString()), Toast.LENGTH_LONG)
+                }
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && !snapshot.isEmpty) {
+                val latestBackup = snapshot.documents.first()
+                val backupFile = latestBackup.toObject(BackupFile::class.java)
+                val activity = this
+
+                if (backupFile != null) {
+                    runOnUiThread {
+                       ioSafe {
+                            restore(
+                                 activity,
+                                 backupFile,
+                                 restoreSettings = true,
+                                 restoreDataStore = true
+                            )
+                           activity.runOnUiThread { activity.recreate() }
+                       }
+                    }
+                } else {
+                    runOnUiThread {
+                        showToast(R.string.restore_failed, Toast.LENGTH_LONG)
+                    }
+                }
+            } else {
+                runOnUiThread {
+                    showToast(R.string.restore_failed, Toast.LENGTH_LONG)
+                }
+            }
+        }
+    }
+
 }

@@ -566,7 +566,7 @@
     <string name="preferred_media_subtext">What do you want to see</string>
     <string name="setup_done">Done</string>
     <string name="extensions">Extensions</string>
-    <string name="add_repository">Add repository</string>
+    <string name="add_repository">Add new source</string>
     <string name="repository_name_hint">Repository name</string>
     <string name="repository_url_hint">Repository URL</string>
     <string name="plugin_loaded">Plugin Loaded</string>
@@ -755,4 +755,8 @@
     <string name="reset_password">Reset Password</string>
     <string name="we_will_send_you_the_password_reset_link_to_your_email">We will send you the password reset link to your email</string>
     <string name="send">Send</string>
+    <string name="biometric_enabled_key" translatable="false">biometric_key</string>
+    <string name="biometric_setting">Use Fingerprint authentication</string>
+    <string name="restore_failed_error_format">"Resotre data "</string>
+    <string name="restore_failed">Restore Failed Check Network Connention</string>
 </resources>

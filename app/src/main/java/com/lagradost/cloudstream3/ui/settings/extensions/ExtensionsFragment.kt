@@ -70,7 +70,7 @@ class ExtensionsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding?.addRepoButton?.visibility = View.GONE
+        binding?.addRepoButton?.visibility = View.VISIBLE
 
 
         afterRepositoryLoadedEvent += ::reloadRepositories

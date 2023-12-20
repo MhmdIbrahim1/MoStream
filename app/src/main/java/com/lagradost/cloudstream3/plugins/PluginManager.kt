@@ -242,8 +242,14 @@ object PluginManager {
             "MoStreamServer",
             "https://raw.githubusercontent.com/MhmdIbrahim1/cloudstream-extensions-hexatedd/master/backend.json"
         )
+        val mainRepo2 = RepositoryData(
+            "Browsable Resources",
+            "https://raw.githubusercontent.com/CranberrySoup/AniyomiCompatExtension/master/repo.json"
+        )
         addRepository(mainRepo1)
+        addRepository(mainRepo2)
         loadSinglePlugin(context, mainRepo1.url)
+        loadSinglePlugin(context, mainRepo2.url)
         if (getPluginsOnline().isEmpty()) {
             Log.e(TAG, "Failed to load default plugins")
             return false

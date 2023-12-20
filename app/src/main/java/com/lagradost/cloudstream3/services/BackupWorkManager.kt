@@ -51,16 +51,6 @@ class BackupWorkManager(val context: Context, workerParams: WorkerParameters) :
                 ExistingPeriodicWorkPolicy.UPDATE,
                 periodicSyncDataWork
             )
-
-            // Uncomment below for testing
-
-//            val oneTimeBackupWork =
-//                OneTimeWorkRequest.Builder(BackupWorkManager::class.java)
-//                    .addTag(BACKUP_WORK_NAME)
-//                    .setConstraints(constraints)
-//                    .build()
-//
-//            WorkManager.getInstance(context).enqueue(oneTimeBackupWork)
         }
     }
 
