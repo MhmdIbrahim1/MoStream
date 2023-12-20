@@ -1,3 +1,2 @@
-rootProject.name = "CloudStream"
-
+rootProject.name = "MoStream"
 include(":app")
