@@ -22,6 +22,7 @@
         android:textColor="@color/colorPrimaryRed"
         android:textStyle="bold"
         android:textSize="17sp"
+        android:visibility="gone"
         android:text="@string/setup_extensions_subtext" />
 
     <LinearLayout

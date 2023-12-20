@@ -58,6 +58,13 @@ class LoginFragment : Fragment() {
         observeLogin()
         resetPassword()
         observeResetPassword()
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null && user.isEmailVerified) {
+            // User is already authenticated and verified
+            navigateToMainActivity()
+        }
+
         binding.signup.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -116,11 +123,17 @@ class LoginFragment : Fragment() {
                         is NetworkResult.Error -> {
                             binding.progressBar2.visibility = View.GONE
                             binding.loginBtn.visibility = View.VISIBLE
-                            Snackbar.make(
+                            val snackbar = Snackbar.make(
                                 binding.root,
                                 it.message.toString(),
-                                Snackbar.LENGTH_SHORT
-                            ).show()
+                                Snackbar.LENGTH_LONG
+                            )
+                            if (it.message.toString() == "Please verify your email to login") {
+                                snackbar.setAction("Resend") {
+                                    viewModel.resendVerificationEmail()
+                                }
+                            }
+                            snackbar.show()
                         }
 
                         else -> Unit
@@ -129,6 +142,7 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
 
     private fun getUserStatusFromDatabase() {
         val auth = FirebaseAuth.getInstance()
@@ -252,4 +266,11 @@ class LoginFragment : Fragment() {
         }
     }
 
+
+    private fun navigateToMainActivity() {
+        Intent(requireActivity(), AccountSelectActivity::class.java).also { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+    }
 }

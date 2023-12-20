@@ -306,7 +306,14 @@ object BackupUtils {
                 return@addSnapshotListener
             }
 
-            if (snapshot != null && !snapshot.isEmpty) {
+            // check if there is a collection
+            if (snapshot == null || snapshot.isEmpty) {
+                runOnUiThread {
+                    showToast(R.string.restore_failed, Toast.LENGTH_LONG)
+                }
+                return@addSnapshotListener
+            }
+            if (!snapshot.isEmpty) {
                 val latestBackup = snapshot.documents.first()
                 val backupFile = latestBackup.toObject(BackupFile::class.java)
                 val activity = this

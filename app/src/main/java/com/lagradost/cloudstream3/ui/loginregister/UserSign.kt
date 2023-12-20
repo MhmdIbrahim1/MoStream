@@ -5,7 +5,8 @@ data class UserSign(
     val lastName: String?,
     val email: String?,
     val userStatus: String?,
-    val imagePath: String? = ""
+    val imagePath: String? = "",
+    val isFirstLogin: Boolean = true,
 ) {
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", "")
 }

@@ -257,4 +257,5 @@ class PluginsViewModel : ViewModel() {
             false to downloadedPlugins.filterTvTypes().filterLang().sortByQuery(currentQuery)
         )
     }
+
 }

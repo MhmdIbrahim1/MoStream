@@ -85,15 +85,19 @@ class RepoAdapter(
                         // Only show icon if in setup and not a prebuilt repo.
                         if (isSetup && isPrebuilt) {
                             actionButton.setImageResource(drawable)
+                            actionButton.visibility = View.GONE
                         } else {
                             actionButton.visibility = View.GONE
                         }
 
                         actionButton.setOnClickListener {
                             imageClickCallback(repositoryData)
+                            actionButton.visibility = View.GONE
+
                         }
 
                         repositoryItemRoot.setOnClickListener {
+
                             clickCallback(repositoryData)
                         }
                         mainText.text = repositoryData.name
@@ -106,6 +110,7 @@ class RepoAdapter(
                         // Only show icon if in setup, or if it isn't a prebuilt repo.
                         if (isSetup || isPrebuilt) {
                             actionButton.setImageResource(drawable)
+                            actionButton.visibility = View.GONE
                         } else {
                             actionButton.visibility = View.GONE
                         }

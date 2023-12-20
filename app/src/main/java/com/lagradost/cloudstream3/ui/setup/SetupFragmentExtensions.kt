@@ -121,6 +121,13 @@ class SetupFragmentExtensions : Fragment() {
                     findNavController().navigate(R.id.navigation_setup_language)
                 }
             }
+
+            val repositories = RepositoryManager.getRepositories() + PREBUILT_REPOSITORIES
+            if (repositories.isNotEmpty()) {
+                for (repo in repositories) {
+                    PluginsViewModel.downloadAll(activity, repo.url, null)
+                }
+            }
         }
     }
 

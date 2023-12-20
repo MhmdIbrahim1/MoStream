@@ -32,16 +32,6 @@ class LoginViewModel(
         const val MAIN_ACTIVITY = 23
     }
 
-
-    init {
-        val user = auth.currentUser
-        if (user != null) {
-            viewModelScope.launch {
-                _navigateState.emit(MAIN_ACTIVITY)
-            }
-        }
-    }
-
     fun login(email: String, password: String) {
         // Check for empty fields
         if (email.isEmpty() || password.isEmpty()) {
@@ -57,14 +47,10 @@ class LoginViewModel(
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                viewModelScope.launch {
-                    _login.emit(NetworkResult.Success("Login Success"))
-                }
+                handleLoginSuccess()
             }
             .addOnFailureListener {
-                viewModelScope.launch {
-                    _login.emit(NetworkResult.Error(it.message.toString()))
-                }
+                handleLoginFailure()
             }
     }
 
@@ -86,6 +72,44 @@ class LoginViewModel(
                     _resetPassword.emit(NetworkResult.Error(it.message.toString()))
                 }
             }
+    }
+
+
+    private fun handleLoginSuccess() {
+        if (auth.currentUser?.isEmailVerified == true) {
+            viewModelScope.launch {
+                _login.emit(NetworkResult.Success("Login Success"))
+            }
+        } else {
+            viewModelScope.launch {
+                _login.emit(NetworkResult.Error("Please verify your email to login"))
+            }
+        }
+    }
+
+
+    private fun handleLoginFailure() {
+        viewModelScope.launch {
+            // if there is an error, show snackbar
+            _login.emit(NetworkResult.Error("Login Failed: Incorrect email or password"))
+        }
+    }
+
+    fun resendVerificationEmail() {
+        val user = auth.currentUser
+        user?.let {
+            it.sendEmailVerification()
+                .addOnSuccessListener {
+                    viewModelScope.launch {
+                        _login.emit(NetworkResult.Success("Verification email sent"))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    viewModelScope.launch {
+                        _login.emit(NetworkResult.Error(e.message.toString()))
+                    }
+                }
+        }
     }
 
 
