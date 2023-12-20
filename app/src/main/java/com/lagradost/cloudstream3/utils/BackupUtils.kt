@@ -301,7 +301,7 @@ object BackupUtils {
             if (e != null) {
                 logError(e)
                 runOnUiThread {
-                    showToast(txt(R.string.restore_failed_error_format, e.toString()), Toast.LENGTH_LONG)
+                   // showToast(txt(R.string.restore_failed_error_format, e.toString()), Toast.LENGTH_LONG)
                 }
                 return@addSnapshotListener
             }
