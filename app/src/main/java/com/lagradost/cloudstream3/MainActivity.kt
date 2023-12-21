@@ -1100,11 +1100,6 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
                 // Call your restore method
                 restoreFromFirestore(applicationContext)
 
-                // Show a Toast on the main thread
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(applicationContext, "Restore completed", Toast.LENGTH_LONG).show()
-                }
-
                 // Update the preference on the main thread
                 settingsManager.edit().putBoolean(FIRST_TIME_KEY, false).apply()
             }

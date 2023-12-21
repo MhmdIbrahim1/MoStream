@@ -207,7 +207,7 @@ object UIHelper {
         return color
     }
 
-    var createPaletteAsyncCache: HashMap<String, Palette> = hashMapOf()
+    private var createPaletteAsyncCache: HashMap<String, Palette> = hashMapOf()
     fun createPaletteAsync(url: String, bitmap: Bitmap, callback: (Palette) -> Unit) {
         createPaletteAsyncCache[url]?.let { palette ->
             callback.invoke(palette)
