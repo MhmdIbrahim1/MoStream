@@ -63,8 +63,8 @@ android {
         minSdk = 21
         targetSdk = 33 /* Android 14 is Fu*ked
         ^ https://developer.android.com/about/versions/14/behavior-changes-14#safer-dynamic-code-loading*/
-        versionCode = 67
-        versionName = "4.3.4"
+        versionCode = 68
+        versionName = "4.3.5"
 
         resValue("string", "app_version", "${defaultConfig.versionName}${versionNameSuffix ?: ""}")
         resValue("string", "commit_hash", "git rev-parse --short HEAD".execute() ?: "")
