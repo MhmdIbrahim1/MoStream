@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".ui.loginregister.LoginFragment">
 
     <androidx.constraintlayout.widget.Guideline
@@ -17,13 +16,11 @@
 
     <TextView
         android:id="@+id/welcome_tv"
-        style="@style/h4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto"
         android:text="@string/welcome"
-        android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +34,6 @@
         android:layout_marginTop="7dp"
         android:fontFamily="@font/roboto"
         android:text="@string/please_enter_your_data_to_login"
-        android:textColor="@color/black"
         android:textSize="@dimen/logintextdim"
         app:layout_constraintEnd_toEndOf="@id/welcome_tv"
         app:layout_constraintStart_toStartOf="@id/welcome_tv"
@@ -72,7 +68,6 @@
         android:layout_marginEnd="4dp"
         android:fontFamily="@font/roboto"
         android:text="@string/forgot_password"
-        android:textColor="#AD0451CD"
         android:textSize="@dimen/logintextdim"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
@@ -90,14 +85,11 @@
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/loginText"
         android:fontFamily="@font/roboto"
         android:gravity="center"
         android:text="@string/login"
         android:textAlignment="center"
-        android:textColor="@color/lightGrayBackground"
         android:textSize="15sp"
-        app:backgroundTint="@null"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
         app:layout_constraintStart_toStartOf="@+id/guideline_v1"
         app:layout_constraintTop_toBottomOf="@+id/forgotPassword" />
@@ -106,7 +98,6 @@
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:backgroundTint="@color/background_buttom_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -137,20 +128,17 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/grayTextColor"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxCornerRadiusBottomStart="20dp"
         app:boxCornerRadiusTopEnd="20dp"
         app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="#BF000000"
         app:boxStrokeWidth="2dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline_h3"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
         app:layout_constraintStart_toStartOf="@+id/guideline_v1"
         app:layout_constraintTop_toTopOf="@+id/guide_h3"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/grayTextColor">
+        app:passwordToggleEnabled="true">
 
         <EditText
             android:id="@+id/edPassword"
@@ -163,8 +151,6 @@
             android:hint="@string/hint_password"
             android:inputType="textPassword"
 
-            android:textColor="#BF000000"
-            android:textColorHighlight="#BF000000"
             android:textSize="@dimen/logintextdim" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,13 +159,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/grayTextColor"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxCornerRadiusBottomStart="20dp"
         app:boxCornerRadiusTopEnd="20dp"
         app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="#BF000000"
         app:boxStrokeWidth="2dp"
         app:layout_constraintBottom_toTopOf="@+id/guide_h3"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
@@ -191,14 +175,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:autofillHints="First Name"
-            android:backgroundTint="@color/black"
             android:ems="10"
             android:fontFamily="@font/roboto"
             android:gravity="center_vertical"
             android:hint="@string/hint_email"
-            android:inputType="textEmailAddress"
-            android:textColor="#BF000000"
-            android:textColorHighlight="#BF000000"
             android:textSize="@dimen/logintextdim" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -220,7 +200,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
             android:text="@string/don_t_have_an_account"
-            android:textColor="@color/lightGrayTextColor"
             android:textSize="@dimen/logintextdim"
             android:textStyle="bold" />
 
@@ -232,7 +211,6 @@
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto"
             android:text="@string/sign_up"
-            android:textColor="@color/loginText"
             android:textSize="@dimen/logintextdim" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

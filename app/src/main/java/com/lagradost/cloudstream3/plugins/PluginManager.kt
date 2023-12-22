@@ -236,14 +236,16 @@ object PluginManager {
         } ?: false
     }
 
-    // create function to load default plugins from this https://pastebin.com/raw/mjDBFX3R
+    /**
+     * Loads all default plugins from the default repositories
+     * */
     suspend fun loadDefaultPlugins(context: Context): Boolean {
         val mainRepo1 = RepositoryData(
             "MoStreamServer",
             "https://raw.githubusercontent.com/MhmdIbrahim1/cloudstream-extensions-hexatedd/master/backend.json"
         )
         val mainRepo2 = RepositoryData(
-            "Browsable Resources",
+            "Open Source Plugins ",
             "https://raw.githubusercontent.com/CranberrySoup/AniyomiCompatExtension/master/repo.json"
         )
         addRepository(mainRepo1)

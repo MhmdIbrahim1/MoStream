@@ -13,6 +13,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.lagradost.cloudstream3.CommonActivity.loadThemes
+import com.lagradost.cloudstream3.CommonActivity.updateLocale
 import com.lagradost.cloudstream3.databinding.ActivityLoginRegiesterBinding
 import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 import com.lagradost.cloudstream3.utils.NetworkResult
@@ -21,14 +23,14 @@ import kotlinx.coroutines.launch
 
 class LoginRegisterActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginRegiesterBinding.inflate(layoutInflater) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        loadThemes(this)
+
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
 
     }
-
 
 
 }
