@@ -17,6 +17,7 @@ import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.lagradost.cloudstream3.MainActivity
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.allViews
@@ -287,11 +288,12 @@ class LibraryFragment : Fragment() {
 
                 when (searchClickCallback.action) {
                     SEARCH_ACTION_SHOW_METADATA -> {
-                        activity?.showPluginSelectionDialog(
-                            syncId,
-                            syncName,
-                            searchClickCallback.card.apiName
-                        )
+                        (activity as? MainActivity)?.loadPopup(searchClickCallback.card, load = false)
+                        /*activity?.showPluginSelectionDialog(
+                                syncId,
+                                syncName,
+                                searchClickCallback.card.apiName
+                            )*/
                     }
 
                     SEARCH_ACTION_LOAD -> {
