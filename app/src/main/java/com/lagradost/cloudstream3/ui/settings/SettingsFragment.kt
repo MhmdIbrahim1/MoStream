@@ -9,10 +9,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
@@ -40,7 +44,7 @@ import com.lagradost.cloudstream3.utils.UIHelper.setImage
 import com.lagradost.cloudstream3.utils.UIHelper.toPx
 import java.io.File
 
-class SettingsFragment : Fragment(),UserFetchCallback {
+class SettingsFragment : Fragment(), UserFetchCallback {
     companion object {
         var beneneCount = 0
 
@@ -66,6 +70,7 @@ class SettingsFragment : Fragment(),UserFetchCallback {
                 listView?.setPadding(0, 0, 0, 100.toPx)
             }
         }
+
         fun PreferenceFragmentCompat.setToolBarScrollFlags() {
             if (isTvSettings()) {
                 val settingsAppbar = view?.findViewById<MaterialToolbar>(R.id.settings_toolbar)
@@ -75,18 +80,22 @@ class SettingsFragment : Fragment(),UserFetchCallback {
                 }
             }
         }
+
         fun Fragment?.setToolBarScrollFlags() {
             if (isTvSettings()) {
-                val settingsAppbar = this?.view?.findViewById<MaterialToolbar>(R.id.settings_toolbar)
+                val settingsAppbar =
+                    this?.view?.findViewById<MaterialToolbar>(R.id.settings_toolbar)
 
                 settingsAppbar?.updateLayoutParams<AppBarLayout.LayoutParams> {
                     scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
                 }
             }
         }
+
         fun Fragment?.setUpToolbar(title: String) {
             if (this == null) return
-            val settingsToolbar = view?.findViewById<MaterialToolbar>(R.id.settings_toolbar) ?: return
+            val settingsToolbar =
+                view?.findViewById<MaterialToolbar>(R.id.settings_toolbar) ?: return
 
             settingsToolbar.apply {
                 setTitle(title)
@@ -100,7 +109,8 @@ class SettingsFragment : Fragment(),UserFetchCallback {
 
         fun Fragment?.setUpToolbar(@StringRes title: Int) {
             if (this == null) return
-            val settingsToolbar = view?.findViewById<MaterialToolbar>(R.id.settings_toolbar) ?: return
+            val settingsToolbar =
+                view?.findViewById<MaterialToolbar>(R.id.settings_toolbar) ?: return
 
             settingsToolbar.apply {
                 setTitle(title)
@@ -253,15 +263,47 @@ class SettingsFragment : Fragment(),UserFetchCallback {
     }
 
     private fun logout() {
-        FirebaseAuth.getInstance().signOut()
-        Intent(
-            requireActivity(),
-            LoginRegisterActivity::class.java
-        ).also { intent ->
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+        val dialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.reset_password_dialog, null)
+        val logoutDialog =
+            AlertDialog.Builder(
+                requireContext(),
+                R.style.AlertDialogCustom
+            ) // Use the custom style here
+                .setView(dialogView)
+                .create()
+        dialogView.findViewById<View>(R.id.inputLayoutEdEmail).visibility = View.GONE
+        dialogView.findViewById<View>(R.id.tvResetPasswordText).visibility = View.INVISIBLE
+        val btnCancel = dialogView.findViewById<Button>(R.id.cancel_btn)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.apply_btn)
+        val tvResetPasswordTitle = dialogView.findViewById<TextView>(R.id.tvResetPassword)
+        tvResetPasswordTitle.text = getString(R.string.logout)
+        btnConfirm.text = getString(R.string.logout)
+        // make margin top to 8dp for buttons
+        btnCancel.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = 8.toPx
         }
-        requireActivity().finish()
+        btnConfirm.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = 8.toPx
+        }
+
+        btnCancel.setOnClickListener {
+            logoutDialog.dismiss()
+        }
+
+        btnConfirm.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            Intent(
+                requireActivity(),
+                LoginRegisterActivity::class.java
+            ).also { intent ->
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            requireActivity().finish()
+        }
+
+        logoutDialog.show()
     }
 
     // fun to get the user information from firestore first name, last name, email
@@ -292,13 +334,19 @@ class SettingsFragment : Fragment(),UserFetchCallback {
 
         // Initial random image
         val initialProfilePic = HomeFragment.errorProfilePics.random()
-        binding?.settingsProfilePic?.setImage(initialProfilePic, errorImageDrawable = HomeFragment.errorProfilePic)
+        binding?.settingsProfilePic?.setImage(
+            initialProfilePic,
+            errorImageDrawable = HomeFragment.errorProfilePic
+        )
 
         // Roll the image forwards once of the user clicks on it
         binding?.settingsProfilePic?.setOnClickListener {
             // Show a different random image from errorProfilePics list
-            val newProfilePic =HomeFragment.errorProfilePics.random()
-            binding?.settingsProfilePic?.setImage(newProfilePic, errorImageDrawable = HomeFragment.errorProfilePic)
+            val newProfilePic = HomeFragment.errorProfilePics.random()
+            binding?.settingsProfilePic?.setImage(
+                newProfilePic,
+                errorImageDrawable = HomeFragment.errorProfilePic
+            )
         }
 
     }
