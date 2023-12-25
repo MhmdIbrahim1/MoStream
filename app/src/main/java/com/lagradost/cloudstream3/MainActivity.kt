@@ -128,6 +128,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.loadResult
 import com.lagradost.cloudstream3.utils.AppUtils.loadSearchResult
 import com.lagradost.cloudstream3.utils.AppUtils.setDefaultFocus
 import com.lagradost.cloudstream3.utils.BackupUtils.restoreFromFirestore
+import com.lagradost.cloudstream3.utils.BackupUtils.copyBackupDataBetweenUsers
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.Coroutines.main
 import com.lagradost.cloudstream3.utils.DataStore.getKey
@@ -170,6 +171,7 @@ import kotlinx.coroutines.launch
 import com.lagradost.cloudstream3.syncproviders.SyncAPI
 import com.lagradost.cloudstream3.ui.SyncWatchType
 import com.lagradost.cloudstream3.ui.result.SyncViewModel
+import kotlinx.coroutines.GlobalScope
 
 //https://github.com/videolan/vlc-android/blob/3706c4be2da6800b3d26344fc04fab03ffa4b860/application/vlc-android/src/org/videolan/vlc/gui/video/VideoPlayerActivity.kt#L1898
 //https://wiki.videolan.org/Android_Player_Intents/
@@ -1143,6 +1145,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
             logError(t)
         }
 
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         updateTv()
 
@@ -1161,6 +1164,22 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
 //                }
 //            }
 //        }
+
+//        val sourceUserId = "wCGuYwRvywfmdiEtpwzPtLkmXlw1" // Replace with the source user ID
+//        val destinationUserId = "7L4YOgvQlXeq8ai3WTwYKcuZ90J3" // Replace with the destination user ID
+//        val sourceBackupDocId = "lj03En6vAmXyJ2yqCUrn" // Replace with the source backup document ID
+//        val destinationBackupDocId = "t6qPpHVKUn5PbLvAgDfN" // Replace with the destination backup document ID
+//
+//        // Launch a coroutine to execute the function asynchronously
+//        GlobalScope.launch {
+//        copyBackupDataBetweenUsers(
+//            sourceUserId,
+//            destinationUserId,
+//            sourceBackupDocId,
+//            destinationBackupDocId
+//        )
+//    }
+
 
         // just in case, MAIN SHOULD *NEVER* BOOT LOOP CRASH
         binding = try {

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lagradost.cloudstream3.AcraApplication.Companion.getActivity
@@ -340,6 +341,37 @@ object BackupUtils {
                     showToast(R.string.restore_failed, Toast.LENGTH_LONG)
                 }
             }
+        }
+    }
+
+    suspend fun FragmentActivity.copyBackupDataBetweenUsers(sourceUserId: String, destinationUserId: String, sourceBackupDocId: String, destinationBackupDocId: String) {
+        val firestore = FirebaseFirestore.getInstance()
+
+        // Reference to the source user's backup document
+        val sourceDocumentReference = firestore.collection("users").document(sourceUserId)
+            .collection("backups").document(sourceBackupDocId)
+
+        // Reference to the destination user's backup document
+        val destinationDocumentReference = firestore.collection("users").document(destinationUserId)
+            .collection("backups").document(destinationBackupDocId)
+
+        try {
+            // Get the data from the source backup document
+            val snapshot = sourceDocumentReference.get().await()
+            if (snapshot.exists()) {
+                // Copy the data to the destination backup document
+                val data = snapshot.data
+                if (data != null) {
+                    destinationDocumentReference.set(data).await()
+                    println("Data copied successfully!")
+                } else {
+                    println("Source backup document has no data.")
+                }
+            } else {
+                println("Source backup document does not exist.")
+            }
+        } catch (e: Exception) {
+            println("Error copying data: ${e.message}")
         }
     }
 

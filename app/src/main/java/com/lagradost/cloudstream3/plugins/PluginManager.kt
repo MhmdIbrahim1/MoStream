@@ -315,10 +315,10 @@ object PluginManager {
             }
         }
 
-        main {
-            val uitext = txt(R.string.plugins_updated, updatedPlugins.size)
-            createNotification(activity, uitext, updatedPlugins)
-        }
+//        main {
+//            val uitext = txt(R.string.plugins_updated, updatedPlugins.size)
+//            createNotification(activity, uitext, updatedPlugins)
+//        }
 
         // ioSafe {
         loadedOnlinePlugins = true
@@ -411,10 +411,10 @@ object PluginManager {
             }
         }
 
-        main {
-            val uitext = txt(R.string.plugins_downloaded, newDownloadPlugins.size)
-            createNotification(activity, uitext, newDownloadPlugins)
-        }
+//        main {
+//            val uitext = txt(R.string.plugins_downloaded, newDownloadPlugins.size)
+//            createNotification(activity, uitext, newDownloadPlugins)
+//        }
 
         // ioSafe {
         afterPluginsLoadedEvent.invoke(false)
