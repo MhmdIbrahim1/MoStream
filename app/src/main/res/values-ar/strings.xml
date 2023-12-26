@@ -15,8 +15,8 @@
     <string name="new_update_format" formatted="true">يوجد تحديث جديد!
 \n%1$s -&gt; %2$s</string>
     <string name="duration_format" formatted="true">%d دقيقة</string>
-    <string name="app_name">CloudStream</string>
-    <string name="play_with_app_name">تشغيل بواسطة CloudStream</string>
+    <string name="app_name">MoStream</string>
+    <string name="play_with_app_name">تشغيل بواسطة MoStream</string>
     <string name="title_home">الرئيسية</string>
     <string name="title_search">البحث</string>
     <string name="title_downloads">التنزيلات</string>

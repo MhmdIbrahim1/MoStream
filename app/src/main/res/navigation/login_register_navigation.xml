@@ -18,10 +18,19 @@
             app:popEnterAnim="@anim/enter_anim"
             app:popExitAnim="@anim/exit_anim"
             />
+        <action
+            android:id="@+id/action_loginFragment_to_security"
+            app:destination="@id/security" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.lagradost.cloudstream3.ui.loginregister.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment" />
+    <fragment
+        android:id="@+id/security"
+        android:name="com.lagradost.cloudstream3.ui.loginregister.Security"
+        android:label="Security"
+        tools:layout="@layout/fragment_security"
+        />
 </navigation>

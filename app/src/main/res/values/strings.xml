@@ -759,4 +759,7 @@
     <string name="biometric_setting">Use Fingerprint authentication</string>
     <string name="restore_failed_error_format">"Resotre data "</string>
     <string name="restore_failed">Restore Failed Check Network Connention</string>
+    <string name="submit">Submit</string>
+    <string name="hint_securitykey">Security Key</string>
+    <string name="enter_security_key_to_continue">Enter Security Key to continue</string>
 </resources>
