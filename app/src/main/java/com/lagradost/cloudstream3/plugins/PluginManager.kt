@@ -161,7 +161,7 @@ object PluginManager {
     }
 
     private val CLOUD_STREAM_FOLDER =
-        Environment.getExternalStorageDirectory().absolutePath + "/MoStream/"
+        File(Environment.getExternalStorageDirectory(), "MoStream").absolutePath + "/"
 
     private val LOCAL_PLUGINS_PATH = CLOUD_STREAM_FOLDER + "plugins"
 

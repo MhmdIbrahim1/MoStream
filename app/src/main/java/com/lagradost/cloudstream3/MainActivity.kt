@@ -171,6 +171,7 @@ import kotlinx.coroutines.launch
 import com.lagradost.cloudstream3.syncproviders.SyncAPI
 import com.lagradost.cloudstream3.ui.SyncWatchType
 import com.lagradost.cloudstream3.ui.result.SyncViewModel
+import com.lagradost.cloudstream3.utils.BackupUtils.backup
 import kotlinx.coroutines.GlobalScope
 
 //https://github.com/videolan/vlc-android/blob/3706c4be2da6800b3d26344fc04fab03ffa4b860/application/vlc-android/src/org/videolan/vlc/gui/video/VideoPlayerActivity.kt#L1898
@@ -1150,35 +1151,35 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         updateTv()
 
         // backup when we update the app, I don't trust myself to not boot lock users, might want to make this a setting?
-//        normalSafeApiCall {
-//            val appVer = BuildConfig.VERSION_NAME
-//            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
-//            if (appVer != lastAppAutoBackup) {
-//                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
-//                normalSafeApiCall {
-//                    backup(this)
-//                }
-//                normalSafeApiCall {
-//                    // Recompile oat on new version
-//                    PluginManager.deleteAllOatFiles(this)
-//                }
-//            }
-//        }
+        normalSafeApiCall {
+            val appVer = BuildConfig.VERSION_NAME
+            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
+            if (appVer != lastAppAutoBackup) {
+                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
+                normalSafeApiCall {
+                    backup(this)
+                }
+                normalSafeApiCall {
+                    // Recompile oat on new version
+                    PluginManager.deleteAllOatFiles(this)
+                }
+            }
+        }
 
-        val sourceUserId = "wCGuYwRvywfmdiEtpwzPtLkmXlw1" // Replace with the source user ID
-        val destinationUserId = "WeT8wq7QeoN3ADJU9jHbxBvREM42" // Replace with the destination user ID
-        val sourceBackupDocId = "a6LJ1ApFPmtr1SBGgQt0" // Replace with the source backup document ID
-        val destinationBackupDocId = "KeJejXRG4xYC46PCh4XD" // Replace with the destination backup document ID
-
-        // Launch a coroutine to execute the function asynchronously
-        GlobalScope.launch {
-        copyBackupDataBetweenUsers(
-            sourceUserId,
-            destinationUserId,
-            sourceBackupDocId,
-            destinationBackupDocId
-        )
-    }
+//        val sourceUserId = "wCGuYwRvywfmdiEtpwzPtLkmXlw1" // Replace with the source user ID
+//        val destinationUserId = "WeT8wq7QeoN3ADJU9jHbxBvREM42" // Replace with the destination user ID
+//        val sourceBackupDocId = "a6LJ1ApFPmtr1SBGgQt0" // Replace with the source backup document ID
+//        val destinationBackupDocId = "KeJejXRG4xYC46PCh4XD" // Replace with the destination backup document ID
+//
+//        // Launch a coroutine to execute the function asynchronously
+//        GlobalScope.launch {
+//        copyBackupDataBetweenUsers(
+//            sourceUserId,
+//            destinationUserId,
+//            sourceBackupDocId,
+//            destinationBackupDocId
+//        )
+//    }
 
 
         // just in case, MAIN SHOULD *NEVER* BOOT LOOP CRASH
