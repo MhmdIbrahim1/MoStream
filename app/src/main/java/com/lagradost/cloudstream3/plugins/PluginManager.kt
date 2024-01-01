@@ -249,7 +249,7 @@ object PluginManager {
             "https://raw.githubusercontent.com/CranberrySoup/AniyomiCompatExtension/master/repo.json"
         )
         addRepository(mainRepo1)
-        addRepository(mainRepo2)
+      //  addRepository(mainRepo2)
         loadSinglePlugin(context, mainRepo1.url)
         //loadSinglePlugin(context, mainRepo2.url)
         if (getPluginsOnline().isEmpty()) {
