@@ -295,6 +295,7 @@ object BackupUtils {
         }
     }
 
+
     fun FragmentActivity.restoreFromFirestore(context: Context?): ListenerRegistration? {
         if (context == null) return null
 

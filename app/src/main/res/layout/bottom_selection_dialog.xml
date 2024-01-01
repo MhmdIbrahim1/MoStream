@@ -20,17 +20,17 @@
             android:layout_height="wrap_content" />
 
     <ListView
-            android:nextFocusRight="@id/cancel_btt"
-            android:nextFocusLeft="@id/apply_btt"
+        android:id="@+id/listview1"
+        android:layout_width="match_parent"
 
-            android:id="@+id/listview1"
-            android:layout_marginBottom="60dp"
-            android:paddingTop="10dp"
-            android:requiresFadingEdge="vertical"
-            tools:listitem="@layout/sort_bottom_single_choice"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_rowWeight="1" />
+        android:layout_height="match_parent"
+        android:layout_rowWeight="1"
+        android:layout_marginBottom="60dp"
+        android:nextFocusLeft="@id/apply_btt"
+        android:nextFocusRight="@id/cancel_btt"
+        android:paddingTop="10dp"
+        android:requiresFadingEdge="vertical"
+        tools:listitem="@layout/sort_bottom_single_choice" />
 
     <LinearLayout
             android:id="@+id/apply_btt_holder"

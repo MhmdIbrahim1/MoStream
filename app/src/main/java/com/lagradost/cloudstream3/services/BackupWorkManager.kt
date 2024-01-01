@@ -9,6 +9,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.google.android.material.internal.ContextUtils.getActivity
+import com.lagradost.cloudstream3.AcraApplication.Companion.getActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.utils.AppUtils.createNotificationChannel
 import com.lagradost.cloudstream3.utils.BackupUtils

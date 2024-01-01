@@ -148,8 +148,6 @@ class PluginAdapter(
             val drawableInt = if (data.isDownloaded)
                 R.drawable.ic_baseline_delete_outline_24
             else R.drawable.netflix_download
-            // if it is downloaded hide the delete button
-            binding.actionButton.isVisible = !data.isDownloaded
 
             binding.nsfwMarker.isVisible = metadata.tvTypes?.contains("NSFW") ?: false
             binding.actionButton.setImageResource(drawableInt)

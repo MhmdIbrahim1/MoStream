@@ -64,9 +64,7 @@ val appLanguages = arrayListOf(
     /* begin language list */
     Triple("", "العربية", "ar"),
     Triple("", "English", "en")
-
-/* end language list */
-).sortedBy { it.second.lowercase() } //ye, we go alphabetical, so ppl don't put their lang on top
+).sortedBy { it.second.lowercase() }
 
 class SettingsGeneral : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
