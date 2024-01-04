@@ -63,7 +63,7 @@ class SettingsUpdates : PreferenceFragmentCompat() {
             val prefValues = resources.getIntArray(R.array.periodic_work_values)
             // Set the default selection to index 1 (3 hours)
             val current = settingsManager.getInt(getString(R.string.automatic_backup_key), 0)
-            val defaultSelection = prefValues.indexOf(current).coerceAtLeast(1)
+            val defaultSelection = prefValues.indexOf(current).coerceAtLeast(0)
 
 
             activity?.showDialog(
