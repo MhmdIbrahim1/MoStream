@@ -54,17 +54,13 @@
         <item>@string/player_settings_play_in_app</item>
         <item>@string/player_settings_play_in_vlc</item>
         <item>@string/player_settings_play_in_mpv</item>
-        <item>@string/player_settings_play_in_web</item>
-        <item>@string/player_settings_play_in_browser</item>
     </array>
 
     <array name="player_pref_values">
         <item>1</item>
         <item>2</item>
         <item>5</item>
-        <item>4</item>
-        <item>3</item>
-    </array>
+      </array>
 
     <array name="limit_title_rez_pref_names">
         <item>@string/resolution_and_title</item>
@@ -127,7 +123,7 @@
     </array>
 
     <string-array name="periodic_work_names">
-        <item>@string/none</item>
+        <item>1h</item>
         <item>3h</item>
         <item>6h</item>
         <item>12h</item>
@@ -137,7 +133,7 @@
     </string-array>
     <!-- Values in hours -->
     <integer-array name="periodic_work_values">
-        <item>0</item>
+        <item>1</item>
         <item>3</item>
         <item>6</item>
         <item>12</item>

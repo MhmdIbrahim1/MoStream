@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -58,8 +59,10 @@ object BackupUtils {
     private val firestoreUsers: CollectionReference by lazy {
         Firebase.firestore.collection(FIRESTORE_USERS_COLLECTION_NAME)
     }
-    private val firestore: CollectionReference by lazy {
-        firestoreUsers.document(auth.uid!!).collection(FIRESTORE_BACKUP_COLLECTION_NAME)
+
+    // Reference to the user's backup document
+    private val backupDocumentReference: DocumentReference by lazy {
+        firestoreUsers.document(auth.uid!!).collection(FIRESTORE_BACKUP_COLLECTION_NAME).document("backup")
     }
 
     /**
@@ -100,15 +103,16 @@ object BackupUtils {
         @JsonProperty("_Float") val _Float: Map<String, Float>?,
         @JsonProperty("_Long") val _Long: Map<String, Long>?,
         @JsonProperty("_StringSet") val _StringSet: Map<String, Set<String>?>?,
-    ){
+    ) {
         constructor() : this(null, null, null, null, null, null)
     }
 
     data class BackupFile(
+        @JsonProperty("documentId") var documentId: String? = null,
         @JsonProperty("datastore") val datastore: BackupVars,
         @JsonProperty("settings") val settings: BackupVars
-    ){
-        constructor() : this(BackupVars(null, null, null, null, null, null), BackupVars(null, null, null, null, null, null))
+    ) {
+        constructor() : this(null, BackupVars(), BackupVars())
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -137,6 +141,7 @@ object BackupUtils {
         )
 
         return BackupFile(
+            null,
             allDataSorted,
             allSettingsSorted
         )
@@ -182,15 +187,8 @@ object BackupUtils {
                 return@ioSafe
             }
 
-            val date = SimpleDateFormat("yyyy_MM_dd_HH_mm").format(Date(currentTimeMillis()))
-            val ext = "txt"
-            val displayName = "CS3_Backup_${date}"
+            //    val date = SimpleDateFormat("yyyy_MM_dd_HH_mm").format(Date(currentTimeMillis()))
             val backupFile = getBackup(context)
-//            // Save to local storage
-//            val stream = setupStream(context, displayName, null, ext, false)
-//            fileStream = stream.openNew()
-//            printStream = PrintWriter(fileStream)
-//            printStream.print(mapper.writeValueAsString(backupFile))
 
             // Save to Firestore
             if (backupFile != null) {
@@ -286,8 +284,12 @@ object BackupUtils {
     @WorkerThread
     fun saveToFirestore(backupFile: BackupFile) = ioSafe {
         try {
-            // Add the backup file as a document in the Firestore collection
-            firestore.add(backupFile).await()
+            // Set the document ID in the BackupFile object
+            backupFile.documentId = "backup"
+
+            // Save the backup file to Firestore
+            backupDocumentReference.set(backupFile).await()
+
             showToast(R.string.backup_success, Toast.LENGTH_LONG)
         } catch (e: Exception) {
             logError(e)
@@ -298,54 +300,41 @@ object BackupUtils {
 
     fun FragmentActivity.restoreFromFirestore(context: Context?): ListenerRegistration? {
         if (context == null) return null
+        val firestore = FirebaseFirestore.getInstance()
 
-        return firestore.addSnapshotListener { snapshot, e ->
+        val backupDocumentReference = firestore.collection("users").document(auth.uid!!)
+            .collection("backups").document("backup")
+
+        return backupDocumentReference.addSnapshotListener { snapshot, e ->
             if (e != null) {
-                logError(e)
-                runOnUiThread {
-                   // showToast(txt(R.string.restore_failed_error_format, e.toString()), Toast.LENGTH_LONG)
-                }
+                Log.w("BackupUtils", "Listen failed.", e)
                 return@addSnapshotListener
             }
 
-            // check if there is a collection
-            if (snapshot == null || snapshot.isEmpty) {
-                runOnUiThread {
-                    showToast(R.string.restore_failed, Toast.LENGTH_LONG)
-                }
-                return@addSnapshotListener
-            }
-            if (!snapshot.isEmpty) {
-                val latestBackup = snapshot.documents.first()
-                val backupFile = latestBackup.toObject(BackupFile::class.java)
-                val activity = this
-
+            if (snapshot != null && snapshot.exists()) {
+                Log.d("BackupUtils", "Current data: ${snapshot.data}")
+                val backupFile = snapshot.toObject(BackupFile::class.java)
                 if (backupFile != null) {
-                    runOnUiThread {
-                       ioSafe {
-                            restore(
-                                 activity,
-                                 backupFile,
-                                 restoreSettings = true,
-                                 restoreDataStore = true
-                            )
-                           activity.runOnUiThread { activity.recreate() }
-                       }
-                    }
-                } else {
-                    runOnUiThread {
-                        showToast(R.string.restore_failed, Toast.LENGTH_LONG)
-                    }
+                    restore(
+                        context,
+                        backupFile,
+                        restoreSettings = true,
+                        restoreDataStore = true
+                    )
+                    runOnUiThread { recreate() }
                 }
             } else {
-                runOnUiThread {
-                    showToast(R.string.restore_failed, Toast.LENGTH_LONG)
-                }
+                Log.d("BackupUtils", "Current data: null")
             }
         }
     }
 
-    suspend fun FragmentActivity.copyBackupDataBetweenUsers(sourceUserId: String, destinationUserId: String, sourceBackupDocId: String, destinationBackupDocId: String) {
+    suspend fun FragmentActivity.copyBackupDataBetweenUsers(
+        sourceUserId: String,
+        destinationUserId: String,
+        sourceBackupDocId: String,
+        destinationBackupDocId: String
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
         // Reference to the source user's backup document

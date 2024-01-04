@@ -1151,25 +1151,25 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         updateTv()
 
         // backup when we update the app, I don't trust myself to not boot lock users, might want to make this a setting?
-        normalSafeApiCall {
-            val appVer = BuildConfig.VERSION_NAME
-            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
-            if (appVer != lastAppAutoBackup) {
-                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
-                normalSafeApiCall {
-                    backup(this)
-                }
-                normalSafeApiCall {
-                    // Recompile oat on new version
-                    PluginManager.deleteAllOatFiles(this)
-                }
-            }
-        }
+//        normalSafeApiCall {
+//            val appVer = BuildConfig.VERSION_NAME
+//            val lastAppAutoBackup: String = getKey("VERSION_NAME") ?: ""
+//            if (appVer != lastAppAutoBackup) {
+//                setKey("VERSION_NAME", BuildConfig.VERSION_NAME)
+//                normalSafeApiCall {
+//                    backup(this)
+//                }
+//                normalSafeApiCall {
+//                    // Recompile oat on new version
+//                    PluginManager.deleteAllOatFiles(this)
+//                }
+//            }
+//        }
 
-//        val sourceUserId = "wCGuYwRvywfmdiEtpwzPtLkmXlw1" // Replace with the source user ID
-//        val destinationUserId = "WeT8wq7QeoN3ADJU9jHbxBvREM42" // Replace with the destination user ID
-//        val sourceBackupDocId = "a6LJ1ApFPmtr1SBGgQt0" // Replace with the source backup document ID
-//        val destinationBackupDocId = "KeJejXRG4xYC46PCh4XD" // Replace with the destination backup document ID
+//        val sourceUserId = "xFErx7EazaN1ltITskdvzcjSqVF2" // Replace with the source user ID
+//        val destinationUserId = "wCGuYwRvywfmdiEtpwzPtLkmXlw1" // Replace with the destination user ID
+//        val sourceBackupDocId = "7DVskyfRp4sgTeywooDq" // Replace with the source backup document ID
+//        val destinationBackupDocId = "backup" // Replace with the destination backup document ID
 //
 //        // Launch a coroutine to execute the function asynchronously
 //        GlobalScope.launch {
