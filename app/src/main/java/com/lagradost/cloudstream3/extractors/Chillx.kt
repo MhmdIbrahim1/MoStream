@@ -82,7 +82,7 @@ open class Chillx : ExtractorApi() {
     suspend fun getKey() = key ?: fetchKey().also { key = it }
 
     private suspend fun fetchKey(): String {
-        return app.get("https://raw.githubuserconteyoutnt.com/Sofie99/Resources/main/chillix_key.json").parsed()
+        return app.get("https://raw.githubusercontent.com/Sofie99/Resources/main/chillix_key.json").parsed()
     }
 
     data class Tracks(
