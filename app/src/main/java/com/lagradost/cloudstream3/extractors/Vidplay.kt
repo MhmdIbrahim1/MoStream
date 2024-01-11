@@ -28,7 +28,6 @@ open class Vidplay : ExtractorApi() {
     override val requiresReferer = true
     open val key =
         "https://raw.githubusercontent.com/Claudemirovsky/worstsource-keys/keys/keys.json"
-
     override suspend fun getUrl(
         url: String,
         referer: String?,
