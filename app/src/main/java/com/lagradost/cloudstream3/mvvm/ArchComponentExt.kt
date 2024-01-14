@@ -94,6 +94,11 @@ suspend fun <T> suspendSafeApiCall(apiCall: suspend () -> T): T? {
         return null
     }
 }
+fun <T> safeFail(throwable: Throwable): Resource<T> {
+    val stackTraceMsg = throwable.getStackTracePretty()
+    return Resource.Failure(false, null, null, stackTraceMsg)
+}
+
 
 fun Throwable.getAllMessages(): String {
     return (this.localizedMessage ?: "") + (this.cause?.getAllMessages()?.let { "\n$it" } ?: "")
@@ -108,10 +113,7 @@ fun Throwable.getStackTracePretty(showMessage: Boolean = true): String {
     }
 }
 
-fun <T> safeFail(throwable: Throwable): Resource<T> {
-    val stackTraceMsg = throwable.getStackTracePretty()
-    return Resource.Failure(false, null, null, stackTraceMsg)
-}
+
 
 fun CoroutineScope.launchSafe(
     context: CoroutineContext = EmptyCoroutineContext,

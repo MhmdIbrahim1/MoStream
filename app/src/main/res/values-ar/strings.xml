@@ -77,6 +77,8 @@
     <string name="sort_close">إغلاق</string>
     <string name="sort_clear">مسح</string>
     <string name="sort_save">حفظ</string>
+    <string name="copyTitle">تم نسخ العنوان!</string>
+    <string name="copyDescription">تم نسخ الوصف!</string>
     <string name="player_speed">سرعة المُشغل</string>
     <string name="subtitles_settings">إعدادات الترجمة</string>
     <string name="subs_text_color">لون الخط</string>

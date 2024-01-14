@@ -3,6 +3,8 @@ package com.lagradost.cloudstream3
 import android.Manifest
 import android.app.Activity
 import android.app.PictureInPictureParams
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -625,5 +627,14 @@ object CommonActivity {
             return true
         }
         return null
+    }
+
+    fun copyTextToClipboard(label: String, text: CharSequence) {
+        val clipboardManager =
+            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager?
+        clipboardManager?.setPrimaryClip(ClipData.newPlainText(label, text))
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            showToast(R.string.copyTitle, Toast.LENGTH_SHORT)
+        }
     }
 }

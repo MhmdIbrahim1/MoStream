@@ -31,6 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lagradost.cloudstream3.APIHolder
 import com.lagradost.cloudstream3.APIHolder.updateHasTrailers
 import com.lagradost.cloudstream3.CommonActivity
+import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.DubStatus
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainActivity.Companion.afterPluginsLoadedEvent
@@ -688,9 +689,8 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                         activity?.let { activity ->
                             activity.showBottomDialogText(
                                 d.titleText.asString(activity),
-                                d.plotText.asString(activity).html(),
-                                {}
-                            )
+                                d.plotText.asString(activity).html()
+                            ) {}
                         }
                     }
 
@@ -751,6 +751,15 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                 resultLoadingError.isVisible = data is Resource.Failure
                 resultErrorText.isVisible = data is Resource.Failure
                 resultReloadConnectionOpenInBrowser.isVisible = data is Resource.Failure
+
+                resultTitle.setOnLongClickListener {
+                    CommonActivity.copyTextToClipboard("Title", resultTitle.text)
+                    return@setOnLongClickListener true
+                }
+                resultDescription.setOnLongClickListener {
+                    CommonActivity.copyTextToClipboard("Description", resultDescription.text)
+                    return@setOnLongClickListener true
+                }
             }
         }
 
