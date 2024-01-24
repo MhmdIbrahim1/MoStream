@@ -766,4 +766,7 @@
     <string name="submit">Submit</string>
     <string name="hint_securitykey">Security Key</string>
     <string name="enter_security_key_to_continue">Enter Security Key to continue</string>
+    <string name="rotate_video">Rotate</string>
+    <string name="rotate_video_desc">Display a toggle button for screen orientation</string>
+
 </resources>
