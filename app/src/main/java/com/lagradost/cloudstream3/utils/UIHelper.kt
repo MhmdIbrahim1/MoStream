@@ -182,11 +182,8 @@ object UIHelper {
     fun Activity?.navigate(@IdRes navigation: Int, arguments: Bundle? = null) {
         try {
             if (this is FragmentActivity) {
-                val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
-                navHostFragment?.navController?.let {
-                    it.navigate(navigation, arguments)
-                }
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
+                navHostFragment?.navController?.navigate(navigation, arguments)
             }
         } catch (t: Throwable) {
             logError(t)
@@ -344,10 +341,10 @@ object UIHelper {
                 builder = builder.listener(object : RequestListener<Drawable> {
                     @SuppressLint("CheckResult")
                     override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
+                        resource: Drawable,
+                        model: Any,
                         target: Target<Drawable>?,
-                        dataSource: DataSource?,
+                        dataSource: DataSource,
                         isFirstResource: Boolean
                     ): Boolean {
                         resource?.toBitmapOrNull()
@@ -365,7 +362,7 @@ object UIHelper {
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: Target<Drawable>?,
+                        target: Target<Drawable>,
                         isFirstResource: Boolean
                     ): Boolean {
                         return false

@@ -1103,6 +1103,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         app.initClient(this)
+
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
 
         val errorFile = filesDir.resolve("last_error")
