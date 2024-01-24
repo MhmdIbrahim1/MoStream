@@ -107,7 +107,6 @@ class HomeFragment : Fragment() {
             )
             bottomSheetDialogBuilder.setContentView(binding.root)
             //val title = bottomSheetDialogBuilder.findViewById<TextView>(R.id.home_expanded_text)!!
-
             //title.findViewTreeLifecycleOwner().lifecycle.addObserver()
 
             val item = expand.list

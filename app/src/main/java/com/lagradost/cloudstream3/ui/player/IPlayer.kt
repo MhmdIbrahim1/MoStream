@@ -34,7 +34,6 @@ enum class CSPlayerEvent(val value: Int) {
     Play(1),
     SeekForward(2),
     SeekBack(3),
-
     SkipCurrentChapter(4),
     NextEpisode(5),
     PrevEpisode(6),

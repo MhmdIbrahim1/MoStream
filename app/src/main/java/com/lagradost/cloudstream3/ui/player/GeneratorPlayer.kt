@@ -977,8 +977,6 @@ class GeneratorPlayer : FullScreenPlayer() {
         // Don't save livestream data
         if ((currentMeta as? ResultEpisode)?.tvType?.isLiveStream() == true) return
 
-        // Don't save NSFW data
-
         if (duration <= 0L) return // idk how you achieved this, but div by zero crash
         if (!hasRequestedStamps) {
             hasRequestedStamps = true
@@ -1407,6 +1405,8 @@ class GeneratorPlayer : FullScreenPlayer() {
                     showToast(it.errorString, Toast.LENGTH_LONG)
                     startPlayer()
                 }
+
+                else -> {}
             }
         }
 
@@ -1452,6 +1452,7 @@ class GeneratorPlayer : FullScreenPlayer() {
             // Downloaded subtitles cannot be selected immediately after loading since
             // player.getCurrentPreferredSubtitle() cannot fetch data from non-loaded subtitles
             // Resulting in unselecting the downloaded subtitle
+
             if (set.lastOrNull()?.origin != SubtitleOrigin.DOWNLOADED_FILE) {
                 autoSelectSubtitles()
             }

@@ -88,7 +88,7 @@ class DownloadedPlayerActivity : AppCompatActivity() {
             val item = if (cd != null && cd.itemCount > 0) cd.getItemAt(0) else null
             val url = item?.text?.toString()
 
-            // idk what I am doing, just hope any of these work
+            // idk what I am doing, just trying to make it work
             if (item?.uri != null)
                 playUri(item.uri)
             else if (url != null)
