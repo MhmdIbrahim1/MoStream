@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class RegisterViewModel constructor(
+class RegisterViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val db: FirebaseFirestore
 ): ViewModel() {

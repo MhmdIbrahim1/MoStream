@@ -86,7 +86,7 @@ class LibraryViewModel : ViewModel() {
     }
 
     fun reloadPages(forceReload: Boolean) {
-        // Only skip loading if its not forced and pages is not empty
+// Only skip loading if its not forced and pages is not empty
         if (!forceReload && (pages.value as? Resource.Success)?.value?.isNotEmpty() == true &&
             currentSyncApi?.requireLibraryRefresh != true
         ) return
@@ -117,7 +117,7 @@ class LibraryViewModel : ViewModel() {
                 if (desiredSortingMethod != null && library.supportedListSorting.contains(desiredSortingMethod)) {
                     sort(desiredSortingMethod, null, pages)
                 } else {
-                    // null query = no sorting
+// null query = no sorting
                     sort(ListSorting.Query, null, pages)
                 }
             }

@@ -1,7 +1,6 @@
 package com.lagradost.cloudstream3.ui.library
 
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.doOnAttach
@@ -53,9 +52,9 @@ class ViewpagerAdapter(
                 spanCount =
                     this@PageViewHolder.itemView.context.getSpanCount() ?: 3
                 if (adapter == null || rebind) {
-                    // Only add the items after it has been attached since the items rely on ItemWidth
-                    // Which is only determined after the recyclerview is attached.
-                    // If this fails then item height becomes 0 when there is only one item
+// Only add the items after it has been attached since the items rely on ItemWidth
+// Which is only determined after the recyclerview is attached.
+// If this fails then item height becomes 0 when there is only one item
                     doOnAttach {
                         adapter = PageAdapter(
                             page.items.toMutableList(),
@@ -72,7 +71,7 @@ class ViewpagerAdapter(
                     setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
                         val diff = scrollY - oldScrollY
 
-                        //Expand the top Appbar based on scroll direction up/down, simulate phone behavior
+//Expand the top Appbar based on scroll direction up/down, simulate phone behavior
                         if (SettingsFragment.isTvSettings()) {
                             binding.root.rootView.findViewById<AppBarLayout>(R.id.search_bar)
                                 .apply {

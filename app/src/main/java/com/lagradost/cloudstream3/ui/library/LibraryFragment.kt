@@ -148,7 +148,7 @@ class LibraryFragment : Fragment() {
         }
 
         // Set the color for the search exit icon to the correct theme text color
-        val searchExitIcon = binding?.mainSearch?.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+        val searchExitIcon = binding?.mainSearch?.findViewById<ImageView>(R.id.search_close_btn)
         val searchExitIconColor = TypedValue()
 
         activity?.theme?.resolveAttribute(android.R.attr.textColor, searchExitIconColor, true)
