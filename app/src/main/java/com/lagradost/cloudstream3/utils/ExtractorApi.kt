@@ -104,6 +104,7 @@ import com.lagradost.cloudstream3.extractors.TauVideo
 import com.lagradost.cloudstream3.extractors.SibNet
 import com.lagradost.cloudstream3.extractors.ContentX
 import com.lagradost.cloudstream3.extractors.FourCX
+import com.lagradost.cloudstream3.extractors.FourPlayRu
 import com.lagradost.cloudstream3.extractors.Hotlinger
 import com.lagradost.cloudstream3.extractors.HDMomPlayer
 import com.lagradost.cloudstream3.extractors.HDPlayerSystem
@@ -120,6 +121,7 @@ import com.lagradost.cloudstream3.extractors.OkRuSSL
 import com.lagradost.cloudstream3.extractors.OkRuHTTP
 import com.lagradost.cloudstream3.extractors.Okrulink
 import com.lagradost.cloudstream3.extractors.PlayLtXyz
+import com.lagradost.cloudstream3.extractors.PlayRu
 import com.lagradost.cloudstream3.extractors.PlayerVoxzer
 import com.lagradost.cloudstream3.extractors.Rabbitstream
 import com.lagradost.cloudstream3.extractors.Rasacintaku
@@ -830,7 +832,8 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Vidplay(),
     VidplayOnline(),
     MyCloud(),
-
+    PlayRu(),
+    FourPlayRu(),
     Cda(),
     Dailymotion(),
     ByteShare(),

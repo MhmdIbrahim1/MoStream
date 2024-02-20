@@ -298,8 +298,27 @@ var app = Requests(responseParser = object : ResponseParser {
 class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
     companion object {
         const val TAG = "MAINACT"
-        const val ANIMATED_OUTLINE : Boolean = false
+        const val ANIMATED_OUTLINE: Boolean = false
         var lastError: String? = null
+
+
+        private const val FILE_DELETE_KEY = "FILES_TO_DELETE_KEY"
+
+        /**
+         * Transient files to delete on application exit.
+         * Deletes files on onDestroy().
+         */
+        private var filesToDelete: Set<String>
+            // This needs to be persistent because the application may exit without calling onDestroy.
+            get() = AcraApplication.getKey<Set<String>>(FILE_DELETE_KEY) ?: setOf()
+            private set(value) = setKey(FILE_DELETE_KEY, value)
+
+        /**
+         * Add file to delete on Exit.
+         */
+        fun deleteFileOnExit(file: File) {
+            filesToDelete = filesToDelete + file.path
+        }
 
         /**
          * Setting this will automatically enter the query in the search
@@ -688,6 +707,15 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
 
     override fun onDestroy() {
+        filesToDelete.forEach { path ->
+            val result = File(path).deleteRecursively()
+            if (result) {
+                Log.d(TAG, "Deleted temporary file: $path")
+            } else {
+                Log.d(TAG, "Failed to delete temporary file: $path")
+            }
+        }
+        filesToDelete = setOf()
         val broadcastIntent = Intent()
         broadcastIntent.action = "restart_service"
         broadcastIntent.setClass(this, VideoDownloadRestartReceiver::class.java)
@@ -1523,7 +1551,6 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         // restore the backup for the first time opening the app
 
-
         CommonActivity.init(this)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -1714,7 +1741,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
             // this ensures that no unnecessary space is taken
             loadCache()
             File(filesDir, "exoplayer").deleteRecursively() // old cache
-            File(cacheDir, "exoplayer").deleteOnExit()      // current cache
+            deleteFileOnExit(File(cacheDir, "exoplayer"))   // current cache
         } catch (e: Exception) {
             logError(e)
         }

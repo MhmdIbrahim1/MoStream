@@ -14,6 +14,7 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
         val simklApi = SimklApi(0)
         val indexSubtitlesApi = IndexSubtitleApi()
         val addic7ed = Addic7ed()
+        val subScene = SubScene()
         val localListApi = LocalList()
 
         // used to login via app intent
@@ -41,6 +42,7 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
             get() = listOf(
                 openSubtitlesApi,
                 indexSubtitlesApi, // they got anti scraping measures in place :(
+                subScene,
                 addic7ed
             )
 
