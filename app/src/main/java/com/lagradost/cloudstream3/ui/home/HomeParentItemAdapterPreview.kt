@@ -315,7 +315,7 @@ class HomeParentItemAdapterPreview(
                 homePreviewText.text = item.name
                 populateChips(
                     homePreviewTags,
-                    item.tags ?: emptyList(),
+                    item.tags?.take(6) ?: emptyList(),
                     R.style.ChipFilledSemiTransparent
                 )
 

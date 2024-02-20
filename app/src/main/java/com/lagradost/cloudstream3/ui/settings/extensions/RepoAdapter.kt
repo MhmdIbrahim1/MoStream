@@ -1,11 +1,17 @@
 package com.lagradost.cloudstream3.ui.settings.extensions
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.lagradost.cloudstream3.CommonActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.RepositoryItemBinding
 import com.lagradost.cloudstream3.databinding.RepositoryItemTvBinding
@@ -93,7 +99,20 @@ class RepoAdapter(
                         actionButton.setOnClickListener {
                             imageClickCallback(repositoryData)
                             actionButton.visibility = View.GONE
+                        }
 
+
+                        repositoryItemRoot.setOnLongClickListener {
+                            val clipboardManager =
+                                CommonActivity.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager?
+                            clipboardManager?.setPrimaryClip(ClipData.newPlainText("RepoUrl", repositoryData.url))
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                                CommonActivity.showToast(
+                                    R.string.repoCopied,
+                                    Toast.LENGTH_SHORT
+                                )
+                            }
+                            return@setOnLongClickListener true
                         }
 
                         repositoryItemRoot.setOnClickListener {

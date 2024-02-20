@@ -626,5 +626,6 @@
     <string name="manage_accounts">إدارة الحسابات</string>
     <string name="edit_account">تعديل الحساب</string>
     <string name="links_reloaded_toast">تم إعادة تحميل الروابط</string>
+    <string name="repoCopied">تم نسخ رابط المصدر!</string>
 
 </resources>
