@@ -65,8 +65,11 @@ class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.Biome
 
             if (isTruePhone() && authEnabled) {
                 if (deviceHasPasswordPinLock(this)) {
-                    startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
-
+                    startBiometricAuthentication(
+                        this,
+                        R.string.biometric_authentication_title,
+                        false
+                    )
                     BiometricAuthenticator.promptInfo?.let {
                         BiometricAuthenticator.biometricPrompt?.authenticate(it)
                     }

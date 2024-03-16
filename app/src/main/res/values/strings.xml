@@ -67,6 +67,8 @@
     <string name="enable_nsfw_on_providers_key" translatable="false">enable_nsfw_on_providers_key</string>
     <string name="skip_startup_account_select_key" translatable="false">skip_startup_account_select_key</string>
     <string name="enable_skip_op_from_database" translatable="false">enable_skip_op_from_database</string>
+    <string name="resume_remaining" formatted="true">%s\nremaining</string>
+
     <!-- FORMAT MIGHT TRANSLATE, WILL CAUSE CRASH IF APPLIED WRONG -->
     <string name="extra_info_format" formatted="true" translatable="false">%d %s | %s</string>
     <string name="storage_size_format" formatted="true" translatable="false">%s • %s</string>
@@ -780,5 +782,8 @@
     <string name="biometric_unsupported">Biometric authentication is not supported on this device</string>
     <string name="biometric_prompt_description">This window will close after few failed attempts. You\\\'ll have to restart the App</string>
     <string name="biometric_warning"><![CDATA[>Your CloudStream data has been backed up now, although probability of this rare case is very low but all\n        devices behave differently, in case you get locked down from accessing the app in worst case scenario,\n    Clear the app data wholly and restore the backup. Any inconvenience if arrived is deeply regretted.]]></string>
+    <string name="toast_copied">Copied!</string>
+    <string name="clipboard_permission_error">Error accessing Clipboard, Please try again</string>
+    <string name="clipboard_unknown_error">Error copying, Please copy logcat and contact app support</string>
 
 </resources>

@@ -11,6 +11,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lagradost.cloudstream3.AcraApplication.Companion.openBrowser
 import com.lagradost.cloudstream3.CommonActivity.onDialogDismissedEvent
@@ -284,14 +285,20 @@ class SettingsAccount : PreferenceFragmentCompat() {
             }
         }
         getPref(R.string.biometric_enabled_key)?.setOnPreferenceClickListener {
+            val authEnabled = PreferenceManager.getDefaultSharedPreferences(
+                context ?: return@setOnPreferenceClickListener false
+            )
+                .getBoolean(getString(R.string.biometric_enabled_key), false)
 
-            BackupUtils.backup(activity)
-            val title = activity?.getString(R.string.biometric_setting)
-            val warning = activity?.getString(R.string.biometric_warning)
-            activity?.showBottomDialogText(
-                title as String,
-                warning.html()
-            ) { onDialogDismissedEvent }
+            if (authEnabled) {
+                BackupUtils.backup(activity)
+                val title = activity?.getString(R.string.biometric_setting)
+                val warning = activity?.getString(R.string.biometric_warning)
+                activity?.showBottomDialogText(
+                    title as String,
+                    warning.html()
+                ) { onDialogDismissedEvent }
+            }
 
             true
         }
