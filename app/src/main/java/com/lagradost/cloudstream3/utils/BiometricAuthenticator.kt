@@ -1,135 +1,177 @@
 package com.lagradost.cloudstream3.utils
 
+import android.app.Activity
+import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import com.lagradost.cloudstream3.AcraApplication.Companion.context
+import androidx.fragment.app.FragmentActivity
 import com.lagradost.cloudstream3.CommonActivity.showToast
-import com.lagradost.cloudstream3.MainActivity
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isEmulatorSettings
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
+import com.lagradost.cloudstream3.R
 
 object BiometricAuthenticator {
-    private const val TAG = "MSAuth"
 
-    private lateinit var biometricManager: BiometricManager
-    lateinit var biometricPrompt: BiometricPrompt
-    lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private const val MAX_FAILED_ATTEMPTS = 3
+    private var failedAttempts = 0
+    const val TAG = "cs3Auth"
 
-    fun initializeBiometrics(activity: MainActivity) {
+    private var biometricManager: BiometricManager? = null
+    var biometricPrompt: BiometricPrompt? = null
+    var promptInfo: BiometricPrompt.PromptInfo? = null
+
+    var authCallback: BiometricAuthCallback? = null // listen to authentication success
+
+    private fun initializeBiometrics(activity: Activity) {
         val executor = ContextCompat.getMainExecutor(activity)
+
         biometricManager = BiometricManager.from(activity)
 
-        biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+        biometricPrompt = BiometricPrompt(
+            activity as FragmentActivity,
+            executor,
+            object : BiometricPrompt.AuthenticationCallback() {
 
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                showToast("Authentication error: $errString")
-                activity.finish()
-            }
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    showToast("$errString")
+                    Log.e(TAG, "$errorCode")
+                    failedAttempts++
 
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                Log.d(TAG, "Biometric succeeded.")
-            }
+                    if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                        failedAttempts = 0
+                        activity.finish()
+                    } else {
+                        failedAttempts = 0
+                        activity.finish()
+                    }
+                }
 
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                showToast("Authentication failed")
-                activity.finish()
-            }
-        })
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    failedAttempts = 0
+                    authCallback?.onAuthenticationSuccess()
+                }
 
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("MoStream")
-            .setSubtitle("Log in using your biometric credential")
-            //.setNegativeButtonText("Use account password")
-            .setAllowedAuthenticators(BIOMETRIC_WEAK or BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
-            .build()
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    failedAttempts++
+                    if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                        failedAttempts = 0
+                        activity.finish()
+                    }
+                }
+            })
     }
 
-    fun checkBiometricAvailability(context: Context) {
+    @Suppress("DEPRECATION")
+    // authentication dialog prompt builder
+    private fun authenticationDialog(
+        activity: Activity,
+        title: Int,
+        setDeviceCred: Boolean,
+    ) {
+        val description = activity.getString(R.string.biometric_prompt_description)
+
+        if (setDeviceCred) {
+            // For API level > 30, Newer API setAllowedAuthenticators is used
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+                val authFlag = DEVICE_CREDENTIAL or BIOMETRIC_WEAK or BIOMETRIC_STRONG
+                promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(activity.getString(title))
+                    .setDescription(description)
+                    .setAllowedAuthenticators(authFlag)
+                    .build()
+
+            } else {
+                // for apis < 30
+                promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(activity.getString(title))
+                    .setDescription(description)
+                    .setDeviceCredentialAllowed(true)
+                    .build()
+            }
+
+        } else {
+            // fallback for A12+ when both fingerprint & Face unlock is absent but PIN is set
+            promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle(activity.getString(title))
+                .setDescription(description)
+                .setDeviceCredentialAllowed(true)
+                .build()
+        }
+    }
+
+    private fun isBiometricHardWareAvailable(): Boolean {
+        // authentication occurs only when this is true and device is truly capable
+        var result = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-            // Strong and credential bundle cannot be checked at same time in API < 11
-            when (biometricManager.canAuthenticate(BIOMETRIC_WEAK or BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
-                BiometricManager.BIOMETRIC_SUCCESS ->
-                    Log.d(TAG, "App can authenticate.")
+            when (biometricManager?.canAuthenticate(
+                DEVICE_CREDENTIAL or BIOMETRIC_STRONG or BIOMETRIC_WEAK
+            )) {
+                BiometricManager.BIOMETRIC_SUCCESS -> result = true
+                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> result = false
+                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> result = false
+                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> result = false
+                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> result = true
+                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> result = true
+                BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> result = false
+            }
 
-                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                    Log.d(TAG, "No biometric sensor found.")
-
-                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                    Log.d(TAG, "Biometric authentication is currently unavailable.")
-
-                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                    Toast.makeText(
-                        context,
-                        "No biometric credentials are enrolled",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
-                    Toast.makeText(
-                        context,
-                        "Please update your software and security patches.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> {
-                    Toast.makeText(
-                        context,
-                        "Please update your software and security patches.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
-                    Log.d(TAG, "Unknown error encountered(Biometric data failed).")
-                }
+        } else {
+            @Suppress("DEPRECATION")
+            when (biometricManager?.canAuthenticate()) {
+                BiometricManager.BIOMETRIC_SUCCESS -> result = true
+                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> result = false
+                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> result = false
+                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> result = false
+                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> result = true
+                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> result = true
+                BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> result = false
             }
         }
 
-        else {
+        return result
+    }
 
-            when (biometricManager.canAuthenticate(BIOMETRIC_WEAK or BIOMETRIC_STRONG)) {
+    // checks if device is secured i.e has at least some type of lock
+    fun deviceHasPasswordPinLock(context: Context?): Boolean {
+        val keyMgr =
+            context?.getSystemService(AppCompatActivity.KEYGUARD_SERVICE) as? KeyguardManager
+        return keyMgr?.isKeyguardSecure ?: false
+    }
 
-                BiometricManager.BIOMETRIC_SUCCESS ->
-                    Log.d(TAG, "App can authenticate using biometrics.")
-                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                    Log.e(TAG, "No biometric features available on this device.")
-                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                    Log.e(TAG, "Biometric features are currently unavailable.")
-                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                    Log.e(TAG, "Biometric features are currently unavailable.")
+    // function to start authentication in any fragment or activity
+    fun startBiometricAuthentication(activity: Activity, title: Int, setDeviceCred: Boolean) {
+        initializeBiometrics(activity)
 
-                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
-                   showToast("Please update your software and security patches.")
-                }
+        if (isBiometricHardWareAvailable()) {
+            authCallback = activity as? BiometricAuthCallback
+            authenticationDialog(activity, title, setDeviceCred)
+            promptInfo?.let { biometricPrompt?.authenticate(it) }
 
-                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> {
-                    showToast("Please update your software and security patches.")
-                }
+        } else {
+            if (deviceHasPasswordPinLock(activity)) {
+                authCallback = activity as? BiometricAuthCallback
+                authenticationDialog(activity, R.string.password_pin_authentication_title, true)
+                promptInfo?.let { biometricPrompt?.authenticate(it) }
 
-                BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
-                    Log.d(TAG, "Unknown error encountered(Biometric data failed).")
-                }
+            } else {
+                showToast(R.string.biometric_unsupported)
             }
         }
     }
 
-    // yes, this feature is phone exclusive
-    fun isTruePhone(): Boolean {
-        return !isTrueTvSettings() && !isTvSettings() && context?.isEmulatorSettings() != true
+    interface BiometricAuthCallback {
+        fun onAuthenticationSuccess()
     }
 }

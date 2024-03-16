@@ -764,7 +764,7 @@
     <string name="we_will_send_you_the_password_reset_link_to_your_email">We will send you the password reset link to your email</string>
     <string name="send">Send</string>
     <string name="biometric_enabled_key" translatable="false">biometric_key</string>
-    <string name="biometric_setting">Use Fingerprint authentication</string>
+    <string name="biometric_setting">Lock with Biometrics</string>
     <string name="restore_failed_error_format">"Resotre data "</string>
     <string name="restore_failed">Restore Failed Check Network Connention</string>
     <string name="submit">Submit</string>
@@ -773,7 +773,12 @@
     <string name="rotate_video">Rotate</string>
     <string name="rotate_video_desc">Display a toggle button for screen orientation</string>
     <string name="repoCopied">Repo URL copied!</string>
+    <string name="biometric_authentication_title">Unlock MoStream</string>
     <string name="chromecast_subtitles_settings_des">Enable subtitles on Chromecast</string>
     <string name="eigengraumode_settings_des">Add a speed control button to the player</string>
+    <string name="password_pin_authentication_title">Password/PIN Authentication</string>
+    <string name="biometric_unsupported">Biometric authentication is not supported on this device</string>
+    <string name="biometric_prompt_description">This window will close after few failed attempts. You\\\'ll have to restart the App</string>
+    <string name="biometric_warning"><![CDATA[>Your CloudStream data has been backed up now, although probability of this rare case is very low but all\n        devices behave differently, in case you get locked down from accessing the app in worst case scenario,\n    Clear the app data wholly and restore the backup. Any inconvenience if arrived is deeply regretted.]]></string>
 
 </resources>

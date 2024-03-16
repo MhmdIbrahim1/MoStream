@@ -86,6 +86,7 @@ object BackupUtils {
 
         OPEN_SUBTITLES_USER_KEY,
         "nginx_user", // Nginx user key
+        "biometric_key"
     )
 
     /** false if blacklisted key */

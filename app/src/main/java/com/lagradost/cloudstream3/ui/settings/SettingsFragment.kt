@@ -27,6 +27,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.lagradost.cloudstream3.AcraApplication
 import com.lagradost.cloudstream3.LoginRegisterActivity
 import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
@@ -37,6 +38,7 @@ import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 import com.lagradost.cloudstream3.ui.home.HomeFragment
 import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel.Companion.USER_COLLECTION
 import com.lagradost.cloudstream3.ui.loginregister.UserSign
+import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isEmulatorSettings
 import com.lagradost.cloudstream3.utils.NetworkResult
 import com.lagradost.cloudstream3.utils.UIHelper.fixPaddingStatusbar
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
@@ -175,6 +177,9 @@ class SettingsFragment : Fragment(), UserFetchCallback {
             return getLayoutInt() == 2
         }
 
+        fun isTruePhone(): Boolean {
+            return !isTrueTvSettings() && !isTvSettings() && AcraApplication.context?.isEmulatorSettings() != true
+        }
         private fun Context.isAutoTv(): Boolean {
             val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager?
             // AFT = Fire TV

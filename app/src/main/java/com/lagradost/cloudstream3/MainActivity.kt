@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.marginStart
 import androidx.fragment.app.FragmentActivity
@@ -164,15 +165,15 @@ import kotlin.math.absoluteValue
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator
-import com.lagradost.cloudstream3.utils.BiometricAuthenticator.isTruePhone
-import com.lagradost.cloudstream3.utils.BiometricAuthenticator.promptInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.lagradost.cloudstream3.syncproviders.SyncAPI
 import com.lagradost.cloudstream3.ui.SyncWatchType
 import com.lagradost.cloudstream3.ui.result.SyncViewModel
-import com.lagradost.cloudstream3.utils.BackupUtils.backup
-import kotlinx.coroutines.GlobalScope
+import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTruePhone
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator.deviceHasPasswordPinLock
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator.startBiometricAuthentication
+import com.lagradost.cloudstream3.utils.DataStoreHelper.accounts
 
 //https://github.com/videolan/vlc-android/blob/3706c4be2da6800b3d26344fc04fab03ffa4b860/application/vlc-android/src/org/videolan/vlc/gui/video/VideoPlayerActivity.kt#L1898
 //https://wiki.videolan.org/Android_Player_Intents/
@@ -295,7 +296,8 @@ var app = Requests(responseParser = object : ResponseParser {
 }
 
 
-class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
+class MainActivity : AppCompatActivity(), ColorPickerDialogListener
+    , BiometricAuthenticator.BiometricAuthCallback {
     companion object {
         const val TAG = "MAINACT"
         const val ANIMATED_OUTLINE: Boolean = false
@@ -1229,13 +1231,11 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
                     newLocalBinding.focusOutline.isVisible = false
                 }
 
-                if(isTrueTvSettings()) {
+                if (isTrueTvSettings()) {
                     newLocalBinding.root.viewTreeObserver.addOnGlobalFocusChangeListener { _, newFocus ->
                         centerView(newFocus)
                     }
                 }
-
-
 
                 ActivityMainBinding.bind(newLocalBinding.root) // this may crash
             } else {
@@ -1250,15 +1250,23 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         changeStatusBarState(isEmulatorSettings())
 
-        /** Biometric Stuff **/
-        val authEnabled = settingsManager.getBoolean(
-            getString(R.string.biometric_enabled_key), false)
+        /** Biometric stuff for users without accounts **/
+        val authEnabled = settingsManager.getBoolean(getString(R.string.biometric_enabled_key), false)
+        val noAccounts = settingsManager.getBoolean(getString(R.string.skip_startup_account_select_key), false) || accounts.count() <= 1
 
-        if (isTruePhone() && authEnabled) {
-            BiometricAuthenticator.initializeBiometrics(this@MainActivity)
-            BiometricAuthenticator.checkBiometricAvailability(this@MainActivity)
-            BiometricAuthenticator.biometricPrompt.authenticate(promptInfo)
+        if (isTruePhone() && authEnabled && noAccounts) {
+            if (deviceHasPasswordPinLock(this)) {
+                startBiometricAuthentication(this, R.string.biometric_authentication_title, false)
+
+                BiometricAuthenticator.promptInfo?.let {
+                    BiometricAuthenticator.biometricPrompt?.authenticate(it)
+                }
+
+                // hide background while authenticating, Sorry moms & dads 🙏
+                binding?.navHostFragment?.isInvisible = true
+            }
         }
+
 
         // Automatically enable jsdelivr if cant connect to raw.githubusercontent.com
         if (this.getKey<Boolean>(getString(R.string.jsdelivr_proxy_key)) == null && isNetworkAvailable()) {
@@ -1835,5 +1843,9 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
     }
 
-
+    /** Biometric stuff **/
+    override fun onAuthenticationSuccess() {
+        // make background (nav host fragment) visible again
+        binding?.navHostFragment?.isInvisible = false
+    }
 }
