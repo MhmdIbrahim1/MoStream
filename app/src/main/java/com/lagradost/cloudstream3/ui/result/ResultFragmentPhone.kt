@@ -16,6 +16,8 @@ import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.widget.AbsListView
 import android.widget.ArrayAdapter
+import com.lagradost.cloudstream3.CommonActivity.showToast
+
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -63,6 +65,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.AppUtils.isCastApiAvailable
 import com.lagradost.cloudstream3.utils.AppUtils.loadCache
 import com.lagradost.cloudstream3.utils.AppUtils.openBrowser
+import com.lagradost.cloudstream3.utils.BatteryOptimizationChecker.openBatteryOptimizationSettings
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showBottomDialog
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showBottomDialogInstant
@@ -445,6 +448,8 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                     val name = (viewModel.page.value as? Resource.Success)?.value?.title
                         ?: txt(R.string.no_data).asStringNull(context) ?: ""
                     CommonActivity.showToast(txt(message, name), Toast.LENGTH_SHORT)
+                    CommonActivity.showToast(txt(message, name), Toast.LENGTH_SHORT)
+                    context?.let { openBatteryOptimizationSettings(it) }
                 }
             }
             resultFavorite.setOnClickListener {
@@ -642,6 +647,7 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                         ),
                         null
                     ) { click ->
+                        context?.let { openBatteryOptimizationSettings(it) }
                         when (click.action) {
                             DOWNLOAD_ACTION_DOWNLOAD -> {
                                 viewModel.handleAction(
