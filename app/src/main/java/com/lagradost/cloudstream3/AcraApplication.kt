@@ -12,7 +12,9 @@ import com.google.firebase.FirebaseApp
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall
 import com.lagradost.cloudstream3.plugins.PluginManager
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.utils.AppUtils.openBrowser
 import com.lagradost.cloudstream3.utils.Coroutines.runOnMainThread
 import com.lagradost.cloudstream3.utils.DataStore.getKey
@@ -213,7 +215,7 @@ class AcraApplication : Application() {
         fun openBrowser(url: String, activity: FragmentActivity?) {
             openBrowser(
                 url,
-                isTvSettings(),
+                isLayout(TV or EMULATOR),
                 activity?.supportFragmentManager?.fragments?.lastOrNull()
             )
         }

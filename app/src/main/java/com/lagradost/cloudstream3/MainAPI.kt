@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.lagradost.cloudstream3.mvvm.logError
+import com.lagradost.cloudstream3.ui.result.ResultViewModel2
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.syncproviders.AccountManager.Companion.aniListApi
 import com.lagradost.cloudstream3.syncproviders.AccountManager.Companion.malApi
@@ -119,9 +120,9 @@ object APIHolder {
     }
 
     fun LoadResponse.getId(): Int {
-        return getLoadResponseIdFromUrl(url, apiName)
+        // this fixes an issue with outdated api as getLoadResponseIdFromUrl might be fucked
+        return (if (this is ResultViewModel2.LoadResponseFromSearch) this.id else null) ?: getLoadResponseIdFromUrl(url, apiName)
     }
-
     /**
      * Gets the website captcha token
      * discovered originally by https://github.com/ahmedgamal17
@@ -863,6 +864,10 @@ enum class TvType(value: Int?) {
     AsianDrama(9),
     Live(10),
     NSFW(11),
+    Music(13),
+    AudioBook(14),
+    /** Wont load the built in player, make your own interaction */
+    CustomMedia(15),
     Others(12)
 }
 

@@ -38,7 +38,9 @@ import com.lagradost.cloudstream3.ui.result.ResultFragment.updateUIEvent
 import com.lagradost.cloudstream3.ui.search.SEARCH_ACTION_FOCUSED
 import com.lagradost.cloudstream3.ui.search.SearchAdapter
 import com.lagradost.cloudstream3.ui.search.SearchHelper
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isEmulatorSettings
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.utils.AppUtils.getNameFull
 import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.AppUtils.isRtl
@@ -580,7 +582,7 @@ class ResultFragmentTv : Fragment() {
 
         observeNullable(viewModel.subscribeStatus) { isSubscribed ->
             binding?.resultSubscribeButton?.apply {
-                isVisible = isSubscribed != null && context.isEmulatorSettings()
+                isVisible = isSubscribed != null && isLayout(TV or EMULATOR)
                 if (isSubscribed == null) return@observeNullable
 
                 val drawable = if (isSubscribed) {

@@ -781,9 +781,24 @@
     <string name="password_pin_authentication_title">Password/PIN Authentication</string>
     <string name="biometric_unsupported">Biometric authentication is not supported on this device</string>
     <string name="biometric_prompt_description">This window will close after few failed attempts. You\\\'ll have to restart the App</string>
-    <string name="biometric_warning"><![CDATA[>Your CloudStream data has been backed up now, although probability of this rare case is very low but all\n        devices behave differently, in case you get locked down from accessing the app in worst case scenario,\n    Clear the app data wholly and restore the backup. Any inconvenience if arrived is deeply regretted.]]></string>
+    <string name="biometric_warning">Your MoStream data has been backed up now.</string>
     <string name="toast_copied">Copied!</string>
     <string name="clipboard_permission_error">Error accessing Clipboard, Please try again</string>
     <string name="clipboard_unknown_error">Error copying, Please copy logcat and contact app support</string>
-
+    <string name="favorite">Favorite</string>
+    <string name="unfavorite">Unfavorite</string>
+    <string name="music_singlar">Music</string>
+    <string name="audio_book_singular">Audio Book</string>
+    <string name="custom_media_singluar">Media</string>
+    <string name="app_info_intent_error">Unable to open CloudStream\'s App info.</string>
+    <string name="battery_dialog_title">Disable Battery optimization</string>
+    <string name="battery_dialog_message">To ensure uninterrupted downloads and notifications for subscribed
+        TV shows, CloudStream needs permission to run in background. By pressing "OK", you\'ll be directed to App info.
+        There, scroll to 𝘼𝙥𝙥 𝙗𝙖𝙩𝙩𝙚𝙧𝙮 𝙪𝙨𝙖𝙜𝙚 and set battery usage to 𝙐𝙣𝙧𝙚𝙨𝙩𝙧𝙞𝙘𝙩𝙚𝙙. Please note, this permission
+        does not mean CS3 will drain your battery. It will only operate in the background when necessary, such as
+        when receiving notifications or downloading videos from official extensions. If you choose to cancel,
+        you can adjust this setting later in 𝙂𝙚𝙣𝙚𝙧𝙖𝙡 𝙎𝙚𝙩𝙩𝙞𝙣𝙜𝙨.</string>
+    <string name="battery_optimisation_key" translatable="false">battery_optimisation</string>
+    <string name="app_unrestricted_toast">App battery usage is already set to unrestricted</string>
+    <string name="ok">Ok</string>
 </resources>

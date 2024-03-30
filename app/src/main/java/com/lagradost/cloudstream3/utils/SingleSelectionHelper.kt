@@ -21,10 +21,12 @@ import com.lagradost.cloudstream3.databinding.BottomInputDialogBinding
 import com.lagradost.cloudstream3.databinding.BottomSelectionDialogBinding
 import com.lagradost.cloudstream3.databinding.BottomTextDialogBinding
 import com.lagradost.cloudstream3.databinding.OptionsPopupTvBinding
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
 import com.lagradost.cloudstream3.utils.UIHelper.dismissSafe
 import com.lagradost.cloudstream3.utils.UIHelper.popupMenuNoIconsAndNoStringRes
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 
 object SingleSelectionHelper {
     fun Activity?.showOptionSelectStringRes(
@@ -54,7 +56,7 @@ object SingleSelectionHelper {
     ) {
         if (this == null) return
 
-        if (isTvSettings()) {
+        if (isLayout(TV or EMULATOR)) {
             val binding = OptionsPopupTvBinding.inflate(layoutInflater)
             val dialog = AlertDialog.Builder(this, R.style.AlertDialogCustom)
                 .setView(binding.root)

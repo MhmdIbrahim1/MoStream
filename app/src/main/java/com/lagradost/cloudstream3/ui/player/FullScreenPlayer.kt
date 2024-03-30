@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import com.lagradost.cloudstream3.ui.settings.Globals
 import android.provider.Settings
 import android.text.Editable
 import android.text.format.DateUtils
@@ -1514,7 +1515,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
             }
         }
         // cs3 is peak media center
-        setRemainingTimeCounter(durationMode || SettingsFragment.isTrueTvSettings())
+        setRemainingTimeCounter(durationMode || Globals.isLayout(Globals.TV))
         playerBinding?.exoPosition?.doOnTextChanged { _, _, _, _ ->
             updateRemainingTime()
         }

@@ -28,7 +28,6 @@ import com.lagradost.cloudstream3.CommonActivity.onDialogDismissedEvent
 import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.SubtitleSettingsBinding
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
 import com.lagradost.cloudstream3.utils.DataStore.setKey
 import com.lagradost.cloudstream3.utils.Event
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showDialog
@@ -39,6 +38,10 @@ import com.lagradost.cloudstream3.utils.UIHelper.hideSystemUI
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
 import com.lagradost.cloudstream3.utils.UIHelper.popCurrentPage
 import java.io.File
+import com.lagradost.cloudstream3.ui.settings.Globals
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
+
 
 const val SUBTITLE_KEY = "subtitle_settings"
 const val SUBTITLE_AUTO_SELECT_KEY = "subs_auto_select"
@@ -252,7 +255,7 @@ class SubtitlesFragment : Fragment() {
         state = getCurrentSavedStyle()
         context?.updateState()
 
-        val isTvTrueSettings = isTrueTvSettings()
+        val isTvTrueSettings = isLayout(TV)
 
         fun View.setFocusableInTv() {
             this.isFocusableInTouchMode = isTvTrueSettings

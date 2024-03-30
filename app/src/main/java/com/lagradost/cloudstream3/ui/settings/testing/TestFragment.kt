@@ -11,10 +11,10 @@ import com.lagradost.cloudstream3.databinding.FragmentTestingBinding
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.mvvm.observe
 import com.lagradost.cloudstream3.mvvm.observeNullable
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setToolBarScrollFlags
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setUpToolbar
-
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 
 class TestFragment : Fragment() {
 
@@ -62,7 +62,7 @@ class TestFragment : Fragment() {
                 }
             }
 
-            if (isTrueTvSettings()) {
+            if (isLayout(TV)) {
                 providerTest.playPauseButton?.isFocusableInTouchMode = true
                 providerTest.playPauseButton?.requestFocus()
             }
@@ -75,7 +75,7 @@ class TestFragment : Fragment() {
 
             fun focusRecyclerView() {
                 // Hack to make it possible to focus the recyclerview.
-                if (isTrueTvSettings()) {
+                if (isLayout(TV)) {
                     providerTestRecyclerView.requestFocus()
                     providerTestAppbar.setExpanded(false, true)
                 }

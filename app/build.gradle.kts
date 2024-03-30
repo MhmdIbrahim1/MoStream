@@ -46,7 +46,7 @@ android {
 
     signingConfigs {
         create("prerelease") {
-            storeFile = file("D:\\MoStream\\mostreamkey.jks")
+            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
             storePassword = "147369"
             keyAlias = "key0"
             keyPassword = "147369"
@@ -62,8 +62,8 @@ android {
         minSdk = 21
         targetSdk = 33 /* Android 14 is Fu*ked
         ^ https://developer.android.com/about/versions/14/behavior-changes-14#safer-dynamic-code-loading*/
-        versionCode = 70
-        versionName = "4.4.8"
+        versionCode = 71
+        versionName = "4.4.9"
 
         resValue("string", "app_version", "${defaultConfig.versionName}${versionNameSuffix ?: ""}")
         resValue("string", "commit_hash", "git rev-parse --short HEAD".execute() ?: "")
@@ -175,10 +175,10 @@ dependencies {
     // Android Core & Lifecycle
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
 
     // Design & UI
     implementation("jp.wasabeef:glide-transformations:4.3.0")

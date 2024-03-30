@@ -17,7 +17,6 @@ import com.lagradost.cloudstream3.plugins.PluginManager
 import com.lagradost.cloudstream3.plugins.VotingApi.getVotes
 import com.lagradost.cloudstream3.ui.result.setText
 import com.lagradost.cloudstream3.ui.result.txt
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
 import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.Coroutines.main
@@ -30,7 +29,8 @@ import org.junit.Test
 import java.text.DecimalFormat
 import kotlin.math.floor
 import kotlin.math.log10
-
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 
 data class PluginViewData(
     val plugin: Plugin,
@@ -44,7 +44,7 @@ class PluginAdapter(
     private val plugins: MutableList<PluginViewData> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layout = if(isTrueTvSettings()) R.layout.repository_item_tv else R.layout.repository_item
+        val layout = if(isLayout(TV)) R.layout.repository_item_tv else R.layout.repository_item
         val inflated = LayoutInflater.from(parent.context).inflate(layout, parent, false)
 
         return PluginViewHolder(

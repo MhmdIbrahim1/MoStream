@@ -12,7 +12,7 @@ import com.lagradost.cloudstream3.databinding.AccountListItemBinding
 import com.lagradost.cloudstream3.databinding.AccountListItemEditBinding
 import com.lagradost.cloudstream3.ui.account.AccountHelper.showAccountEditDialog
 import com.lagradost.cloudstream3.ui.result.setImage
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
+import com.lagradost.cloudstream3.ui.settings.Globals
 import com.lagradost.cloudstream3.utils.DataStoreHelper
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
 
@@ -38,7 +38,7 @@ class AccountAdapter(
                 is AccountListItemBinding -> binding.apply {
                     if (account == null) return@apply
 
-                    val isTv = isTvSettings() || !root.isInTouchMode
+                    val isTv = Globals.isLayout(Globals.TV or Globals.EMULATOR) || !root.isInTouchMode
 
                     val isLastUsedAccount = account.keyIndex == DataStoreHelper.selectedKeyIndex
 
@@ -80,7 +80,7 @@ class AccountAdapter(
                 is AccountListItemEditBinding -> binding.apply {
                     if (account == null) return@apply
 
-                    val isTv = isTvSettings() || !root.isInTouchMode
+                    val isTv = Globals.isLayout(Globals.TV or Globals.EMULATOR) || !root.isInTouchMode
 
                     val isLastUsedAccount = account.keyIndex == DataStoreHelper.selectedKeyIndex
 

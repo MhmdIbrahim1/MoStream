@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.fasterxml.jackson.annotation.JsonProperty
 import androidx.media3.common.text.Cue
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.android.gms.cast.TextTrackStyle
 import com.google.android.gms.cast.TextTrackStyle.*
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
@@ -24,13 +24,15 @@ import com.lagradost.cloudstream3.CommonActivity.onDialogDismissedEvent
 import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.ChromecastSubtitleSettingsBinding
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
 import com.lagradost.cloudstream3.utils.DataStore.setKey
 import com.lagradost.cloudstream3.utils.Event
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showDialog
 import com.lagradost.cloudstream3.utils.UIHelper.fixPaddingStatusbar
 import com.lagradost.cloudstream3.utils.UIHelper.hideSystemUI
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.utils.UIHelper.popCurrentPage
 
 const val CHROME_SUBTITLE_KEY = "chome_subtitle_settings"
@@ -174,7 +176,7 @@ class ChromecastSubtitlesFragment : Fragment() {
         state = getCurrentSavedStyle()
         context?.updateState()
 
-        val isTvSettings = isTvSettings()
+        val isTvSettings =isLayout(TV or EMULATOR)
 
         fun View.setFocusableInTv() {
             this.isFocusableInTouchMode = isTvSettings

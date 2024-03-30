@@ -25,8 +25,9 @@ import com.lagradost.cloudstream3.ui.AutofitRecyclerView
 import com.lagradost.cloudstream3.ui.account.AccountAdapter.Companion.VIEW_TYPE_EDIT_ACCOUNT
 import com.lagradost.cloudstream3.ui.account.AccountAdapter.Companion.VIEW_TYPE_SELECT_ACCOUNT
 import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTruePhone
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
+import com.lagradost.cloudstream3.ui.settings.Globals
+import com.lagradost.cloudstream3.ui.settings.Globals.PHONE
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.deviceHasPasswordPinLock
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.startBiometricAuthentication
@@ -63,7 +64,7 @@ class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.Biome
 
         fun askBiometricAuth() {
 
-            if (isTruePhone() && authEnabled) {
+            if (isLayout(PHONE) && authEnabled) {
                 if (deviceHasPasswordPinLock(this)) {
                     startBiometricAuthentication(
                         this,
@@ -142,7 +143,7 @@ class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.Biome
 
             recyclerView.adapter = adapter
 
-            if (isTvSettings()) {
+            if (isLayout(Globals.TV or Globals.EMULATOR)) {
                 binding.editAccountButton.setBackgroundResource(
                     R.drawable.player_button_tv_attr_no_bg
                 )
@@ -183,7 +184,7 @@ class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.Biome
                 viewModel.toggleIsEditing()
             }
 
-            if (isTvSettings()) {
+            if (isLayout(Globals.TV or Globals.EMULATOR)) {
                 recyclerView.spanCount = if (liveAccounts.count() + 1 <= 6) {
                     liveAccounts.count() + 1
                 } else 6

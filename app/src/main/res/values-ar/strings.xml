@@ -627,5 +627,6 @@
     <string name="edit_account">تعديل الحساب</string>
     <string name="links_reloaded_toast">تم إعادة تحميل الروابط</string>
     <string name="repoCopied">تم نسخ رابط المصدر!</string>
-
+    <string name="favorite">المفضلة</string>
+    <string name="unfavorite">غير مفضل</string>
 </resources>

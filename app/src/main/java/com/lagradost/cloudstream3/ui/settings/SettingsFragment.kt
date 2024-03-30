@@ -16,30 +16,26 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
+import com.lagradost.cloudstream3.utils.UIHelper
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lagradost.cloudstream3.AcraApplication
 import com.lagradost.cloudstream3.LoginRegisterActivity
-import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.MainSettingsBinding
 import com.lagradost.cloudstream3.mvvm.logError
-import com.lagradost.cloudstream3.syncproviders.AccountManager.Companion.accountManagers
-import com.lagradost.cloudstream3.ui.account.AccountSelectActivity
 import com.lagradost.cloudstream3.ui.home.HomeFragment
 import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel.Companion.USER_COLLECTION
 import com.lagradost.cloudstream3.ui.loginregister.UserSign
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isEmulatorSettings
-import com.lagradost.cloudstream3.utils.NetworkResult
 import com.lagradost.cloudstream3.utils.UIHelper.fixPaddingStatusbar
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
@@ -48,10 +44,6 @@ import java.io.File
 
 class SettingsFragment : Fragment(), UserFetchCallback {
     companion object {
-        var beneneCount = 0
-
-        private var isTv: Boolean = false
-        private var isTrueTv: Boolean = false
 
         fun PreferenceFragmentCompat?.getPref(id: Int): Preference? {
             if (this == null) return null
@@ -68,13 +60,13 @@ class SettingsFragment : Fragment(), UserFetchCallback {
          * On TV you cannot properly scroll to the bottom of settings, this fixes that.
          * */
         fun PreferenceFragmentCompat.setPaddingBottom() {
-            if (isTvSettings()) {
+            if (isLayout(TV or EMULATOR)) {
                 listView?.setPadding(0, 0, 0, 100.toPx)
             }
         }
 
         fun PreferenceFragmentCompat.setToolBarScrollFlags() {
-            if (isTvSettings()) {
+            if (isLayout(TV or EMULATOR)) {
                 val settingsAppbar = view?.findViewById<MaterialToolbar>(R.id.settings_toolbar)
 
                 settingsAppbar?.updateLayoutParams<AppBarLayout.LayoutParams> {
@@ -84,7 +76,7 @@ class SettingsFragment : Fragment(), UserFetchCallback {
         }
 
         fun Fragment?.setToolBarScrollFlags() {
-            if (isTvSettings()) {
+            if(isLayout(TV or EMULATOR)) {
                 val settingsAppbar =
                     this?.view?.findViewById<MaterialToolbar>(R.id.settings_toolbar)
 
@@ -139,47 +131,9 @@ class SettingsFragment : Fragment(), UserFetchCallback {
             return size
         }
 
-        private fun Context.getLayoutInt(): Int {
-            val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
-            return settingsManager.getInt(this.getString(R.string.app_layout_key), -1)
-        }
 
-        private fun Context.isTvSettings(): Boolean {
-            var value = getLayoutInt()
-            if (value == -1) {
-                value = if (isAutoTv()) 1 else 0
-            }
-            return value == 1 || value == 2
-        }
 
-        private fun Context.isTrueTvSettings(): Boolean {
-            var value = getLayoutInt()
-            if (value == -1) {
-                value = if (isAutoTv()) 1 else 0
-            }
-            return value == 1
-        }
 
-        fun Context.updateTv() {
-            isTrueTv = isTrueTvSettings()
-            isTv = isTvSettings()
-        }
-
-        fun isTrueTvSettings(): Boolean {
-            return isTrueTv
-        }
-
-        fun isTvSettings(): Boolean {
-            return isTv
-        }
-
-        fun Context.isEmulatorSettings(): Boolean {
-            return getLayoutInt() == 2
-        }
-
-        fun isTruePhone(): Boolean {
-            return !isTrueTvSettings() && !isTvSettings() && AcraApplication.context?.isEmulatorSettings() != true
-        }
         private fun Context.isAutoTv(): Boolean {
             val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager?
             // AFT = Fire TV
@@ -214,7 +168,6 @@ class SettingsFragment : Fragment(), UserFetchCallback {
 
         // used to debug leaks showToast(activity,"${VideoDownloadManager.downloadStatusEvent.size} : ${VideoDownloadManager.downloadProgressEvent.size}")
 
-        val isTrueTv = isTrueTvSettings()
 
 //        for (syncApi in accountManagers) {
 //            val login = syncApi.loginInfo()
@@ -247,7 +200,7 @@ class SettingsFragment : Fragment(), UserFetchCallback {
                     setOnClickListener {
                         navigate(navigationId)
                     }
-                    if (isTrueTv) {
+                    if (isLayout(TV)) {
                         isFocusable = true
                         isFocusableInTouchMode = true
                     }
@@ -261,7 +214,7 @@ class SettingsFragment : Fragment(), UserFetchCallback {
             }
 
             // Default focus on TV
-            if (isTrueTv) {
+            if (isLayout(TV)) {
                 settingsGeneral.requestFocus()
             }
         }

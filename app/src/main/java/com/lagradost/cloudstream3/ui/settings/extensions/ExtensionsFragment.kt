@@ -29,7 +29,6 @@ import com.lagradost.cloudstream3.plugins.RepositoryManager
 import com.lagradost.cloudstream3.ui.result.FOCUS_SELF
 import com.lagradost.cloudstream3.ui.result.setLinearListLayout
 import com.lagradost.cloudstream3.ui.result.setText
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setToolBarScrollFlags
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setUpToolbar
 import com.lagradost.cloudstream3.utils.AppUtils.downloadAllPluginsDialog
@@ -37,6 +36,8 @@ import com.lagradost.cloudstream3.utils.AppUtils.setDefaultFocus
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.Coroutines.main
 import com.lagradost.cloudstream3.utils.UIHelper.dismissSafe
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 
 class ExtensionsFragment : Fragment() {
     var binding: FragmentExtensionsBinding? = null
@@ -102,7 +103,7 @@ class ExtensionsFragment : Fragment() {
                 nextLeft = R.id.nav_rail_view
             )
 
-            if (!isTrueTvSettings())
+            if (!isLayout(TV))
                 binding?.addRepoButton?.let { button ->
                     button.post {
                         setPadding(
@@ -292,7 +293,7 @@ class ExtensionsFragment : Fragment() {
             }
         }
 
-        val isTv = isTrueTvSettings()
+        val isTv = isLayout(TV)
         binding?.apply {
             addRepoButton.isGone = isTv
             addRepoButtonImageviewHolder.isVisible = isTv

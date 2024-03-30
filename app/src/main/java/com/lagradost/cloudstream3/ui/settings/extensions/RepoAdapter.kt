@@ -16,8 +16,8 @@ import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.databinding.RepositoryItemBinding
 import com.lagradost.cloudstream3.databinding.RepositoryItemTvBinding
 import com.lagradost.cloudstream3.plugins.RepositoryManager.PREBUILT_REPOSITORIES
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
-
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 class RepoAdapter(
     val isSetup: Boolean,
     val clickCallback: RepoAdapter.(RepositoryData) -> Unit,
@@ -28,7 +28,7 @@ class RepoAdapter(
     private val repositories: MutableList<RepositoryData> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layout = if (isTrueTvSettings()) RepositoryItemTvBinding.inflate(
+        val layout = if(isLayout(TV)) RepositoryItemTvBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

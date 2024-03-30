@@ -70,8 +70,9 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.ui.result.UiImage
 import com.lagradost.cloudstream3.ui.result.UiText
 import com.lagradost.cloudstream3.ui.result.txt
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isEmulatorSettings
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTvSettings
+import com.lagradost.cloudstream3.ui.settings.Globals
+import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlin.math.roundToInt
 
@@ -513,7 +514,7 @@ object UIHelper {
     }*/
 
     fun Context.getStatusBarHeight(): Int {
-        if (isTvSettings()) {
+        if(isLayout(Globals.TV or EMULATOR)) {
             return 0
         }
 
@@ -595,8 +596,7 @@ object UIHelper {
 
             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-        changeStatusBarState(isEmulatorSettings())
-
+        changeStatusBarState(isLayout(EMULATOR))
         // window.clearFlags(View.KEEP_SCREEN_ON)
     }
 

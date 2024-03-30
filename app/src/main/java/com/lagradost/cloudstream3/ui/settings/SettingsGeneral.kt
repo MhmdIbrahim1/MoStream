@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.lagradost.cloudstream3.utils.BatteryOptimizationChecker.isAppRestricted
+import com.lagradost.cloudstream3.utils.BatteryOptimizationChecker.showBatteryOptimizationDialog
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.APIHolder.allProviders
 import com.lagradost.cloudstream3.AcraApplication
@@ -27,6 +29,8 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.network.initClient
 import com.lagradost.cloudstream3.ui.EasterEggMonke
+import com.lagradost.cloudstream3.ui.settings.Globals.PHONE
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.getPref
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setPaddingBottom
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setToolBarScrollFlags
@@ -147,6 +151,20 @@ class SettingsGeneral : PreferenceFragmentCompat() {
                 }
             }
             return@setOnPreferenceClickListener true
+        }
+
+        // disable preference on tvs and emulators
+        getPref(R.string.battery_optimisation_key)?.isEnabled = isLayout(PHONE)
+        getPref(R.string.battery_optimisation_key)?.setOnPreferenceClickListener {
+            val ctx = context ?: return@setOnPreferenceClickListener false
+
+            if (isAppRestricted(ctx)) {
+                showBatteryOptimizationDialog(ctx)
+            } else {
+                showToast(R.string.app_unrestricted_toast)
+            }
+
+            true
         }
 
         fun showAdd() {
@@ -323,40 +341,5 @@ class SettingsGeneral : PreferenceFragmentCompat() {
             return@setOnPreferenceClickListener true
         }
 
-        try {
-            SettingsFragment.beneneCount =
-                settingsManager.getInt(getString(R.string.benene_count), 0)
-            getPref(R.string.benene_count)?.let { pref ->
-                pref.summary =
-                    if (SettingsFragment.beneneCount <= 0) getString(R.string.benene_count_text_none) else getString(
-                        R.string.benene_count_text
-                    ).format(
-                        SettingsFragment.beneneCount
-                    )
-
-                pref.setOnPreferenceClickListener {
-                    try {
-                        SettingsFragment.beneneCount++
-                        if (SettingsFragment.beneneCount%20 == 0) {
-                            val intent = Intent(context, EasterEggMonke::class.java)
-                            startActivity(intent)
-                        }
-                        settingsManager.edit().putInt(
-                            getString(R.string.benene_count),
-                            SettingsFragment.beneneCount
-                        )
-                            .apply()
-                        it.summary =
-                            getString(R.string.benene_count_text).format(SettingsFragment.beneneCount)
-                    } catch (e: Exception) {
-                        logError(e)
-                    }
-
-                    return@setOnPreferenceClickListener true
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 }

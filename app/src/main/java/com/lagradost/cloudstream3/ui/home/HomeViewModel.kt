@@ -34,10 +34,11 @@ import com.lagradost.cloudstream3.ui.quicksearch.QuickSearchFragment
 import com.lagradost.cloudstream3.ui.search.SEARCH_ACTION_FOCUSED
 import com.lagradost.cloudstream3.ui.search.SearchClickCallback
 import com.lagradost.cloudstream3.ui.search.SearchHelper
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.isTrueTvSettings
 import com.lagradost.cloudstream3.utils.AppUtils.addProgramsToContinueWatching
 import com.lagradost.cloudstream3.utils.AppUtils.loadResult
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.utils.DOWNLOAD_HEADER_CACHE
 import com.lagradost.cloudstream3.utils.DataStoreHelper
 import com.lagradost.cloudstream3.utils.DataStoreHelper.deleteAllResumeStateIds
@@ -53,7 +54,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import java.util.EnumSet
 import kotlin.collections.set
-
+import java.util.concurrent.CopyOnWriteArrayList
 class HomeViewModel : ViewModel() {
     companion object {
         suspend fun getResumeWatching(): List<DataStoreHelper.ResumeWatchingResult>? {
@@ -124,7 +125,7 @@ class HomeViewModel : ViewModel() {
 
     private val _resumeWatching = MutableLiveData<List<SearchResponse>>()
     private val _preview = MutableLiveData<Resource<Pair<Boolean, List<LoadResponse>>>>()
-    private val previewResponses = mutableListOf<LoadResponse>()
+    private val previewResponses = CopyOnWriteArrayList<LoadResponse>()
     private val previewResponsesAdded = mutableSetOf<String>()
 
     val resumeWatching: LiveData<List<SearchResponse>> = _resumeWatching
@@ -132,7 +133,7 @@ class HomeViewModel : ViewModel() {
 
     private fun loadResumeWatching() = viewModelScope.launchSafe {
         val resumeWatchingResult = getResumeWatching()
-        if (isTrueTvSettings() && resumeWatchingResult != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isLayout(TV) && resumeWatchingResult != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ioSafe {
                 // this WILL crash on non tvs, so keep this inside a try catch
                 activity?.addProgramsToContinueWatching(resumeWatchingResult)
@@ -326,7 +327,13 @@ class HomeViewModel : ViewModel() {
                             val filteredList =
                                 context?.filterHomePageListByFilmQuality(list) ?: list
                             expandable[list.name] =
-                                ExpandableHomepageList(filteredList, 1, home.hasNext)
+                                ExpandableHomepageList(
+                                    filteredList.copy(
+                                        list = CopyOnWriteArrayList(
+                                            filteredList.list
+                                        )
+                                    ), 1, home.hasNext
+                                )
                         }
                     }
 
@@ -341,8 +348,7 @@ class HomeViewModel : ViewModel() {
                         val currentList =
                             items.shuffled().filter { it.list.isNotEmpty() }
                                 .flatMap { it.list }
-                                .distinctBy { it.url }
-                                .toList()
+                                .distinctBy { it.url }.toList()
 
                         if (currentList.isNotEmpty()) {
                             val randomItems =

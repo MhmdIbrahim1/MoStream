@@ -31,7 +31,12 @@
         android:layout_height="wrap_content"
         android:text="@string/anime" />
 
-
+    <com.google.android.material.chip.Chip
+        android:id="@+id/home_select_asian"
+        style="@style/ChipFilled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/asian_drama" />
     <com.google.android.material.chip.Chip
         android:id="@+id/home_select_cartoons"
         style="@style/ChipFilled"
@@ -50,7 +55,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/livestreams" />
-
+    <com.google.android.material.chip.Chip
+        android:id="@+id/home_select_nsfw"
+        style="@style/ChipFilled"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nsfw" />
     <com.google.android.material.chip.Chip
         android:id="@+id/home_select_others"
         style="@style/ChipFilled"

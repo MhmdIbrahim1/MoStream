@@ -24,6 +24,9 @@ import kotlinx.coroutines.withContext
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.log2
+import com.lagradost.cloudstream3.ui.settings.Globals
+import com.lagradost.cloudstream3.ui.settings.Globals.TV
+import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 
 const val MAX_LOD = 6
 const val MIN_LOD = 3
@@ -63,7 +66,7 @@ interface IPreviewGenerator {
     companion object {
         fun new(): IPreviewGenerator {
             /** because TV has low ram + not show we disable this for now */
-            return if (SettingsFragment.isTrueTvSettings()) {
+            return if (isLayout(TV)) {
                 empty()
             } else {
                 PreviewGenerator()
