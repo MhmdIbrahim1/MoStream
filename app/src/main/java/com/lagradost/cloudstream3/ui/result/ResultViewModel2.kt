@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
+import android.text.format.Formatter.formatFileSize
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -1280,9 +1281,15 @@ class ResultViewModel2 : ViewModel() {
         callback: (Pair<LinkLoadingResult, Int>) -> Unit,
     ) {
         loadLinks(result, isVisible = true, type) { links ->
+
+            // This is what i found :D
+            val context = AcraApplication.context
             postPopup(
                 text,
-                links.links.map { txt("${it.name} ${Qualities.getStringByInt(it.quality)}") }) {
+                links.links.apmap {
+                    val size = it.getVideoSize()?.let { size -> " " + formatFileSize(context, size) } ?: ""
+                    txt("${it.name} ${Qualities.getStringByInt(it.quality)}$size")
+                }) {
                 callback.invoke(links to (it ?: return@postPopup))
             }
         }

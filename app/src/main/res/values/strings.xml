@@ -801,4 +801,6 @@
     <string name="battery_optimisation_key" translatable="false">battery_optimisation</string>
     <string name="app_unrestricted_toast">App battery usage is already set to unrestricted</string>
     <string name="ok">Ok</string>
+    <string name="reset_btn">Reset</string>
+
 </resources>

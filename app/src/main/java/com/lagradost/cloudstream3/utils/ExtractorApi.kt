@@ -22,6 +22,7 @@ import com.lagradost.cloudstream3.extractors.CineGrabber
 import com.lagradost.cloudstream3.extractors.Cinestart
 import com.lagradost.cloudstream3.extractors.DBfilm
 import com.lagradost.cloudstream3.extractors.Dailymotion
+import com.lagradost.cloudstream3.extractors.EPlayExtractor
 import com.lagradost.cloudstream3.extractors.DatabaseGdrive
 import com.lagradost.cloudstream3.extractors.DatabaseGdrive2
 import com.lagradost.cloudstream3.extractors.DesuArcg
@@ -199,6 +200,7 @@ import com.lagradost.cloudstream3.extractors.VizcloudOnline
 import com.lagradost.cloudstream3.extractors.VizcloudSite
 import com.lagradost.cloudstream3.extractors.VizcloudXyz
 import com.lagradost.cloudstream3.extractors.Voe
+import com.lagradost.cloudstream3.extractors.Vtbe
 import com.lagradost.cloudstream3.extractors.Watchx
 import com.lagradost.cloudstream3.extractors.WcoStream
 import com.lagradost.cloudstream3.extractors.Wibufile
@@ -397,8 +399,28 @@ open class ExtractorLink constructor(
     open val extractorData: String? = null,
     open val type: ExtractorLinkType,
 ) : VideoDownloadManager.IDownloadableMinimum {
-    val isM3u8 : Boolean get() = type == ExtractorLinkType.M3U8
-    val isDash : Boolean get() = type == ExtractorLinkType.DASH
+    val isM3u8: Boolean get() = type == ExtractorLinkType.M3U8
+    val isDash: Boolean get() = type == ExtractorLinkType.DASH
+
+    // Cached video size
+    private var videoSize: Long? = null
+
+    /**
+     * Get video size in bytes with one head request. Only available for ExtractorLinkType.Video
+     * @param timeoutSeconds timeout of the head request.
+     */
+    suspend fun getVideoSize(timeoutSeconds: Long = 3L): Long? {
+        // Content-Length is not applicable to other types of formats
+        if (this.type != ExtractorLinkType.VIDEO) return null
+
+        videoSize = videoSize ?: runCatching {
+            val response =
+                app.head(this.url, headers = headers, referer = referer, timeout = timeoutSeconds)
+            response.headers["Content-Length"]?.toLong()
+        }.getOrNull()
+
+        return videoSize
+    }
 
     @JsonIgnore
     fun getAllHeaders() : Map<String, String> {
@@ -841,7 +863,9 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Rabbitstream(),
     Dokicloud(),
     Megacloud(),
-    Mediafire()
+    Mediafire(),
+    Vtbe(),
+    EPlayExtractor()
 )
 
 

@@ -15,13 +15,7 @@ import com.lagradost.cloudstream3.ui.settings.Globals
 import android.provider.Settings
 import android.text.Editable
 import android.text.format.DateUtils
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.Surface
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -47,7 +41,6 @@ import com.lagradost.cloudstream3.ui.player.GeneratorPlayer.Companion.subsProvid
 import com.lagradost.cloudstream3.ui.player.source_priority.QualityDataHelper
 import com.lagradost.cloudstream3.ui.result.setText
 import com.lagradost.cloudstream3.ui.result.txt
-import com.lagradost.cloudstream3.ui.settings.SettingsFragment
 import com.lagradost.cloudstream3.utils.AppUtils.isUsingMobileData
 import com.lagradost.cloudstream3.utils.DataStoreHelper
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showDialog
@@ -63,14 +56,14 @@ import com.lagradost.cloudstream3.utils.UserPreferenceDelegate
 import com.lagradost.cloudstream3.utils.Vector2
 import kotlin.math.*
 
-const val MINIMUM_SEEK_TIME = 7000L         // when swipe seeking
-const val MINIMUM_VERTICAL_SWIPE = 2.0f     // in percentage
-const val MINIMUM_HORIZONTAL_SWIPE = 2.0f   // in percentage
+const val MINIMUM_SEEK_TIME = 7000L         // when swipe seeking in milliseconds
+const val MINIMUM_VERTICAL_SWIPE = 2.0f     // in percentage of screen height
+const val MINIMUM_HORIZONTAL_SWIPE = 2.0f   // in percentage of screen width
 const val VERTICAL_MULTIPLIER = 2.0f
 const val HORIZONTAL_MULTIPLIER = 2.0f
 const val DOUBLE_TAB_MAXIMUM_HOLD_TIME = 200L
-const val DOUBLE_TAB_MINIMUM_TIME_BETWEEN = 200L    // this also affects the UI show response time
-const val DOUBLE_TAB_PAUSE_PERCENTAGE = 0.15        // in both directions
+const val DOUBLE_TAB_MINIMUM_TIME_BETWEEN = 200L    // this also affects the UI show response time for double tap
+const val DOUBLE_TAB_PAUSE_PERCENTAGE = 0.15        // in both directions of the screen
 private const val SUBTITLE_DELAY_BUNDLE_KEY = "subtitle_delay"
 
 // All the UI Logic for the player
@@ -493,6 +486,11 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
                     activity?.hideSystemUI()
             }
             applyBtt.setOnClickListener {
+                dialog.dismissSafe(activity)
+                player.seekTime(1L)
+            }
+            resetBtt.setOnClickListener {
+                subtitleDelay = 0
                 dialog.dismissSafe(activity)
                 player.seekTime(1L)
             }

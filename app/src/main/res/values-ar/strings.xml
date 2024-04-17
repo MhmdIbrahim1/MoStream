@@ -629,4 +629,5 @@
     <string name="repoCopied">تم نسخ رابط المصدر!</string>
     <string name="favorite">المفضلة</string>
     <string name="unfavorite">غير مفضل</string>
+    <string name="reset_btn">إعادة تعيين</string>
 </resources>
