@@ -15,6 +15,7 @@ import com.lagradost.cloudstream3.ui.settings.Globals
 import android.provider.Settings
 import android.text.Editable
 import android.text.format.DateUtils
+import com.lagradost.cloudstream3.LoadResponse
 import android.view.*
 import android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
 import android.view.animation.AlphaAnimation
@@ -175,7 +176,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
 
     open fun openOnlineSubPicker(
         context: Context,
-        imdbId: Long?,
+        loadResponse: LoadResponse?,
         dismissCallback: (() -> Unit)
     ) {
         throw NotImplementedError()

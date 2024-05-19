@@ -15,6 +15,7 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
         val indexSubtitlesApi = IndexSubtitleApi()
         val addic7ed = Addic7ed()
         val subScene = SubScene()
+        val subDl = SubDL()
         val localListApi = LocalList()
 
         // used to login via app intent
@@ -43,7 +44,8 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
                 openSubtitlesApi,
                 indexSubtitlesApi, // they got anti scraping measures in place :(
                 subScene,
-                addic7ed
+                addic7ed,
+                subDl
             )
 
         const val appString = "cloudstreamapp"

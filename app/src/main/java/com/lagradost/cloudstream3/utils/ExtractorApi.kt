@@ -106,6 +106,7 @@ import com.lagradost.cloudstream3.extractors.SibNet
 import com.lagradost.cloudstream3.extractors.ContentX
 import com.lagradost.cloudstream3.extractors.FourCX
 import com.lagradost.cloudstream3.extractors.FourPlayRu
+import com.lagradost.cloudstream3.extractors.Geodailymotion
 import com.lagradost.cloudstream3.extractors.Hotlinger
 import com.lagradost.cloudstream3.extractors.HDMomPlayer
 import com.lagradost.cloudstream3.extractors.HDPlayerSystem
@@ -118,6 +119,7 @@ import com.lagradost.cloudstream3.extractors.VidMoxy
 import com.lagradost.cloudstream3.extractors.PixelDrain
 import com.lagradost.cloudstream3.extractors.MailRu
 import com.lagradost.cloudstream3.extractors.Mediafire
+import com.lagradost.cloudstream3.extractors.MetaGnathTuggers
 import com.lagradost.cloudstream3.extractors.OkRuSSL
 import com.lagradost.cloudstream3.extractors.OkRuHTTP
 import com.lagradost.cloudstream3.extractors.Okrulink
@@ -139,6 +141,7 @@ import com.lagradost.cloudstream3.extractors.Sbspeed
 import com.lagradost.cloudstream3.extractors.Sbthe
 import com.lagradost.cloudstream3.extractors.Sendvid
 import com.lagradost.cloudstream3.extractors.ShaveTape
+import com.lagradost.cloudstream3.extractors.Simpulumlamerop
 import com.lagradost.cloudstream3.extractors.Solidfiles
 import com.lagradost.cloudstream3.extractors.Ssbstream
 import com.lagradost.cloudstream3.extractors.StreamM4u
@@ -173,6 +176,7 @@ import com.lagradost.cloudstream3.extractors.UpstreamExtractor
 import com.lagradost.cloudstream3.extractors.Uqload
 import com.lagradost.cloudstream3.extractors.Uqload1
 import com.lagradost.cloudstream3.extractors.Uqload2
+import com.lagradost.cloudstream3.extractors.Urochsunloath
 import com.lagradost.cloudstream3.extractors.Userload
 import com.lagradost.cloudstream3.extractors.Userscloud
 import com.lagradost.cloudstream3.extractors.Uservideo
@@ -180,10 +184,12 @@ import com.lagradost.cloudstream3.extractors.Vanfem
 import com.lagradost.cloudstream3.extractors.Vicloud
 import com.lagradost.cloudstream3.extractors.VidSrcExtractor
 import com.lagradost.cloudstream3.extractors.VidSrcExtractor2
+import com.lagradost.cloudstream3.extractors.VidSrcTo
 import com.lagradost.cloudstream3.extractors.VideoVard
 import com.lagradost.cloudstream3.extractors.VideovardSX
 import com.lagradost.cloudstream3.extractors.Vidgomunime
 import com.lagradost.cloudstream3.extractors.Vidgomunimesb
+import com.lagradost.cloudstream3.extractors.Vidguardto
 import com.lagradost.cloudstream3.extractors.Vidmoly
 import com.lagradost.cloudstream3.extractors.Vidmolyme
 import com.lagradost.cloudstream3.extractors.Vido
@@ -205,6 +211,7 @@ import com.lagradost.cloudstream3.extractors.Watchx
 import com.lagradost.cloudstream3.extractors.WcoStream
 import com.lagradost.cloudstream3.extractors.Wibufile
 import com.lagradost.cloudstream3.extractors.XStreamCdn
+import com.lagradost.cloudstream3.extractors.Yipsu
 import com.lagradost.cloudstream3.extractors.YourUpload
 import com.lagradost.cloudstream3.extractors.YoutubeExtractor
 import com.lagradost.cloudstream3.extractors.YoutubeMobileExtractor
@@ -865,7 +872,14 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Megacloud(),
     Mediafire(),
     Vtbe(),
-    EPlayExtractor()
+    EPlayExtractor(),
+    Vidguardto(),
+    Simpulumlamerop(),
+    Urochsunloath(),
+    Yipsu(),
+    MetaGnathTuggers(),
+    VidSrcTo(),
+    Geodailymotion(),
 )
 
 

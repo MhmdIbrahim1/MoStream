@@ -19,6 +19,10 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import com.lagradost.cloudstream3.LoadResponse.Companion.getAniListId
+import com.lagradost.cloudstream3.LoadResponse.Companion.getImdbId
+import com.lagradost.cloudstream3.LoadResponse.Companion.getMalId
+import com.lagradost.cloudstream3.LoadResponse.Companion.getTMDbId
 import androidx.media3.common.Format.NO_VALUE
 import androidx.media3.common.MimeTypes
 import com.lagradost.cloudstream3.*
@@ -258,6 +262,7 @@ class GeneratorPlayer : FullScreenPlayer() {
         var episode: Int? = null,
         var season: Int? = null,
         var name: String? = null,
+        var imdbId: String? = null,
     )
 
     private fun getMetaData(): TempMetaData {
@@ -284,7 +289,7 @@ class GeneratorPlayer : FullScreenPlayer() {
     }
 
     override fun openOnlineSubPicker(
-        context: Context, imdbId: Long?, dismissCallback: (() -> Unit)
+        context: Context, loadResponse: LoadResponse?, dismissCallback: (() -> Unit)
     ) {
         val providers = subsProviders
         val isSingleProvider = subsProviders.size == 1
@@ -424,8 +429,10 @@ class GeneratorPlayer : FullScreenPlayer() {
                     val search =
                         AbstractSubtitleEntities.SubtitleSearch(
                             query = query ?: return@ioSafe,
-                            imdb = imdbId,
-                            epNumber = currentTempMeta.episode,
+                            imdbId = loadResponse?.getImdbId(),
+                            tmdbId = loadResponse?.getTMDbId()?.toInt(),
+                            malId = loadResponse?.getMalId()?.toInt(),
+                            aniListId = loadResponse?.getAniListId()?.toInt(),                            epNumber = currentTempMeta.episode,
                             seasonNumber = currentTempMeta.season,
                             lang = currentLanguageTwoLetters.ifBlank { null },
                             year = viewModel.currentSubtitleYear.value
@@ -633,6 +640,7 @@ class GeneratorPlayer : FullScreenPlayer() {
                 }
 
                 if (subsProvidersIsActive) {
+                    val currentLoadResponse = viewModel.getLoadResponse()
                     val loadFromOpenSubsFooter: TextView = layoutInflater.inflate(
                         R.layout.sort_bottom_footer_add_choice, null
                     ) as TextView
@@ -643,7 +651,7 @@ class GeneratorPlayer : FullScreenPlayer() {
                     loadFromOpenSubsFooter.setOnClickListener {
                         shouldDismiss = false
                         sourceDialog.dismissSafe(activity)
-                        openOnlineSubPicker(it.context, null) {
+                        openOnlineSubPicker(it.context, currentLoadResponse) {
                             dismiss()
                         }
                     }

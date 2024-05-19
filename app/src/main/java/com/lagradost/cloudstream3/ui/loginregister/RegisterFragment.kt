@@ -87,7 +87,7 @@ class RegisterFragment : Fragment() {
                                 edEmail.setText("")
                                 edPassword.setText("")
                             }
-                            requireActivity().onBackPressed()
+                            findNavController().popBackStack()
                             // Navigate to login screen
                             Toast.makeText(
                                 requireContext(),

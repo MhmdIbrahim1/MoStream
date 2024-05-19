@@ -17,6 +17,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorUri
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.lagradost.cloudstream3.LoadResponse
 
 class PlayerGeneratorViewModel : ViewModel() {
     companion object {
@@ -110,6 +111,9 @@ class PlayerGeneratorViewModel : ViewModel() {
                 }
             }
         }
+    }
+    fun getLoadResponse(): LoadResponse? {
+        return normalSafeApiCall { (generator as? RepoLinkGenerator?)?.page }
     }
 
     fun getMeta(): Any? {
