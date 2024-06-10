@@ -1587,12 +1587,6 @@ class ResultViewModel2 : ViewModel() {
                 _episodeSynopsis.postValue(click.data.description)
             }
 
-            /* not implemented, not used
-            ACTION_DOWNLOAD_EPISODE_SUBTITLE -> {
-                loadLinks(click.data, isVisible =  false, isCasting = false) { links ->
-                    downloadSubtitle(activity,links.subs,)
-                }
-            }*/
             ACTION_DOWNLOAD_EPISODE_SUBTITLE_MIRROR -> {
                 val response = currentResponse ?: return
 
@@ -1691,6 +1685,8 @@ class ResultViewModel2 : ViewModel() {
                     startChromecast(activity, click.data, result.links, result.subs, index)
                 }
             }
+
+
 
             ACTION_PLAY_EPISODE_IN_BROWSER -> acquireSingleLink(
                 click.data,

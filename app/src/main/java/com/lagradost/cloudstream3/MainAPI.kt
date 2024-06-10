@@ -1453,6 +1453,7 @@ fun TvType?.isEpisodeBased(): Boolean {
 data class NextAiring(
     val episode: Int,
     val unixTime: Long,
+    val season: Int? = null,
 )
 
 /**

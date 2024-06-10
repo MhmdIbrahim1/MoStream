@@ -54,6 +54,7 @@ const val ACTION_DOWNLOAD_EPISODE_SUBTITLE_MIRROR = 14
 const val ACTION_PLAY_EPISODE_IN_WEB_VIDEO = 16
 const val ACTION_PLAY_EPISODE_IN_MPV = 17
 
+const val ACTION_FCAST = 19
 const val ACTION_MARK_AS_WATCHED = 18
 const val TV_EP_SIZE_LARGE = 400
 const val TV_EP_SIZE_SMALL = 300
@@ -112,14 +113,8 @@ class EpisodeAdapter(
     }
 
 
-    // private val layout = R.layout.result_episode_both
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        /*val layout = if (cardList.filter { it.poster != null }.size >= cardList.size / 2)
-            R.layout.result_episode_large
-        else R.layout.result_episode*/
-
-        return when (viewType) {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+      return when (viewType) {
             0 -> {
                 EpisodeCardViewHolderSmall(
                     ResultEpisodeBinding.inflate(

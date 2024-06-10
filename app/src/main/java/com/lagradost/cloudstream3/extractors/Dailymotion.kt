@@ -23,8 +23,7 @@ open class Dailymotion : ExtractorApi() {
     @Suppress("RegExpSimplifiable")
     private val videoIdRegex = "^[kx][a-zA-Z0-9]+\$".toRegex()
 
-    // https://www.dailymotion.com/video/k3JAHfletwk94ayCVIu
-    // https://www.dailymotion.com/embed/video/k3JAHfletwk94ayCVIu
+
     override suspend fun getUrl(
         url: String,
         referer: String?,
