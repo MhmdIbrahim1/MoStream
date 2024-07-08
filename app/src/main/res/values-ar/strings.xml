@@ -638,5 +638,6 @@
     <string name="device_pin_url_message">قم بزيارة <b>%s</b> على هاتفك الذكي أو جهاز الكمبيوتر وأدخل الرمز أعلاه</string>
     <string name="open_downloaded_repo">فتح المستودع المحمل</string>
     <string name="dismiss">تجاهل</string>
+    <string name="downloads_empty">لا توجد تنزيلات</string>
 
 </resources>

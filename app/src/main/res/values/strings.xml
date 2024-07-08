@@ -815,6 +815,11 @@
     <string name="open_downloaded_repo">Open repository</string>
     <string name="dismiss">Dismiss</string>
     <string name="open_local_video">Open Local Video</string>
+    <string name="downloads_empty">There are currently no downloads.</string>
 
+    <plurals name="episodes" translatable="false">
+        <item quantity="one">@string/episode</item>
+        <item quantity="other">@string/episodes</item>
+    </plurals>
 
 </resources>
