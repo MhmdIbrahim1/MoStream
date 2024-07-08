@@ -251,6 +251,8 @@ dependencies {
 
     implementation ("androidx.biometric:biometric:1.2.0-alpha05") // Fingerprint Authentication
 
+    implementation("io.github.g0dkar:qrcode-kotlin:4.1.1") // QR code for PIN Auth on TV
+
 }
 
 tasks.register("androidSourcesJar", Jar::class) {

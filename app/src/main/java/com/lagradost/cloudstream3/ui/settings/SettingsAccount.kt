@@ -6,6 +6,21 @@ import android.view.View.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.annotation.UiThread
+import android.graphics.Bitmap
+import android.os.CountDownTimer
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmapOrNull
+import android.view.View.FOCUS_DOWN
+import com.lagradost.cloudstream3.databinding.DeviceAuthBinding
+import com.lagradost.cloudstream3.ui.result.img
+import com.lagradost.cloudstream3.ui.result.setImage
+import com.lagradost.cloudstream3.ui.result.setText
+import com.lagradost.cloudstream3.ui.result.txt
+import com.lagradost.cloudstream3.utils.UIHelper.colorFromAttribute
+import com.lagradost.cloudstream3.utils.UIHelper.toPx
+import qrcode.QRCode
+import java.io.ByteArrayOutputStream
+
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -82,7 +97,7 @@ class SettingsAccount : PreferenceFragmentCompat(), BiometricAuthenticator.Biome
                 showAccountSwitch(activity, api)
             }
 
-            if(isLayout(TV or EMULATOR)) {
+            if (isLayout(TV or EMULATOR)) {
                 binding.accountSwitchAccount.requestFocus()
             }
         }
@@ -127,7 +142,112 @@ class SettingsAccount : PreferenceFragmentCompat(), BiometricAuthenticator.Biome
             try {
                 when (api) {
                     is OAuth2API -> {
-                        api.authenticate(activity)
+                        if (isLayout(Globals.PHONE) || !api.supportDeviceAuth) {
+                            api.authenticate(activity)
+                        } else if (api.supportDeviceAuth && activity != null) {
+
+                            val binding: DeviceAuthBinding =
+                                DeviceAuthBinding.inflate(activity.layoutInflater, null, false)
+
+                            val builder =
+                                AlertDialog.Builder(activity)
+                                    .setView(binding.root)
+
+                            builder.apply {
+                                setNegativeButton(R.string.cancel) { _, _ -> }
+                                setPositiveButton(R.string.auth_locally) { _, _ ->
+                                    api.authenticate(activity)
+                                }
+                            }
+
+                            val dialog = builder.create()
+
+                            ioSafe {
+                                try {
+                                    val pinCodeData = api.getDevicePin()
+                                    if (pinCodeData == null) {
+                                        showToast(R.string.device_pin_error_message)
+                                        api.authenticate(activity)
+                                        return@ioSafe
+                                    }
+
+                                    /*val logoBytes = ContextCompat.getDrawable(
+                                        activity,
+                                        R.drawable.cloud_2_solid
+                                    )?.toBitmapOrNull()?.let { bitmap ->
+                                        val csLogo = ByteArrayOutputStream()
+                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, csLogo)
+                                        csLogo.toByteArray()
+                                    }*/
+
+                                    val qrCodeImage = QRCode.ofRoundedSquares()
+                                        .withColor(activity.colorFromAttribute(R.attr.textColor))
+                                        .withBackgroundColor(activity.colorFromAttribute(R.attr.primaryBlackBackground))
+                                        //.withLogo(logoBytes, 200.toPx, 200.toPx) //For later if logo needed anytime
+                                        .build(pinCodeData.verificationUrl)
+                                        .render().nativeImage() as Bitmap
+
+                                    activity.runOnUiThread {
+                                        dialog.show()
+                                        binding.apply {
+                                            devicePinCode.setText(txt(pinCodeData.userCode))
+                                            deviceAuthMessage.setText(
+                                                txt(
+                                                    R.string.device_pin_url_message,
+                                                    pinCodeData.verificationUrl
+                                                )
+                                            )
+                                            deviceAuthQrcode.setImage(
+                                                img(qrCodeImage)
+                                            )
+                                        }
+
+                                        val expirationMillis =
+                                            pinCodeData.expiresIn.times(1000).toLong()
+
+                                        object : CountDownTimer(expirationMillis, 1000) {
+
+                                            override fun onTick(millisUntilFinished: Long) {
+                                                val secondsUntilFinished =
+                                                    millisUntilFinished.div(1000).toInt()
+
+                                                binding.deviceAuthValidationCounter.setText(
+                                                    txt(
+                                                        R.string.device_pin_counter_text,
+                                                        secondsUntilFinished.div(60),
+                                                        secondsUntilFinished.rem(60)
+                                                    )
+                                                )
+
+                                                ioSafe {
+                                                    if (secondsUntilFinished.rem(pinCodeData.interval) == 0 && api.handleDeviceAuth(
+                                                            pinCodeData
+                                                        )
+                                                    ) {
+                                                        showToast(
+                                                            txt(
+                                                                R.string.authenticated_user,
+                                                                api.name
+                                                            )
+                                                        )
+                                                        dialog.dismissSafe(activity)
+                                                        cancel()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onFinish() {
+                                                showToast(R.string.device_pin_expired_message)
+                                                dialog.dismissSafe(activity)
+                                            }
+
+                                        }.start()
+                                    }
+                                } catch (e: Exception) {
+                                    logError(e)
+                                }
+                            }
+                        }
                     }
 
                     is InAppAuthAPI -> {
@@ -220,23 +340,15 @@ class SettingsAccount : PreferenceFragmentCompat(), BiometricAuthenticator.Biome
                                 server = if (api.requiresServer) binding.loginServerInput.text?.toString() else null,
                             )
                             ioSafe {
-                                val isSuccessful = try {
-                                    api.login(loginData)
+                                try {
+                                    showToast(
+                                        txt(
+                                            if (api.login(loginData)) R.string.authenticated_user else R.string.authenticated_user_fail,
+                                            api.name
+                                        )
+                                    )
                                 } catch (e: Exception) {
                                     logError(e)
-                                    false
-                                }
-                                activity.runOnUiThread {
-                                    try {
-                                        showToast(
-                                            activity.getString(if (isSuccessful) R.string.authenticated_user else R.string.authenticated_user_fail)
-                                                .format(
-                                                    api.name
-                                                )
-                                        )
-                                    } catch (e: Exception) {
-                                        logError(e) // format might fail
-                                    }
                                 }
                             }
                             dialog.dismissSafe(activity)

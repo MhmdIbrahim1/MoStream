@@ -26,6 +26,10 @@ class AnyVidplay(hostUrl: String) : Vidplay() {
     override val mainUrl = hostUrl
 }
 
+class MegaF : Vidplay() {
+    override val name = "MegaF"
+    override val mainUrl = "https://megaf.cc"
+}
 open class Vidplay : ExtractorApi() {
     override val name = "Vidplay"
     override val mainUrl = "https://vidplay.site"

@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import android.graphics.Bitmap
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
@@ -83,18 +84,28 @@ sealed class UiImage {
     ) : UiImage()
 
     data class Drawable(@DrawableRes val resId: Int) : UiImage()
+    data class Bitmap(val bitmap: android.graphics.Bitmap) : UiImage()
+
 }
 
 fun ImageView?.setImage(value: UiImage?, fadeIn: Boolean = true) {
     when (value) {
         is UiImage.Image -> setImageImage(value, fadeIn)
         is UiImage.Drawable -> setImageDrawable(value)
+        is UiImage.Bitmap -> setImageBitmap(value)
         null -> {
             this?.isVisible = false
         }
     }
 }
 
+
+
+fun ImageView?.setImageBitmap(value: UiImage.Bitmap) {
+    if (this == null) return
+    this.isVisible = true
+    this.setImageBitmap(value.bitmap)
+}
 fun ImageView?.setImageImage(value: UiImage.Image, fadeIn: Boolean = true) {
     if (this == null) return
     this.isVisible = setImage(value.url, value.headers, value.errorDrawable, fadeIn)
@@ -104,6 +115,10 @@ fun ImageView?.setImageDrawable(value: UiImage.Drawable) {
     if (this == null) return
     this.isVisible = true
     this.setImage(UiImage.Drawable(value.resId))
+}
+
+fun img(bitmap: Bitmap): UiImage {
+    return UiImage.Bitmap(bitmap)
 }
 
 @JvmName("imgNull")

@@ -16,6 +16,8 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.TransactionTooLargeException
 import android.util.Log
 import android.view.*
@@ -45,6 +47,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -58,6 +61,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
@@ -199,6 +203,13 @@ object UIHelper {
             }
         } catch (t: Throwable) {
             logError(t)
+        }
+    }
+    fun View?.setAppBarNoScrollFlagsOnTV() {
+        if (isLayout(Globals.TV or EMULATOR)) {
+            this?.updateLayoutParams<AppBarLayout.LayoutParams> {
+                scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+            }
         }
     }
 
@@ -453,21 +464,25 @@ object UIHelper {
     }
 
     fun FragmentActivity.popCurrentPage() {
-        this.onBackPressedDispatcher.onBackPressed()
-        /*val currentFragment = supportFragmentManager.fragments.lastOrNull {
-            it.isVisible
-        } ?: return
-
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                R.anim.enter_anim,
-                R.anim.exit_anim,
-                R.anim.pop_enter,
-                R.anim.pop_exit
-            )
-            .remove(currentFragment)
-            .commitAllowingStateLoss()*/
+        // Post the back press action to the main thread handler to ensure it executes
+        // after any currently pending UI updates or fragment transactions.
+        Handler(Looper.getMainLooper()).post {
+            // Check if the FragmentManager state is saved. If it is, we cannot perform
+            // fragment transactions safely because the state may be inconsistent.
+            if (!supportFragmentManager.isStateSaved) {
+                // If the state is not saved, it's safe to perform the back press action.
+                this.onBackPressedDispatcher.onBackPressed()
+            } else {
+                // If the state is saved, retry the back press action after a slight delay.
+                // This gives the FragmentManager time to complete any ongoing state-saving
+                // operations or transactions, ensuring that we do not encounter an IllegalStateException.
+                Handler(Looper.getMainLooper()).postDelayed({
+                    this.onBackPressedDispatcher.onBackPressed()
+                }, 100)
+            }
+        }
     }
+
     /*
     fun FragmentActivity.popCurrentPage(isInPlayer: Boolean, isInExpandedView: Boolean, isInResults: Boolean) {
         val currentFragment = supportFragmentManager.fragments.lastOrNull {

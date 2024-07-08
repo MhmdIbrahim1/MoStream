@@ -631,5 +631,12 @@
     <string name="unfavorite">غير مفضل</string>
     <string name="reset_btn">إعادة تعيين</string>
     <string name="security">الأمان</string>
+    <string name="qr_image">صورة QR</string>
+    <string name="auth_locally">المصادقة المحلية</string>
+    <string name="device_pin_error_message">لا يمكن الحصول على رمز PIN للجهاز، حاول المصادقة المحلية</string>
+    <string name="device_pin_counter_text">تنتهي صلاحية الرمز خلال %1$dm %2$ds</string>
+    <string name="device_pin_url_message">قم بزيارة <b>%s</b> على هاتفك الذكي أو جهاز الكمبيوتر وأدخل الرمز أعلاه</string>
+    <string name="open_downloaded_repo">فتح المستودع المحمل</string>
+    <string name="dismiss">تجاهل</string>
 
 </resources>

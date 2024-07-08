@@ -121,6 +121,7 @@ import com.lagradost.cloudstream3.extractors.VidMoxy
 import com.lagradost.cloudstream3.extractors.PixelDrain
 import com.lagradost.cloudstream3.extractors.MailRu
 import com.lagradost.cloudstream3.extractors.Mediafire
+import com.lagradost.cloudstream3.extractors.MegaF
 import com.lagradost.cloudstream3.extractors.MetaGnathTuggers
 import com.lagradost.cloudstream3.extractors.OkRuSSL
 import com.lagradost.cloudstream3.extractors.OkRuHTTP
@@ -884,6 +885,7 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Geodailymotion(),
     FourPichive(),
     GoodstreamExtractor(),
+    MegaF()
 )
 
 

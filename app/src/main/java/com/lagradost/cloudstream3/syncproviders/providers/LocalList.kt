@@ -23,6 +23,7 @@ class LocalList : SyncAPI {
     override val requiresLogin = false
     override val createAccountUrl: Nothing? = null
     override val idPrefix = "local"
+    override val supportDeviceAuth = false
     override var requireLibraryRefresh = true
 
     override fun loginInfo(): AuthAPI.LoginInfo {
