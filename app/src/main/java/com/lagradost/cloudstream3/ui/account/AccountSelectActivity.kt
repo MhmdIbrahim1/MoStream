@@ -36,7 +36,7 @@ import com.lagradost.cloudstream3.utils.DataStoreHelper.selectedKeyIndex
 import com.lagradost.cloudstream3.utils.DataStoreHelper.setAccount
 import com.lagradost.cloudstream3.utils.UIHelper.colorFromAttribute
 
-class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.BiometricAuthCallback {
+class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.BiometricCallback {
 
     lateinit var viewModel: AccountViewModel
 
@@ -201,5 +201,9 @@ class AccountSelectActivity : AppCompatActivity() , BiometricAuthenticator.Biome
 
     override fun onAuthenticationSuccess() {
         Log.i(BiometricAuthenticator.TAG,"Authentication successful in AccountSelectActivity")
+    }
+
+    override fun onAuthenticationError() {
+        finish()
     }
 }

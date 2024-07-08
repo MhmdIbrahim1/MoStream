@@ -154,7 +154,9 @@
             android:title="@string/video_buffer_clear_settings" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/pref_category_android_tv">
+        android:title="@string/pref_category_android_tv"
+        android:key="@string/pref_category_android_tv_key" >
+        >
         <SeekBarPreference
             android:defaultValue="10"
             android:max="60"

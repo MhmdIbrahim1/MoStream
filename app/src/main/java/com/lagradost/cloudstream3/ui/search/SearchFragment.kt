@@ -229,7 +229,7 @@ class SearchFragment : Fragment() {
                     SearchHelper.handleSearchClickCallback(callback)
                 }
 
-            searchRoot.findViewById<TextView>(R.id.search_src_text)?.tag = "tv_no_focus_tag"
+            searchRoot.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)?.tag = "tv_no_focus_tag"
             searchAutofitResults.adapter = adapter
             searchLoadingBar.alpha = 0f
         }
@@ -237,10 +237,6 @@ class SearchFragment : Fragment() {
 
         val searchExitIcon =
             binding?.mainSearch?.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
-        // val searchMagIcon =
-        //    binding?.mainSearch?.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
-        // searchMagIcon.scaleX = 0.65f
-        // searchMagIcon.scaleY = 0.65f
 
         // Set the color for the search exit icon to the correct theme text color
         val searchExitIconColor = TypedValue()
@@ -539,11 +535,7 @@ class SearchFragment : Fragment() {
         binding?.apply {
             searchHistoryRecycler.adapter = historyAdapter
             searchHistoryRecycler.setLinearListLayout(isHorizontal = false, nextRight = FOCUS_SELF)
-            //searchHistoryRecycler.layoutManager = GridLayoutManager(context, 1)
-
             searchMasterRecycler.adapter = masterAdapter
-            //searchMasterRecycler.setLinearListLayout(isHorizontal = false, nextRight = FOCUS_SELF)
-
             searchMasterRecycler.layoutManager = GridLayoutManager(context, 1)
 
             // Automatically search the specified query, this allows the app search to launch from intent
@@ -561,19 +553,6 @@ class SearchFragment : Fragment() {
                 MainActivity.nextSearchQuery = null
             }
         }
-
-
-        // SubtitlesFragment.push(activity)
-        //searchViewModel.search("iron man")
-        //(activity as AppCompatActivity).loadResult("https://shiro.is/overlord-dubbed", "overlord-dubbed", "Shiro")
-        /*
-                (activity as AppCompatActivity?)?.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_anim,
-                        R.anim.exit_anim,
-                        R.anim.pop_enter,
-                        R.anim.pop_exit)
-                    .add(R.id.homeRoot, PlayerFragment.newInstance(PlayerData(0, null,0)))
-                    .commit()*/
     }
 
 }

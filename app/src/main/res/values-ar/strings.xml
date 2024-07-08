@@ -630,4 +630,6 @@
     <string name="favorite">المفضلة</string>
     <string name="unfavorite">غير مفضل</string>
     <string name="reset_btn">إعادة تعيين</string>
+    <string name="security">الأمان</string>
+
 </resources>

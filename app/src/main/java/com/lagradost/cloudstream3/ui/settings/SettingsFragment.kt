@@ -45,6 +45,28 @@ import java.io.File
 class SettingsFragment : Fragment(), UserFetchCallback {
     companion object {
 
+
+        fun Preference?.hideOn(layoutFlags: Int): Preference? {
+            if (this == null) return null
+            this.isVisible = !isLayout(layoutFlags)
+            return this
+        }
+
+        /**
+         * Hide many Preferences on selected layouts.
+         **/
+        fun PreferenceFragmentCompat?.hidePrefs(ids: List<Int>, layoutFlags: Int) {
+            if (this == null) return
+
+            try {
+                ids.forEach {
+                    getPref(it)?.isVisible = !isLayout(layoutFlags)
+                }
+            } catch (e: Exception) {
+                logError(e)
+            }
+        }
+
         fun PreferenceFragmentCompat?.getPref(id: Int): Preference? {
             if (this == null) return null
 

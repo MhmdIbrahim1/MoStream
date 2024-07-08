@@ -298,7 +298,7 @@ var app = Requests(responseParser = object : ResponseParser {
 
 
 class MainActivity : AppCompatActivity(), ColorPickerDialogListener,
-BiometricAuthenticator.BiometricAuthCallback {
+BiometricAuthenticator.BiometricCallback {
 
     companion object {
         const val TAG = "MAINACT"
@@ -1883,5 +1883,9 @@ BiometricAuthenticator.BiometricAuthCallback {
     override fun onAuthenticationSuccess() {
         // make background (nav host fragment) visible again
         binding?.navHostFragment?.isInvisible = false
+    }
+
+    override fun onAuthenticationError() {
+        finish()
     }
 }

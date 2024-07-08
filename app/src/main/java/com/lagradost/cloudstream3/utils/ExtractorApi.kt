@@ -108,6 +108,7 @@ import com.lagradost.cloudstream3.extractors.FourCX
 import com.lagradost.cloudstream3.extractors.FourPichive
 import com.lagradost.cloudstream3.extractors.FourPlayRu
 import com.lagradost.cloudstream3.extractors.Geodailymotion
+import com.lagradost.cloudstream3.extractors.GoodstreamExtractor
 import com.lagradost.cloudstream3.extractors.Hotlinger
 import com.lagradost.cloudstream3.extractors.HDMomPlayer
 import com.lagradost.cloudstream3.extractors.HDPlayerSystem
@@ -881,7 +882,8 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     MetaGnathTuggers(),
     VidSrcTo(),
     Geodailymotion(),
-    FourPichive()
+    FourPichive(),
+    GoodstreamExtractor(),
 )
 
 

@@ -61,6 +61,7 @@ object BatteryOptimizationChecker {
         }
     }
 
+
     private fun shouldShowBatteryOptimizationDialog(context: Context): Boolean {
         val isRestricted = isAppRestricted(context)
         val isOptimizedNotShown = PreferenceManager.getDefaultSharedPreferences(context)

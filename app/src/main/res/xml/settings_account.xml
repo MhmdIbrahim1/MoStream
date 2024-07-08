@@ -27,9 +27,15 @@
         android:key="@string/opensubtitles_key" />
 
 
+    <PreferenceCategory
+        android:title="@string/security"
+        app:key="@string/pref_category_security_key">
+
     <SwitchPreferenceCompat
         android:key="@string/biometric_enabled_key"
         android:defaultValue="false"
         android:icon="@drawable/ic_fingerprint"
         android:title="@string/biometric_setting" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

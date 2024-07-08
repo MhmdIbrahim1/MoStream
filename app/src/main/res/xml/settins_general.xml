@@ -16,6 +16,21 @@
             android:title="@string/legal_notice"
             android:icon="@drawable/ic_baseline_warning_24" />
 
+    <PreferenceCategory
+        android:title="@string/title_downloads">
+
+        <Preference
+            android:key="@string/download_path_key"
+            android:title="@string/download_path_pref"
+            android:icon="@drawable/netflix_download" />
+
+        <Preference
+            android:key="@string/battery_optimisation_key"
+            android:title="@string/battery_dialog_title"
+            android:icon="@drawable/ic_battery" />
+
+    </PreferenceCategory>
+
     <Preference
         android:key="@string/benene_count"
         android:title="@string/benene"

@@ -12,8 +12,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lagradost.cloudstream3.AcraApplication.Companion.openBrowser
+import com.lagradost.cloudstream3.CommonActivity.activity
 import com.lagradost.cloudstream3.CommonActivity.onDialogDismissedEvent
 import com.lagradost.cloudstream3.CommonActivity.showToast
 import com.lagradost.cloudstream3.R
@@ -33,18 +35,20 @@ import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.getPref
 import com.lagradost.cloudstream3.ui.settings.Globals.EMULATOR
 import com.lagradost.cloudstream3.ui.settings.Globals.TV
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
+import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.hideOn
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setPaddingBottom
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setToolBarScrollFlags
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setUpToolbar
 import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.BackupUtils
+import com.lagradost.cloudstream3.utils.BiometricAuthenticator
 import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.SingleSelectionHelper.showBottomDialogText
 import com.lagradost.cloudstream3.utils.UIHelper.dismissSafe
 import com.lagradost.cloudstream3.utils.UIHelper.hideKeyboard
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
 
-class SettingsAccount : PreferenceFragmentCompat() {
+class SettingsAccount : PreferenceFragmentCompat(), BiometricAuthenticator.BiometricCallback {
     companion object {
         /** Used by nginx plugin too */
         fun showLoginInfo(
@@ -263,6 +267,27 @@ class SettingsAccount : PreferenceFragmentCompat() {
         hideKeyboard()
         setPreferencesFromResource(R.xml.settings_account, rootKey)
 
+        //Hides the security  category on TV as it's only Biometric for now
+        getPref(R.string.pref_category_security_key)?.hideOn(TV or EMULATOR)
+
+
+        getPref(R.string.biometric_enabled_key)?.hideOn(TV or EMULATOR)?.setOnPreferenceClickListener {
+            val ctx = context ?: return@setOnPreferenceClickListener false
+
+            if (BiometricAuthenticator.deviceHasPasswordPinLock(ctx)) {
+                BiometricAuthenticator.startBiometricAuthentication(
+                    activity ?: return@setOnPreferenceClickListener false,
+                    R.string.biometric_authentication_title,
+                    false
+                )
+                BiometricAuthenticator.promptInfo?.let {
+                    BiometricAuthenticator.authCallback = this
+                    BiometricAuthenticator.biometricPrompt?.authenticate(it)
+                }
+            }
+
+            false
+        }
         val syncApis =
             listOf(
                 //R.string.mal_key to malApi,
@@ -303,6 +328,31 @@ class SettingsAccount : PreferenceFragmentCompat() {
             }
 
             true
+        }
+    }
+
+    private fun updateAuthPreference(enabled: Boolean) {
+        val biometricKey = getString(R.string.biometric_enabled_key)
+
+        PreferenceManager.getDefaultSharedPreferences(context ?: return).edit()
+            .putBoolean(biometricKey, enabled).apply()
+        findPreference<SwitchPreferenceCompat>(biometricKey)?.isChecked = enabled
+    }
+
+    override fun onAuthenticationError() {
+        updateAuthPreference(!BiometricAuthenticator.isAuthEnabled(context ?: return))
+    }
+
+    override fun onAuthenticationSuccess() {
+        if (BiometricAuthenticator.isAuthEnabled(context ?: return)) {
+            updateAuthPreference(true)
+            BackupUtils.backup(activity)
+            activity?.showBottomDialogText(
+                getString(R.string.biometric_setting),
+                getString(R.string.biometric_warning).html()
+            ) { onDialogDismissedEvent }
+        } else {
+            updateAuthPreference(false)
         }
     }
 

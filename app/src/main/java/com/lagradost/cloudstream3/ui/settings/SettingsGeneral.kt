@@ -32,6 +32,7 @@ import com.lagradost.cloudstream3.ui.EasterEggMonke
 import com.lagradost.cloudstream3.ui.settings.Globals.PHONE
 import com.lagradost.cloudstream3.ui.settings.Globals.isLayout
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.getPref
+import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.hideOn
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setPaddingBottom
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setToolBarScrollFlags
 import com.lagradost.cloudstream3.ui.settings.SettingsFragment.Companion.setUpToolbar
@@ -153,8 +154,20 @@ class SettingsGeneral : PreferenceFragmentCompat() {
             return@setOnPreferenceClickListener true
         }
 
-        // disable preference on tvs and emulators
-        getPref(R.string.battery_optimisation_key)?.isEnabled = isLayout(PHONE)
+
+        getPref(R.string.battery_optimisation_key)?.hideOn(Globals.TV or Globals.EMULATOR)?.setOnPreferenceClickListener {
+            val ctx = context ?: return@setOnPreferenceClickListener false
+
+            if (isAppRestricted(ctx)) {
+                showBatteryOptimizationDialog(ctx)
+            } else {
+                showToast(R.string.app_unrestricted_toast)
+            }
+
+            true
+        }
+
+
         getPref(R.string.battery_optimisation_key)?.setOnPreferenceClickListener {
             val ctx = context ?: return@setOnPreferenceClickListener false
 
