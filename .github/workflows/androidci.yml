@@ -1,0 +1,63 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'gradle'
+
+    - name: Print base64 keystore length
+      env:
+        BASE64_KEYSTORE: ${{ secrets.RELEASE_STORE_FILE }}
+      run: |
+        echo "Base64 length: ${#BASE64_KEYSTORE}"
+        echo "Base64 prefix: ${BASE64_KEYSTORE:0:30}..."
+
+    - name: Decrypt keystore file
+      env:
+        BASE64_KEYSTORE: ${{ secrets.RELEASE_STORE_FILE }}
+      run: |
+        echo "$BASE64_KEYSTORE" | base64 --decode > $GITHUB_WORKSPACE/keystore.jks
+        ls -l $GITHUB_WORKSPACE/keystore.jks
+        file $GITHUB_WORKSPACE/keystore.jks
+        pwd
+
+    - name: Create local.properties
+      run: |
+        echo "RELEASE_STORE_FILE=$GITHUB_WORKSPACE/keystore.jks" >> $GITHUB_WORKSPACE/local.properties
+        echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> $GITHUB_WORKSPACE/local.properties
+        echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> $GITHUB_WORKSPACE/local.properties
+        echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_WORKSPACE/local.properties
+        cat $GITHUB_WORKSPACE/local.properties
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
+
+    - name: change permissions 
+      run : chmod +x ./gradlew
+
+    - name: Sign APK
+      run: ./gradlew assemblePrereleaseRelease
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release
+        path: app/build/outputs/apk/release/*.apk

@@ -3,6 +3,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.ByteArrayOutputStream
 import java.net.URL
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -46,10 +47,23 @@ android {
 
     signingConfigs {
         create("prerelease") {
-            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
-            storePassword = "147369"
-            keyAlias = "key0"
-            keyPassword = "147369"
+            //storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
+            //storePassword = "147369"
+            //keyAlias = "key0"
+            //keyPassword = "147369"
+            val propertiesFile = rootProject.file("local.properties")
+            if (propertiesFile.exists()) {
+                val properties = Properties().apply {
+                    load(propertiesFile.inputStream())
+                }
+
+                storeFile = file(properties["RELEASE_STORE_FILE"] as String)
+                storePassword = properties["RELEASE_STORE_PASSWORD"] as String
+                keyAlias = properties["RELEASE_KEY_ALIAS"] as String
+                keyPassword = properties["RELEASE_KEY_PASSWORD"] as String
+            } else {
+                println("local.properties file not found")
+            }
         }
     }
 
