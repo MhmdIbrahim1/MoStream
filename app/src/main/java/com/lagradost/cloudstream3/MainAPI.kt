@@ -1201,10 +1201,11 @@ interface LoadResponse {
     var contentRating: String?
 
     companion object {
-        private val malIdPrefix = malApi.idPrefix
-        private val aniListIdPrefix = aniListApi.idPrefix
-        private val simklIdPrefix = simklApi.idPrefix
+        var malIdPrefix = "" //malApi.idPrefix
+        var aniListIdPrefix = "" //aniListApi.idPrefix
+        var simklIdPrefix = "" //simklApi.idPrefix
         var isTrailersEnabled = true
+
 
         fun LoadResponse.isMovie(): Boolean {
             return this.type.isMovieType() || this is MovieLoadResponse
@@ -1829,7 +1830,25 @@ data class Episode(
     var rating: Int? = null,
     var description: String? = null,
     var date: Long? = null,
-)
+    var runtime: Int? = null,
+){
+    /**
+     * Secondary constructor for backwards compatibility without runTime.
+     *  TODO Remove this constructor after there is a new stable release and extensions are updated to support runTime.
+     */
+    constructor(
+        data: String,
+        name: String? = null,
+        season: Int? = null,
+        episode: Int? = null,
+        posterUrl: String? = null,
+        rating: Int? = null,
+        description: String? = null,
+        date: Long? = null,
+    ) : this(
+        data, name, season, episode, posterUrl, rating, description, date, null
+    )
+}
 
 fun Episode.addDate(date: String?, format: String = "yyyy-MM-dd") {
     try {

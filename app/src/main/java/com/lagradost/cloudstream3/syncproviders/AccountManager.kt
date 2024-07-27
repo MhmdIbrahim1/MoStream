@@ -3,20 +3,26 @@ package com.lagradost.cloudstream3.syncproviders
 import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
 import com.lagradost.cloudstream3.AcraApplication.Companion.removeKeys
 import com.lagradost.cloudstream3.AcraApplication.Companion.setKey
+import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.syncproviders.providers.*
 import java.util.concurrent.TimeUnit
 
 abstract class AccountManager(private val defIndex: Int) : AuthAPI {
     companion object {
-        val malApi = MALApi(0)
-        val aniListApi = AniListApi(0)
+        val malApi = MALApi(0).also { api ->
+            LoadResponse.malIdPrefix = api.idPrefix
+        }
+        val aniListApi = AniListApi(0).also { api ->
+            LoadResponse.aniListIdPrefix = api.idPrefix
+        }
+        val simklApi = SimklApi(0).also { api ->
+            LoadResponse.simklIdPrefix = api.idPrefix
+        }
         val openSubtitlesApi = OpenSubtitlesApi(0)
-        val simklApi = SimklApi(0)
-        val indexSubtitlesApi = IndexSubtitleApi()
         val addic7ed = Addic7ed()
-        val subScene = SubScene()
-        val subDl = SubDL()
+        val subDlApi = SubDlApi(0)
         val localListApi = LocalList()
+        val subSourceApi = SubSourceApi()
 
         // used to login via app intent
         val OAuth2Apis
@@ -27,7 +33,7 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
         // this needs init with context and can be accessed in settings
         val accountManagers
             get() = listOf(
-                malApi, aniListApi, openSubtitlesApi, simklApi //nginxApi
+                malApi, aniListApi, openSubtitlesApi, subDlApi, simklApi //nginxApi
             )
 
         // used for active syncing
@@ -37,15 +43,17 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
             )
 
         val inAppAuths
-            get() = listOf(openSubtitlesApi)//, nginxApi)
+            get() = listOf<InAppAuthAPIManager>(
+                openSubtitlesApi,
+                subDlApi
+            )//, nginxApi)
 
         val subtitleProviders
             get() = listOf(
                 openSubtitlesApi,
-                indexSubtitlesApi, // they got anti scraping measures in place :(
-                subScene,
                 addic7ed,
-                subDl
+                subDlApi,
+                subSourceApi
             )
 
         const val appString = "cloudstreamapp"
@@ -85,6 +93,7 @@ abstract class AccountManager(private val defIndex: Int) : AuthAPI {
             return "${if (days != 0L) "$days" + "d " else ""}${if (hours != 0L) "$hours" + "h " else ""}${minutes}m"
         }
     }
+
 
     var accountIndex = defIndex
     private var lastAccountIndex = defIndex

@@ -639,5 +639,7 @@
     <string name="open_downloaded_repo">فتح المستودع المحمل</string>
     <string name="dismiss">تجاهل</string>
     <string name="downloads_empty">لا توجد تنزيلات</string>
+    <string name="hide_player_control_names_key" translatable="false">hide_player_control_names_key</string>
+    <string name="hide_player_control_names">إخفاء اسماء  عناصر التحكم</string>
 
 </resources>

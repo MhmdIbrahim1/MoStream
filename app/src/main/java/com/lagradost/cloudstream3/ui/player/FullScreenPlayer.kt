@@ -17,6 +17,9 @@ import android.text.Editable
 import android.text.format.DateUtils
 import com.lagradost.cloudstream3.LoadResponse
 import android.view.*
+import android.widget.LinearLayout
+import androidx.core.view.children
+import com.google.android.material.button.MaterialButton
 import android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -63,7 +66,8 @@ const val MINIMUM_HORIZONTAL_SWIPE = 2.0f   // in percentage of screen width
 const val VERTICAL_MULTIPLIER = 2.0f
 const val HORIZONTAL_MULTIPLIER = 2.0f
 const val DOUBLE_TAB_MAXIMUM_HOLD_TIME = 200L
-const val DOUBLE_TAB_MINIMUM_TIME_BETWEEN = 200L    // this also affects the UI show response time for double tap
+const val DOUBLE_TAB_MINIMUM_TIME_BETWEEN =
+    200L    // this also affects the UI show response time for double tap
 const val DOUBLE_TAB_PAUSE_PERCENTAGE = 0.15        // in both directions of the screen
 private const val SUBTITLE_DELAY_BUNDLE_KEY = "subtitle_delay"
 
@@ -74,8 +78,10 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     protected open var isFullScreenPlayer = true
     protected open var isTv = false
     protected var playerBinding: PlayerCustomLayoutBinding? = null
+    private var hideControlsNames = false
 
-    private var durationMode : Boolean by UserPreferenceDelegate("duration_mode", false)
+    private var durationMode: Boolean by UserPreferenceDelegate("duration_mode", false)
+
     // state of player UI
     protected var isShowing = false
     protected var isLocked = false
@@ -282,7 +288,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
             player.getCurrentPreferredSubtitle() == null
     }
 
-    private fun restoreOrientationWithSensor(activity: Activity){
+    private fun restoreOrientationWithSensor(activity: Activity) {
         val currentOrientation = activity.resources.configuration.orientation
         var orientation = 0
         when (currentOrientation) {
@@ -298,7 +304,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         activity.requestedOrientation = orientation
     }
 
-    private fun toggleOrientationWithSensor(activity: Activity){
+    private fun toggleOrientationWithSensor(activity: Activity) {
         val currentOrientation = activity.resources.configuration.orientation
         var orientation = 0
         when (currentOrientation) {
@@ -343,12 +349,11 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
 
     private fun updateOrientation(ignoreDynamicOrientation: Boolean = false) {
         activity?.apply {
-            if(lockRotation) {
-                if(isLocked) {
+            if (lockRotation) {
+                if (isLocked) {
                     lockOrientation(this)
-                }
-                else {
-                    if(ignoreDynamicOrientation){
+                } else {
+                    if (ignoreDynamicOrientation) {
                         // restore when lock is disabled
                         restoreOrientationWithSensor(this)
                     } else {
@@ -726,6 +731,15 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     private var currentTapIndex = 0
     protected fun autoHide() {
         currentTapIndex++
+        delayHide()
+    }
+
+    override fun playerStatusChanged() {
+        super.playerStatusChanged()
+        delayHide()
+    }
+
+    private fun delayHide() {
         val index = currentTapIndex
         playerBinding?.playerHolder?.postDelayed({
             if (!isCurrentTouchValid && isShowing && index == currentTapIndex && player.getIsPlaying()) {
@@ -947,7 +961,10 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
                                         }
 
                                         else -> {
-                                            player.handleEvent(CSPlayerEvent.PlayPauseToggle, PlayerEventSource.UI)
+                                            player.handleEvent(
+                                                CSPlayerEvent.PlayPauseToggle,
+                                                PlayerEventSource.UI
+                                            )
                                         }
                                     }
                                 } else if (doubleTapEnabled && isFullScreenPlayer) {
@@ -1390,10 +1407,19 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
                         false
                     )
 
+                hideControlsNames = settingsManager.getBoolean(
+                    ctx.getString(R.string.hide_player_control_names_key),
+                    false
+                )
+
                 val profiles = QualityDataHelper.getProfiles()
                 val type = if (ctx.isUsingMobileData())
                     QualityDataHelper.QualityProfileType.Data
                 else QualityDataHelper.QualityProfileType.WiFi
+
+                if (hideControlsNames) {
+                    playerBinding?.hideControlsNames()
+                }
 
                 currentQualityProfile =
                     profiles.firstOrNull { it.type == type }?.id ?: profiles.firstOrNull()?.id
@@ -1414,7 +1440,6 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         } catch (e: Exception) {
             logError(e)
         }
-
         playerBinding?.apply {
             playerPausePlay.setOnClickListener {
                 autoHide()
@@ -1533,10 +1558,27 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         }
     }
 
+    private fun PlayerCustomLayoutBinding.hideControlsNames() {
+        fun iterate(layout: LinearLayout) {
+            layout.children.forEach {
+                if (it is MaterialButton) {
+                    it.textSize = 0f
+                    it.iconPadding = 0
+                    it.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+                    it.setPadding(0,0,0,0)
+                } else if (it is LinearLayout) {
+                    iterate(it)
+                }
+            }
+        }
+        iterate(playerLockHolder.parent as LinearLayout)
+    }
+
     override fun playerDimensionsLoaded(width: Int, height: Int) {
         isVerticalOrientation = height > width
         updateOrientation()
     }
+
 
     private fun updateRemainingTime() {
         val duration = player.getDuration()
@@ -1552,7 +1594,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
 
     private fun setRemainingTimeCounter(showRemaining: Boolean) {
         durationMode = showRemaining
-        playerBinding?.exoDuration?.isInvisible= showRemaining
+        playerBinding?.exoDuration?.isInvisible = showRemaining
         playerBinding?.timeLeft?.isVisible = showRemaining
     }
 
@@ -1568,3 +1610,4 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         }
     }
 }
+

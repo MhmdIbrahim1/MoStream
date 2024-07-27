@@ -172,6 +172,7 @@ import kotlinx.coroutines.launch
 import com.lagradost.cloudstream3.syncproviders.SyncAPI
 import com.lagradost.cloudstream3.ui.SyncWatchType
 import com.lagradost.cloudstream3.ui.result.SyncViewModel
+import com.lagradost.cloudstream3.ui.result.setTextHtml
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.deviceHasPasswordPinLock
 import com.lagradost.cloudstream3.utils.BiometricAuthenticator.startBiometricAuthentication
 import com.lagradost.cloudstream3.utils.DataStoreHelper.accounts
@@ -680,7 +681,7 @@ BiometricAuthenticator.BiometricCallback {
         }
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val response = CommonActivity.dispatchKeyEvent(this, event)
         if (response != null)
             return response
@@ -1458,7 +1459,7 @@ BiometricAuthenticator.BiometricCallback {
                         resultviewPreviewMetaDuration.setText(d.durationText)
                         resultviewPreviewMetaRating.setText(d.ratingText)
 
-                        resultviewPreviewDescription.setText(d.plotText)
+                        resultviewPreviewDescription.setTextHtml(d.plotText)
                         resultviewPreviewPoster.setImage(
                             d.posterImage ?: d.posterBackgroundImage
                         )

@@ -68,7 +68,6 @@ class PackageInstallerService : Service() {
         try {
             Log.d(LOG_TAG, "Downloading update: $url")
 
-            // Delete all old updates
             ioSafe {
                 val appUpdateName = "MoStream"
                 val appUpdateSuffix = "apk"
@@ -94,7 +93,6 @@ class PackageInstallerService : Service() {
 
                 installer.installApk(this, inputStream, totalSize, {
                     currentSize += it
-                    // Prevent div 0
                     if (totalSize == 0L) return@installApk
 
                     val percentage = currentSize / totalSize.toFloat()
@@ -117,7 +115,7 @@ class PackageInstallerService : Service() {
         percentage: Float,
         state: ApkInstaller.InstallProgressStatus
     ) {
-//        Log.d(LOG_TAG, "Downloading app update progress $percentage | $state")
+
         val text = when (state) {
             ApkInstaller.InstallProgressStatus.Installing -> R.string.update_notification_installing
             ApkInstaller.InstallProgressStatus.Preparing, ApkInstaller.InstallProgressStatus.Downloading -> R.string.update_notification_downloading
@@ -152,9 +150,6 @@ class PackageInstallerService : Service() {
         val url = intent?.getStringExtra(EXTRA_URL) ?: return START_NOT_STICKY
         ioSafe {
             downloadUpdate(url)
-            // Close the service after the update is done
-            // If no sleep then the install prompt may not appear and the notification
-            // will disappear instantly
             delay(10_000)
             this@PackageInstallerService.stopSelf()
         }
@@ -166,7 +161,7 @@ class PackageInstallerService : Service() {
             try {
                 this.unregisterReceiver(it)
             } catch (_: IllegalArgumentException) {
-                // Receiver not registered
+
             }
         }
         super.onDestroy()

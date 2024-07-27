@@ -27,7 +27,8 @@ import com.lagradost.cloudstream3.utils.AppUtils.html
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
 import com.lagradost.cloudstream3.utils.UIHelper.toPx
 import com.lagradost.cloudstream3.utils.VideoDownloadHelper
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 const val ACTION_PLAY_EPISODE_IN_PLAYER = 1
 const val ACTION_PLAY_EPISODE_IN_VLC_PLAYER = 2
@@ -113,8 +114,8 @@ class EpisodeAdapter(
     }
 
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-      return when (viewType) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
             0 -> {
                 EpisodeCardViewHolderSmall(
                     ResultEpisodeBinding.inflate(
@@ -271,7 +272,10 @@ class EpisodeAdapter(
                         episodeDate.setText(
                             txt(
                                 R.string.episode_upcoming_format,
-                                secondsToReadable(card.airDate.minus(unixTimeMS).div(1000).toInt(), "")
+                                secondsToReadable(
+                                    card.airDate.minus(unixTimeMS).div(1000).toInt(),
+                                    ""
+                                )
                             )
                         )
                     } else {
@@ -288,6 +292,13 @@ class EpisodeAdapter(
                 } else {
                     episodeDate.isVisible = false
                 }
+                episodeRuntime.setText(
+                    txt(
+                        card.runtime?.times(60L)?.toInt()?.let {
+                            secondsToReadable(it, "")
+                        }
+                    )
+                )
             }
 
             itemView.setOnClickListener {
