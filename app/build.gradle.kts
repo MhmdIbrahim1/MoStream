@@ -3,7 +3,6 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.ByteArrayOutputStream
 import java.net.URL
-import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -12,12 +11,6 @@ plugins {
     id("org.jetbrains.dokka")
     id("com.google.gms.google-services")
 }
-//val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-//val prereleaseStoreFile: File? = File(tmpFilePath).listFiles()?.firstOrNull()
-//
-//if (prereleaseStoreFile == null) {
-//    throw GradleException("Keystore file not found in the specified directory: $tmpFilePath")
-//}
 
 fun String.execute() = ByteArrayOutputStream().use { baot ->
     if (project.exec {
@@ -47,26 +40,16 @@ android {
 
     signingConfigs {
         create("prerelease") {
-            //storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
-            //storePassword = "147369"
-            //keyAlias = "key0"
-            //keyPassword = "147369"
-            val propertiesFile = rootProject.file("local.properties")
-            if (propertiesFile.exists()) {
-                val properties = Properties().apply {
-                    load(propertiesFile.inputStream())
-                }
-
-                storeFile = file(properties["RELEASE_STORE_FILE"] as String)
-                storePassword = properties["RELEASE_STORE_PASSWORD"] as String
-                keyAlias = properties["RELEASE_KEY_ALIAS"] as String
-                keyPassword = properties["RELEASE_KEY_PASSWORD"] as String
-            } else {
-                println("local.properties file not found")
-            }
+            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
+            storePassword = "147369"
+            keyAlias = "key0"
+            keyPassword = "147369"
+//            storeFile = file(project.properties["RELEASE_STORE_FILE"].toString())
+//            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
+//            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
+//            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
         }
     }
-
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"
@@ -77,7 +60,7 @@ android {
         targetSdk = 33 /* Android 14 is Fu*ked
         ^ https://developer.android.com/about/versions/14/behavior-changes-14#safer-dynamic-code-loading*/
         versionCode = 73
-        versionName = "4.4.5"
+        versionName = "4.4.6"
 
         resValue("string", "app_version", "${defaultConfig.versionName}${versionNameSuffix ?: ""}")
         resValue("string", "commit_hash", "git rev-parse --short HEAD".execute() ?: "")
