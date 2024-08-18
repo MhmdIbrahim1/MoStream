@@ -92,7 +92,6 @@ object SubtitleHelper {
     }
 
     private val flags = mapOf(
-        "ar" to "EG",
         "en" to "GB",
         "ff" to "CN",
         "fi" to "FI",
@@ -104,38 +103,39 @@ object SubtitleHelper {
         Language639("English", "English", "en", "eng", "eng", "eng", "engs"),
         Language639("French", "français, langue française", "fr", "fra", "", "fra", "fras"),
         Language639("Turkish", "Türkçe", "tr", "tur", "tur", "tur", ""),
+
         )
 
-    /**ISO_639_2_B or ISO_639_2_T or ISO_639_3-> lang*/
-    fun fromThreeLettersToLanguage(input: String): String? {
-        if (input.length != 3) return null
-        val comparison = input.lowercase(Locale.ROOT)
-        for (lang in languages) {
-            if (lang.ISO_639_2_B == comparison) {
-                return lang.languageName
-            }
-        }
-        for (lang in languages) {
-            if (lang.ISO_639_2_T == comparison) {
-                return lang.languageName
-            }
-        }
-        for (lang in languages) {
-            if (lang.ISO_639_3 == comparison) {
-                return lang.languageName
-            }
-        }
-        return null
-    }
-
-    /** lang -> ISO_639_2_T*/
-    fun fromLanguageToThreeLetters(input: String): String? {
-        for (lang in languages) {
-            if (lang.languageName == input || lang.nativeName == input) {
-                return lang.ISO_639_2_T
-            }
-        }
-        return null
-    }
+//    /**ISO_639_2_B or ISO_639_2_T or ISO_639_3-> lang*/
+//    fun fromThreeLettersToLanguage(input: String): String? {
+//        if (input.length != 3) return null
+//        val comparison = input.lowercase(Locale.ROOT)
+//        for (lang in languages) {
+//            if (lang.ISO_639_2_B == comparison) {
+//                return lang.languageName
+//            }
+//        }
+//        for (lang in languages) {
+//            if (lang.ISO_639_2_T == comparison) {
+//                return lang.languageName
+//            }
+//        }
+//        for (lang in languages) {
+//            if (lang.ISO_639_3 == comparison) {
+//                return lang.languageName
+//            }
+//        }
+//        return null
+//    }
+//
+//    /** lang -> ISO_639_2_T*/
+//    fun fromLanguageToThreeLetters(input: String): String? {
+//        for (lang in languages) {
+//            if (lang.languageName == input || lang.nativeName == input) {
+//                return lang.ISO_639_2_T
+//            }
+//        }
+//        return null
+//    }
 
 }

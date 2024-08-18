@@ -604,14 +604,35 @@ BiometricAuthenticator.BiometricCallback {
             navView.isVisible = isNavVisible && !landscape
             navRailView.isVisible = isNavVisible && landscape
 
-            // Hide library on TV since it is not supported yet :(
-            //val isTrueTv = isTrueTvSettings()
-            //navView.menu.findItem(R.id.navigation_library)?.isVisible = !isTrueTv
-            //navRailView.menu.findItem(R.id.navigation_library)?.isVisible = !isTrueTv
 
-            // Hide downloads on TV
-            //navView.menu.findItem(R.id.navigation_downloads)?.isVisible = !isTrueTv
-            //navRailView.menu.findItem(R.id.navigation_downloads)?.isVisible = !isTrueTv
+            /**
+             * We need to make sure if we return to a sub-fragment,
+             * the correct navigation item is selected so that it does not
+             * highlight the wrong one in UI.
+             */
+            when (destination.id) {
+                in listOf(R.id.navigation_downloads, R.id.navigation_download_child) -> {
+                    navRailView.menu.findItem(R.id.navigation_downloads).isChecked = true
+                    navView.menu.findItem(R.id.navigation_downloads).isChecked = true
+                }
+                in listOf(
+                    R.id.navigation_settings,
+                    R.id.navigation_subtitles,
+                    R.id.navigation_chrome_subtitles,
+                    R.id.navigation_settings_player,
+                    R.id.navigation_settings_updates,
+                    R.id.navigation_settings_ui,
+                    R.id.navigation_settings_account,
+                    R.id.navigation_settings_providers,
+                    R.id.navigation_settings_general,
+                    R.id.navigation_settings_extensions,
+                    R.id.navigation_settings_plugins,
+                    R.id.navigation_test_providers
+                ) -> {
+                    navRailView.menu.findItem(R.id.navigation_settings).isChecked = true
+                    navView.menu.findItem(R.id.navigation_settings).isChecked = true
+                }
+            }
         }
     }
 

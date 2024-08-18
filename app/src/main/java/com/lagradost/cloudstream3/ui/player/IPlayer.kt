@@ -188,13 +188,22 @@ data class AudioTrack(
     override val language: String?,
 ) : Track
 
+data class TextTrack(
+    override val id: String?,
+    override val label: String?,
+    override val language: String?,
+    val mimeType: String?,
+) : Track
+
+
 data class CurrentTracks(
     val currentVideoTrack: VideoTrack?,
     val currentAudioTrack: AudioTrack?,
+    val currentTextTracks: List<TextTrack>,
     val allVideoTracks: List<VideoTrack>,
     val allAudioTracks: List<AudioTrack>,
+    val allTextTracks: List<TextTrack>,
 )
-
 class InvalidFileException(msg: String) : Exception(msg)
 
 //http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4

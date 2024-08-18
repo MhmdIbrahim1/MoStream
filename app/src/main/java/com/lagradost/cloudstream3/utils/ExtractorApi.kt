@@ -193,6 +193,7 @@ import com.lagradost.cloudstream3.extractors.VideovardSX
 import com.lagradost.cloudstream3.extractors.Vidgomunime
 import com.lagradost.cloudstream3.extractors.Vidgomunimesb
 import com.lagradost.cloudstream3.extractors.Vidguardto
+import com.lagradost.cloudstream3.extractors.VidhideExtractor
 import com.lagradost.cloudstream3.extractors.Vidmoly
 import com.lagradost.cloudstream3.extractors.Vidmolyme
 import com.lagradost.cloudstream3.extractors.Vido
@@ -713,7 +714,7 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Evoload(),
     Evoload1(),
     UpstreamExtractor(),
-
+    VidhideExtractor(),
     Odnoklassniki(),
     TauVideo(),
     SibNet(),

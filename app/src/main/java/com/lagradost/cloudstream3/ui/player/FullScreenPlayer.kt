@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import androidx.media3.common.MimeTypes
 import com.lagradost.cloudstream3.ui.settings.Globals
 import android.provider.Settings
 import android.text.Editable
@@ -284,8 +285,12 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     }
 
     override fun subtitlesChanged() {
-        playerBinding?.playerSubtitleOffsetBtt?.isGone =
-            player.getCurrentPreferredSubtitle() == null
+        val tracks = player.getVideoTracks()
+        val isBuiltinSubtitles = tracks.currentTextTracks.all { track ->
+            track.mimeType == MimeTypes.APPLICATION_MEDIA3_CUES
+        }
+        // Subtitle offset is not possible on built-in media3 tracks
+        playerBinding?.playerSubtitleOffsetBtt?.isGone = isBuiltinSubtitles || tracks.currentTextTracks.isEmpty()
     }
 
     private fun restoreOrientationWithSensor(activity: Activity) {
@@ -681,7 +686,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         updateLockUI()
     }
 
-    fun updateUIVisibility() {
+    open  fun updateUIVisibility() {
         val isGone = isLocked || !isShowing
         var togglePlayerTitleGone = isGone
         context?.let {

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 
 class DownloaderTestImpl private constructor(builder: OkHttpClient.Builder) : Downloader() {
-    private val client: OkHttpClient
+    private val client: OkHttpClient = builder.readTimeout(30, TimeUnit.SECONDS).build()
     override fun execute(request: Request): Response {
         val httpMethod: String = request.httpMethod()
         val url: String = request.url()
@@ -74,7 +74,5 @@ class DownloaderTestImpl private constructor(builder: OkHttpClient.Builder) : Do
         }
     }
 
-    init {
-        client = builder.readTimeout(30, TimeUnit.SECONDS).build()
-    }
+
 }

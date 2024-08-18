@@ -8,7 +8,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.firebase.FirebaseApp
+import java.util.Locale
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall
 import com.lagradost.cloudstream3.plugins.PluginManager
@@ -82,14 +82,8 @@ class ExceptionHandler(val errorFile: File, val onError: (() -> Unit)) :
         ACRA.errorReporter.handleException(error)
         try {
             PrintStream(errorFile).use { ps ->
-                ps.println(String.format("Currently loading extension: ${PluginManager.currentlyLoading ?: "none"}"))
-                ps.println(
-                    String.format(
-                        "Fatal exception on thread %s (%d)",
-                        thread.name,
-                        thread.id
-                    )
-                )
+                ps.println("Currently loading extension: ${PluginManager.currentlyLoading ?: "none"}")
+                ps.println("Fatal exception on thread ${thread.name} (${thread.id})")
                 error.printStackTrace(ps)
             }
         } catch (ignored: FileNotFoundException) {

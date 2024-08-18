@@ -197,20 +197,20 @@ dependencies {
     implementation("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
 
     // Media 3 (ExoPlayer)
-    implementation("androidx.media3:media3-ui:1.1.1")
-    implementation("androidx.media3:media3-cast:1.1.1")
-    implementation("androidx.media3:media3-common:1.1.1")
-    implementation("androidx.media3:media3-session:1.1.1")
-    implementation("androidx.media3:media3-exoplayer:1.1.1")
+    implementation("androidx.media3:media3-ui:1.4.0")
+    implementation("androidx.media3:media3-cast:1.4.0")
+    implementation("androidx.media3:media3-common:1.4.0")
+    implementation("androidx.media3:media3-session:1.4.0")
+    implementation("androidx.media3:media3-exoplayer:1.4.0")
     implementation("com.google.android.mediahome:video:1.0.0")
-    implementation("androidx.media3:media3-exoplayer-hls:1.1.1")
-    implementation("androidx.media3:media3-exoplayer-dash:1.1.1")
-    implementation("androidx.media3:media3-datasource-okhttp:1.1.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.4.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.4.0")
+    implementation("androidx.media3:media3-datasource-okhttp:1.4.0")
 
     // PlayBack
     implementation("com.jaredrummler:colorpicker:1.1.0") // Subtitle Color Picker
     implementation("com.github.recloudstream:media-ffmpeg:1.1.0") // Custom FF-MPEG Lib for Audio Codecs
-    implementation("com.github.teamnewpipe:NewPipeExtractor:2d36945") // NewPipe Extractor
+    implementation("com.github.teamnewpipe:NewPipeExtractor:176da72") // NewPipe Extractor
     implementation("com.github.albfernandez:juniversalchardet:2.5.0") // Subtitle Decoding
 
 
@@ -232,7 +232,7 @@ dependencies {
     implementation("com.github.LagradOst:SafeFile:0.0.6") // To Prevent the URI File Fu*kery
     implementation("org.conscrypt:conscrypt-android:2.5.2") // To Fix SSL Fu*kery on Android 9
     implementation("com.uwetrottmann.tmdb2:tmdb-java:2.11.0") // TMDB API v3 Wrapper Made with RetroFit
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.4") //nio flavor needed for NewPipeExtractor
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 
     // Downloading & Networking
@@ -245,7 +245,7 @@ dependencies {
 
     implementation ("com.airbnb.android:lottie:6.1.0")
 
-    implementation ("androidx.biometric:biometric:1.2.0-alpha05") // Fingerprint Authentication
+    implementation("androidx.biometric:biometric:1.2.0-alpha05") // Fingerprint Authentication
 
     implementation("io.github.g0dkar:qrcode-kotlin:4.2.0") // QR code for PIN Auth on TV
 }
