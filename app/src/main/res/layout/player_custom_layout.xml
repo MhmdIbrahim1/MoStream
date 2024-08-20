@@ -268,8 +268,7 @@
                         android:nextFocusDown="@id/player_lock"
                         android:padding="10dp"
                         android:scaleType="fitCenter"
-                        android:scaleX="-1"
-                        android:src="@drawable/netflix_skip_forward"
+                        android:src="@drawable/netflix_skip_back"
                         android:tintMode="src_in"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
