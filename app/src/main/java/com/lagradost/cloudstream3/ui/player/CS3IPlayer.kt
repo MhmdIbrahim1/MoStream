@@ -645,47 +645,6 @@ class CS3IPlayer : IPlayer {
             )
         }
 
-        /*private fun getSubSources(
-            onlineSourceFactory: DataSource.Factory?,
-            offlineSourceFactory: DataSource.Factory?,
-            subHelper: PlayerSubtitleHelper,
-        ): Pair<List<SingleSampleMediaSource>, List<SubtitleData>> {
-            val activeSubtitles = ArrayList<SubtitleData>()
-            val subSources = subHelper.getAllSubtitles().mapNotNull { sub ->
-                val subConfig = MediaItem.SubtitleConfiguration.Builder(Uri.parse(sub.url))
-                    .setMimeType(sub.mimeType)
-                    .setLanguage("_${sub.name}")
-                    .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
-                    .build()
-                when (sub.origin) {
-                    SubtitleOrigin.DOWNLOADED_FILE -> {
-                        if (offlineSourceFactory != null) {
-                            activeSubtitles.add(sub)
-                            SingleSampleMediaSource.Factory(offlineSourceFactory)
-                                .createMediaSource(subConfig, C.TIME_UNSET)
-                        } else {
-                            null
-                        }
-                    }
-                    SubtitleOrigin.URL -> {
-                        if (onlineSourceFactory != null) {
-                            activeSubtitles.add(sub)
-                            SingleSampleMediaSource.Factory(onlineSourceFactory)
-                                .createMediaSource(subConfig, C.TIME_UNSET)
-                        } else {
-                            null
-                        }
-                    }
-                    SubtitleOrigin.OPEN_SUBTITLES -> {
-                        // TODO
-                        throw NotImplementedError()
-                    }
-                }
-            }
-            println("SUBSRC: ${subSources.size} activeSubtitles : ${activeSubtitles.size} of ${subHelper.getAllSubtitles().size} ")
-            return Pair(subSources, activeSubtitles)
-        }*/
-
         @SuppressLint("UnsafeOptInUsageError")
         private fun getCache(context: Context, cacheSize: Long): SimpleCache? {
             return try {

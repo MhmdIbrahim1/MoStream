@@ -60,6 +60,8 @@ import com.lagradost.cloudstream3.utils.UIHelper.toPx
 import com.lagradost.cloudstream3.utils.UserPreferenceDelegate
 import com.lagradost.cloudstream3.utils.Vector2
 import kotlin.math.*
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibility
 
 const val MINIMUM_SEEK_TIME = 7000L         // when swipe seeking in milliseconds
 const val MINIMUM_VERTICAL_SWIPE = 2.0f     // in percentage of screen height
@@ -257,6 +259,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
                 }
             }
 
+
             if (!isLocked) {
                 playerFfwdHolder.alpha = 1f
                 playerRewHolder.alpha = 1f
@@ -285,13 +288,10 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     }
 
     override fun subtitlesChanged() {
-        val tracks = player.getVideoTracks()
-        val isBuiltinSubtitles = tracks.currentTextTracks.all { track ->
-            track.mimeType == MimeTypes.APPLICATION_MEDIA3_CUES
-        }
-        // Subtitle offset is not possible on built-in media3 tracks
-        playerBinding?.playerSubtitleOffsetBtt?.isGone = isBuiltinSubtitles || tracks.currentTextTracks.isEmpty()
+        playerBinding?.playerSubtitleOffsetBtt?.isGone =
+            player.getCurrentPreferredSubtitle() == null
     }
+
 
     private fun restoreOrientationWithSensor(activity: Activity) {
         val currentOrientation = activity.resources.configuration.orientation
@@ -700,7 +700,6 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
 
             playerLockHolder.isGone = isGone
             playerVideoBar.isGone = isGone
-
             playerPausePlay.isGone = isGone
             //player_buffering?.isGone = isGone
             playerTopHolder.isGone = isGone
@@ -1269,6 +1268,11 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         savedInstanceState?.getLong(SUBTITLE_DELAY_BUNDLE_KEY)?.let {
             subtitleDelay = it
         }
+     //   playerBinding?.exoRewText?.visibility = View.GONE
+        // change the imageButon of exo_rew
+        playerBinding?.exoRew?.setImageResource(R.drawable.netflix_skip_back)
+        playerBinding?.exoRew?.scaleX = 1f
+        playerBinding?.exoFfwd?.setImageResource(R.drawable.netflix_skip_forward)
 
         // handle tv controls
         playerEventListener = { eventType ->
