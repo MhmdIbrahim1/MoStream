@@ -20,6 +20,15 @@ import com.lagradost.cloudstream3.extractors.Cdnplayer
 import com.lagradost.cloudstream3.extractors.Chillx
 import com.lagradost.cloudstream3.extractors.CineGrabber
 import com.lagradost.cloudstream3.extractors.Cinestart
+import com.lagradost.cloudstream3.extractors.Beastx
+import com.lagradost.cloudstream3.extractors.Playerx
+import com.lagradost.cloudstream3.extractors.AnimesagaStream
+import com.lagradost.cloudstream3.extractors.Anplay
+import com.lagradost.cloudstream3.extractors.Kinogeru
+import com.lagradost.cloudstream3.extractors.Vidxstream
+import com.lagradost.cloudstream3.extractors.Boltx
+import com.lagradost.cloudstream3.extractors.Vectorx
+import com.lagradost.cloudstream3.extractors.Boosterx
 import com.lagradost.cloudstream3.extractors.DBfilm
 import com.lagradost.cloudstream3.extractors.Dailymotion
 import com.lagradost.cloudstream3.extractors.EPlayExtractor
@@ -160,6 +169,7 @@ import com.lagradost.cloudstream3.extractors.StreamSB6
 import com.lagradost.cloudstream3.extractors.StreamSB7
 import com.lagradost.cloudstream3.extractors.StreamSB8
 import com.lagradost.cloudstream3.extractors.StreamSB9
+import com.lagradost.cloudstream3.extractors.StreamSilk
 import com.lagradost.cloudstream3.extractors.StreamTape
 import com.lagradost.cloudstream3.extractors.StreamTapeNet
 import com.lagradost.cloudstream3.extractors.StreamhideCom
@@ -185,6 +195,10 @@ import com.lagradost.cloudstream3.extractors.Userscloud
 import com.lagradost.cloudstream3.extractors.Uservideo
 import com.lagradost.cloudstream3.extractors.Vanfem
 import com.lagradost.cloudstream3.extractors.Vicloud
+import com.lagradost.cloudstream3.extractors.VidHidePro
+import com.lagradost.cloudstream3.extractors.VidHidePro1
+import com.lagradost.cloudstream3.extractors.VidHidePro2
+import com.lagradost.cloudstream3.extractors.VidHidePro3
 import com.lagradost.cloudstream3.extractors.VidSrcExtractor
 import com.lagradost.cloudstream3.extractors.VidSrcExtractor2
 import com.lagradost.cloudstream3.extractors.VidSrcTo
@@ -193,6 +207,8 @@ import com.lagradost.cloudstream3.extractors.VideovardSX
 import com.lagradost.cloudstream3.extractors.Vidgomunime
 import com.lagradost.cloudstream3.extractors.Vidgomunimesb
 import com.lagradost.cloudstream3.extractors.Vidguardto
+import com.lagradost.cloudstream3.extractors.Vidguardto1
+import com.lagradost.cloudstream3.extractors.Vidguardto2
 import com.lagradost.cloudstream3.extractors.VidhideExtractor
 import com.lagradost.cloudstream3.extractors.Vidmoly
 import com.lagradost.cloudstream3.extractors.Vidmolyme
@@ -210,6 +226,7 @@ import com.lagradost.cloudstream3.extractors.VizcloudOnline
 import com.lagradost.cloudstream3.extractors.VizcloudSite
 import com.lagradost.cloudstream3.extractors.VizcloudXyz
 import com.lagradost.cloudstream3.extractors.Voe
+import com.lagradost.cloudstream3.extractors.Voe1
 import com.lagradost.cloudstream3.extractors.Vtbe
 import com.lagradost.cloudstream3.extractors.Watchx
 import com.lagradost.cloudstream3.extractors.WcoStream
@@ -232,6 +249,13 @@ import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import java.net.URL
 import java.util.UUID
+import com.lagradost.cloudstream3.extractors.VidHidePro4
+import com.lagradost.cloudstream3.extractors.VidHidePro5
+import com.lagradost.cloudstream3.extractors.VidHidePro6
+import com.lagradost.cloudstream3.extractors.Lulustream1
+import com.lagradost.cloudstream3.extractors.Lulustream2
+import com.lagradost.cloudstream3.extractors.Lulustream3
+import com.lagradost.cloudstream3.extractors.Vidguardto3
 
 /**
  * For use in the ConcatenatingMediaSource.
@@ -886,7 +910,31 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Geodailymotion(),
     FourPichive(),
     GoodstreamExtractor(),
-    MegaF()
+    MegaF(),
+    VidHidePro(),
+    VidHidePro1(),
+    VidHidePro2(),
+    VidHidePro3(),
+    StreamSilk(),
+    Beastx(),
+    Playerx(),
+    AnimesagaStream(),
+    Anplay(),
+    Kinogeru(),
+    Vidxstream(),
+    Boltx(),
+    Vectorx(),
+    Boosterx(),
+    Voe1(),
+    Vidguardto1(),
+    Vidguardto2(),
+    Vidguardto3(),
+    VidHidePro4(),
+    VidHidePro5(),
+    VidHidePro6(),
+    Lulustream1(),
+    Lulustream2(),
+    Lulustream3(),
 )
 
 

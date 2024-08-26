@@ -34,7 +34,7 @@ class Kswplayer : StreamWishExtractor() {
     override val mainUrl = "https://kswplayer.info"
 }
 
-class Wishfast: StreamWishExtractor() {
+class Wishfast : StreamWishExtractor() {
     override val name = "Wishfast"
     override val mainUrl = "https://wishfast.top"
 }
@@ -151,6 +151,13 @@ open class StreamWishExtractor : ExtractorApi() {
         val response = app.get(getEmbedUrl(url), referer = referer)
         val script = if (!getPacked(response.text).isNullOrEmpty()) {
             getAndUnpack(response.text)
+        } else if (!response.document.select("script").firstOrNull {
+                it.html().contains("jwplayer(\"vplayer\").setup(")
+            }?.html().isNullOrEmpty()
+        ) {
+            response.document.select("script").firstOrNull {
+                it.html().contains("jwplayer(\"vplayer\").setup(")
+            }?.html()
         } else {
             response.document.selectFirst("script:containsData(sources:)")?.data()
         }

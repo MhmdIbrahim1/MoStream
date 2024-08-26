@@ -54,6 +54,7 @@ class BackupWorkManager(val context: Context, workerParams: WorkerParameters) :
                 periodicSyncDataWork
             )
         }
+
     }
 
     private val backupNotificationBuilder =
@@ -83,6 +84,10 @@ class BackupWorkManager(val context: Context, workerParams: WorkerParameters) :
 
         BackupUtils.backup(context)
 
+
+
         return Result.success()
     }
+
+
 }
