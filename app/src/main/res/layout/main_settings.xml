@@ -32,10 +32,13 @@
                     android:layout_height="50dp"
                     app:cardCornerRadius="25dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/settings_profile_pic"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        app:strokeColor="@color/white"
+                        app:strokeWidth="2dp"
+                        app:shapeAppearanceOverlay="@style/RoundedCorners"
                         tools:ignore="ContentDescription" />
                 </androidx.cardview.widget.CardView>
 

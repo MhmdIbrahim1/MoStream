@@ -76,22 +76,24 @@
                 app:customCastBackgroundColor="?attr/primaryGrayBackground"
                 tools:ignore="FragmentTagUsage" />
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="1dp">
+
+            <ImageView
+                android:id="@+id/focus_outline"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:importantForAccessibility="no"
+                android:src="@drawable/outline"
+                android:visibility="gone"></ImageView>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:clickable="false"
-            android:visibility="gone"
-            android:id="@+id/focus_outline"
-            android:src="@drawable/outline"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no">
-        </ImageView>
-    </FrameLayout>
 </FrameLayout>

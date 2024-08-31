@@ -36,6 +36,7 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.ui.home.HomeFragment
 import com.lagradost.cloudstream3.ui.loginregister.RegisterViewModel.Companion.USER_COLLECTION
 import com.lagradost.cloudstream3.ui.loginregister.UserSign
+import com.lagradost.cloudstream3.utils.ImageSelectionDialogFragment
 import com.lagradost.cloudstream3.utils.UIHelper.fixPaddingStatusbar
 import com.lagradost.cloudstream3.utils.UIHelper.navigate
 import com.lagradost.cloudstream3.utils.UIHelper.setImage
@@ -188,26 +189,11 @@ class SettingsFragment : Fragment(), UserFetchCallback {
             activity?.navigate(id, Bundle())
         }
 
-        // used to debug leaks showToast(activity,"${VideoDownloadManager.downloadStatusEvent.size} : ${VideoDownloadManager.downloadProgressEvent.size}")
+        // Load the selected image from SharedPreferences and set it
+        val selectedImageResId = loadSelectedImage()
+        binding?.settingsProfilePic?.setImageResource(selectedImageResId)
 
-
-//        for (syncApi in accountManagers) {
-//            val login = syncApi.loginInfo()
-//            val pic = login?.profilePicture ?: continue
-//            if (binding?.settingsProfilePic?.setImage(
-//                    pic,
-//                    errorImageDrawable = HomeFragment.errorProfilePic
-//                ) == true
-//            ) {
-//                binding?.settingsProfileText?.text = login.name
-//                binding?.settingsProfile?.isVisible = true
-//                break
-//            }
-//        }
-        // set user image and name from firestore
-        getUser(this)
-
-
+        // Set up click listeners for navigation and other views
         binding?.apply {
             listOf(
                 settingsGeneral to R.id.action_navigation_global_to_navigation_settings_general,
@@ -229,10 +215,8 @@ class SettingsFragment : Fragment(), UserFetchCallback {
                 }
             }
 
-            binding?.apply {
-                settingsLogout.setOnClickListener {
-                    logout()
-                }
+            settingsLogout.setOnClickListener {
+                logout()
             }
 
             // Default focus on TV
@@ -240,6 +224,9 @@ class SettingsFragment : Fragment(), UserFetchCallback {
                 settingsGeneral.requestFocus()
             }
         }
+
+        // Set user image and name from Firestore
+        getUser(this)
     }
 
     private fun logout() {
@@ -312,27 +299,32 @@ class SettingsFragment : Fragment(), UserFetchCallback {
         binding?.settingsProfileText?.text = "${user.firstName} ${user.lastName}"
         binding?.settingsProfile?.isVisible = true
 
-        // Initial random image
-        val initialProfilePic = HomeFragment.errorProfilePics.random()
-        binding?.settingsProfilePic?.setImage(
-            initialProfilePic,
-            errorImageDrawable = HomeFragment.errorProfilePic
-        )
+        // Load and display the selected image
+        val selectedImageResId = loadSelectedImage()
+        binding?.settingsProfilePic?.setImageResource(selectedImageResId)
 
-        // Roll the image forwards once of the user clicks on it
+        // Set up click listener to select a new profile image
         binding?.settingsProfilePic?.setOnClickListener {
-            // Show a different random image from errorProfilePics list
-            val newProfilePic = HomeFragment.errorProfilePics.random()
-            binding?.settingsProfilePic?.setImage(
-                newProfilePic,
-                errorImageDrawable = HomeFragment.errorProfilePic
-            )
+            ImageSelectionDialogFragment { selectedImageResId ->
+                binding?.settingsProfilePic?.setImageResource(selectedImageResId)
+                saveSelectedImage(selectedImageResId)
+            }.show(childFragmentManager, "ImageSelectionDialog")
         }
-
     }
+
+
 
     override fun onError(errorMessage: String) {
         //nothing
+    }
+
+    private fun saveSelectedImage(resId: Int) {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putInt("selected_profile_pic", resId).apply()
+    }
+    private fun loadSelectedImage(): Int {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("selected_profile_pic", R.drawable.monke_sob)
     }
 
 }

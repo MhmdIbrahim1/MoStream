@@ -683,6 +683,8 @@ BiometricAuthenticator.BiometricCallback {
         } catch (e: Exception) {
             logError(e)
         }
+
+//        restoreFromFirestore(this)
     }
 
     override fun onPause() {
@@ -1159,6 +1161,12 @@ BiometricAuthenticator.BiometricCallback {
         app.initClient(this)
 
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
+
+        // call restore from firestore
+        if (settingsManager.getBoolean(FIRST_TIME_KEY, true)) {
+            restoreFromFirestore(this)
+            settingsManager.edit().putBoolean(FIRST_TIME_KEY, false).apply()
+        }
 
         val errorFile = filesDir.resolve("last_error")
         if (errorFile.exists() && errorFile.isFile) {
