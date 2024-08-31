@@ -818,7 +818,7 @@
     <string name="open_local_video">Open Local Video</string>
     <string name="downloads_empty">There are currently no downloads.</string>
     <string name="hide_player_control_names">Hide Player names control</string>
-
+    <string name="no_subtitles_loaded">No subtitles loaded yet</string>
     <plurals name="episodes" translatable="false">
         <item quantity="one">@string/episode</item>
         <item quantity="other">@string/episodes</item>

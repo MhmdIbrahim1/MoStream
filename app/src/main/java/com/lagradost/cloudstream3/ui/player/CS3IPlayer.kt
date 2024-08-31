@@ -344,6 +344,9 @@ class CS3IPlayer : IPlayer {
             ?: return
     }
 
+    override fun getSubtitleCues(): List<SubtitleCue> {
+        return currentSubtitleDecoder?.getSubtitleCues() ?: emptyList()
+    }
 
     /**
      * Gets all supported formats in a list

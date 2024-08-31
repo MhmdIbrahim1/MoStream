@@ -3,6 +3,7 @@ package com.lagradost.cloudstream3.ui.player
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
@@ -34,6 +35,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lagradost.cloudstream3.CommonActivity.keyEventListener
 import com.lagradost.cloudstream3.CommonActivity.playerEventListener
 import com.lagradost.cloudstream3.CommonActivity.screenHeight
@@ -288,49 +290,53 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     }
 
     override fun subtitlesChanged() {
+        val tracks = player.getVideoTracks()
+        val isBuiltinSubtitles = tracks.currentTextTracks.all { track ->
+            track.mimeType == MimeTypes.APPLICATION_MEDIA3_CUES
+        }
+        // Subtitle offset is not possible on built-in media3 tracks
         playerBinding?.playerSubtitleOffsetBtt?.isGone =
-            player.getCurrentPreferredSubtitle() == null
+            isBuiltinSubtitles || tracks.currentTextTracks.isEmpty()
     }
 
 
     private fun restoreOrientationWithSensor(activity: Activity) {
         val currentOrientation = activity.resources.configuration.orientation
-        var orientation = 0
-        when (currentOrientation) {
+        val orientation = when (currentOrientation) {
             Configuration.ORIENTATION_LANDSCAPE ->
-                orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-            Configuration.ORIENTATION_SQUARE, Configuration.ORIENTATION_UNDEFINED ->
-                orientation = dynamicOrientation()
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
             Configuration.ORIENTATION_PORTRAIT ->
-                orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+
+            else -> dynamicOrientation()
         }
         activity.requestedOrientation = orientation
     }
 
+
     private fun toggleOrientationWithSensor(activity: Activity) {
         val currentOrientation = activity.resources.configuration.orientation
-        var orientation = 0
-        when (currentOrientation) {
+        val orientation: Int = when (currentOrientation) {
             Configuration.ORIENTATION_LANDSCAPE ->
-                orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-
-            Configuration.ORIENTATION_SQUARE, Configuration.ORIENTATION_UNDEFINED ->
-                orientation = dynamicOrientation()
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
             Configuration.ORIENTATION_PORTRAIT ->
-                orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+            else -> dynamicOrientation()
         }
         activity.requestedOrientation = orientation
     }
 
     open fun lockOrientation(activity: Activity) {
-        val display =
+        @Suppress("DEPRECATION")
+        val display = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
             (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+        else activity.display!!
         val rotation = display.rotation
         val currentOrientation = activity.resources.configuration.orientation
-        var orientation = 0
+        val orientation: Int
         when (currentOrientation) {
             Configuration.ORIENTATION_LANDSCAPE ->
                 orientation =
@@ -339,15 +345,14 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
                     else
                         ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
 
-            Configuration.ORIENTATION_SQUARE, Configuration.ORIENTATION_UNDEFINED ->
-                orientation = dynamicOrientation()
-
             Configuration.ORIENTATION_PORTRAIT ->
                 orientation =
                     if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_270)
                         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                     else
                         ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+
+            else -> orientation = dynamicOrientation()
         }
         activity.requestedOrientation = orientation
     }
@@ -428,29 +433,39 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
 
     private fun showSubtitleOffsetDialog() {
         val ctx = context ?: return
+        // Pause player because the subtitles cannot be continuously updated to follow playback.
+        player.handleEvent(
+            CSPlayerEvent.Pause,
+            PlayerEventSource.UI
+        )
 
         val binding = SubtitleOffsetBinding.inflate(LayoutInflater.from(ctx), null, false)
 
-        val builder =
-            AlertDialog.Builder(ctx, R.style.AlertDialogCustom)
-                .setView(binding.root)
-        val dialog = builder.create()
+        // Use dialog as opposed to alertdialog to get fullscreen
+        val dialog = Dialog(ctx, R.style.AlertDialogCustomBlack).apply {
+            setContentView(binding.root)
+        }
         dialog.show()
 
         val beforeOffset = subtitleDelay
 
-        /*val applyButton = dialog.findViewById<TextView>(R.id.apply_btt)!!
-        val cancelButton = dialog.findViewById<TextView>(R.id.cancel_btt)!!
-        val input = dialog.findViewById<EditText>(R.id.subtitle_offset_input)!!
-        val sub = dialog.findViewById<ImageView>(R.id.subtitle_offset_subtract)!!
-        val subMore = dialog.findViewById<ImageView>(R.id.subtitle_offset_subtract_more)!!
-        val add = dialog.findViewById<ImageView>(R.id.subtitle_offset_add)!!
-        val addMore = dialog.findViewById<ImageView>(R.id.subtitle_offset_add_more)!!
-        val subTitle = dialog.findViewById<TextView>(R.id.subtitle_offset_sub_title)!!*/
         binding.apply {
+            var subtitleAdapter: SubtitleOffsetItemAdapter? = null
+
             subtitleOffsetInput.doOnTextChanged { text, _, _, _ ->
                 text?.toString()?.toLongOrNull()?.let { time ->
                     subtitleDelay = time
+
+                    // Scroll to the first active subtitle
+                    val playerPosition = player.getPosition() ?: 0
+                    val totalPosition = playerPosition - subtitleDelay
+                    subtitleAdapter?.updateTime(totalPosition)
+
+                    subtitleAdapter?.getLatestActiveItem(totalPosition)
+                        ?.let { subtitlePos ->
+                            subtitleOffsetRecyclerview.scrollToPosition(subtitlePos)
+                        }
+
                     val str = when {
                         time > 0L -> {
                             txt(R.string.subtitle_offset_extra_hint_later_format, time)
@@ -469,6 +484,26 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
             }
             subtitleOffsetInput.text =
                 Editable.Factory.getInstance()?.newEditable(beforeOffset.toString())
+
+            val subtitles = player.getSubtitleCues().toMutableList()
+
+            subtitleOffsetRecyclerview.isVisible = subtitles.isNotEmpty()
+            noSubtitlesLoadedNotice.isVisible = subtitles.isEmpty()
+
+            val initialSubtitlePosition = (player.getPosition() ?: 0) - subtitleDelay
+            subtitleAdapter =
+                SubtitleOffsetItemAdapter(initialSubtitlePosition, subtitles) { subtitleCue ->
+                    val playerPosition = player.getPosition() ?: 0
+                    subtitleOffsetInput.text = Editable.Factory.getInstance()
+                        ?.newEditable((playerPosition - subtitleCue.startTimeMs).toString())
+                }
+
+            subtitleOffsetRecyclerview.adapter = subtitleAdapter
+            // Prevent flashing changes when changing items
+            (subtitleOffsetRecyclerview.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
+
+            val firstSubtitle = subtitleAdapter.getLatestActiveItem(initialSubtitlePosition)
+            subtitleOffsetRecyclerview.scrollToPosition(firstSubtitle)
 
             val buttonChange = 100L
             val buttonChangeMore = 1000L
@@ -511,6 +546,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
             }
         }
     }
+
 
 
     private fun showSpeedDialog() {
