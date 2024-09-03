@@ -2,18 +2,21 @@ name: Pre-release
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
     paths-ignore:
       - '*.md'
       - '*.json'
       - '**/wcokey.txt'
 
+concurrency:
+  group: "pre-release"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -25,32 +28,27 @@ jobs:
         run: chmod +x gradlew
 
       - name: Copy keystore to runner
-        run: echo "${{ secrets.RELEASE_STORE_FILE }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
-
-      - name: Verify keystore creation
-        run: ls -la $RUNNER_TEMP
-
-      - name: Run Gradle Build
-        run: ./gradlew assemblePrereleaseRelease
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
-
-      - name: Print Environment Variables
         run: |
-         echo "SIGNING_KEY_ALIAS: $SIGNING_KEY_ALIAS"
-         echo "SIGNING_KEY_PASSWORD: $SIGNING_KEY_PASSWORD"
-         echo "SIGNING_STORE_PASSWORD: $SIGNING_STORE_PASSWORD"
+          mkdir -p ~/.android/
+          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
+
+      - name: Run Gradle
+        run: |
+          ./gradlew assemblePrerelease build androidSourcesJar
+          ./gradlew makeJar # for classes.jar, has to be done after assemblePrerelease
         env:
-         SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-         SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-         SIGNING_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Create pre-release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: app-prerelease-release
-          path: app/build/outputs/apk/prerelease/release/*.apk
-
-
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "pre-release"
+          prerelease: true
+          title: "Pre-release Build"
+          files: |
+            app/build/outputs/apk/prerelease/release/*.apk
+            app/build/libs/app-sources.jar
+            app/build/classes.jar

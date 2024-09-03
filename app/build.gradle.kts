@@ -44,20 +44,21 @@ android {
 //            storePassword = "147369"
 //            keyAlias = "key0"
 //            keyPassword = "147369"
-//
+////            storeFile = file(project.properties["RELEASE_STORE_FILE"].toString())
+//            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
+//            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
+//            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
 //        }
 //    }
-
 
     signingConfigs {
         create("prerelease") {
             storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
-            storePassword = System.getenv("RELEASE_STORE_PASSWORD")
-            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
-            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
+            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
+            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
         }
     }
-
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"
@@ -105,7 +106,6 @@ android {
             isDebuggable = false
             isMinifyEnabled = false
             isShrinkResources = false
-            isDefault = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -114,6 +114,7 @@ android {
         }
         debug {
             isDebuggable = true
+
             applicationIdSuffix = ".debug"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -132,8 +133,8 @@ android {
             dimension = "state"
             resValue("bool", "is_prerelease", "true")
             buildConfigField("boolean", "BETA", "true")
-            isDefault = true
             applicationIdSuffix = ".prerelease"
+            isDefault = true
             signingConfig = signingConfigs.getByName("prerelease")
             versionNameSuffix = "-PRE"
             versionCode = (System.currentTimeMillis() / 60000).toInt()
