@@ -44,10 +44,7 @@ android {
             storePassword = "147369"
             keyAlias = "key0"
             keyPassword = "147369"
-//            storeFile = file(project.properties["RELEASE_STORE_FILE"].toString())
-//            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
-//            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
-//            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
+
         }
     }
 
