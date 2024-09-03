@@ -33,15 +33,16 @@ jobs:
     
     - name: Verify keystore creation
       run: ls -la $RUNNER_TEMP
-  
+
     - name: Run Gradle
       run: |
         ./gradlew assemblePrereleaseRelease build androidSourcesJar
-        ./gradlew makeJar # for classes.jar, has to be done after assemblePrereleaseRelease
+       ./gradlew makeJar # for classes.jar, has to be done after assemblePrereleaseRelease
+
       env:
-        SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+       SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+       SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+       SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     - name: Create pre-release
       uses: "marvinpinto/action-automatic-releases@latest"

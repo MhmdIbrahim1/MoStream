@@ -56,8 +56,6 @@ android {
         }
     }
 
-
-
     compileSdk = 34
     buildToolsVersion = "34.0.0"
 
@@ -136,7 +134,6 @@ android {
             versionCode = (System.currentTimeMillis() / 60000).toInt()
         }
     }
-
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
