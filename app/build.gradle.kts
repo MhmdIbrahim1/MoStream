@@ -128,6 +128,7 @@ android {
             dimension = "state"
             resValue("bool", "is_prerelease", "true")
             buildConfigField("boolean", "BETA", "true")
+            isDefault = true
             applicationIdSuffix = ".prerelease"
             signingConfig = signingConfigs.getByName("prerelease")
             versionNameSuffix = "-PRE"
