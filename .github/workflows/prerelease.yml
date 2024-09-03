@@ -24,10 +24,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Decode and set up google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
-
-      - name: Decode and set up keystore
+      - name: Copy keystore to runner
         run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
 
       - name: Verify keystore creation
