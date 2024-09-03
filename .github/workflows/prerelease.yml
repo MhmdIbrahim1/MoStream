@@ -36,8 +36,8 @@ jobs:
   
     - name: Run Gradle
       run: |
-        ./gradlew assemblePrerelease build androidSourcesJar
-        ./gradlew makeJar # for classes.jar, has to be done after assemblePrerelease
+        ./gradlew assemblePrereleaseRelease build androidSourcesJar
+        ./gradlew makeJar # for classes.jar, has to be done after assemblePrereleaseRelease
       env:
         SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
