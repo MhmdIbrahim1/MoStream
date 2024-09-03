@@ -37,8 +37,20 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
+      - name: Print Environment Variables
+        run: |
+         echo "SIGNING_KEY_ALIAS: $SIGNING_KEY_ALIAS"
+         echo "SIGNING_KEY_PASSWORD: $SIGNING_KEY_PASSWORD"
+         echo "SIGNING_STORE_PASSWORD: $SIGNING_STORE_PASSWORD"
+        env:
+         SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+         SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+         SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: app-prerelease-release
           path: app/build/outputs/apk/prerelease/release/*.apk
+
+
