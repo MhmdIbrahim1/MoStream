@@ -38,23 +38,23 @@ android {
         }
     }*/
 
-    signingConfigs {
-        create("prerelease") {
-            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
-            storePassword = "147369"
-            keyAlias = "key0"
-            keyPassword = "147369"
-
-        }
-    }
 //    signingConfigs {
 //        create("prerelease") {
-//            storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
-//            storePassword = System.getenv("KEYSTORE_PASSWORD")
-//            keyAlias = System.getenv("KEY_ALIAS")
-//            keyPassword = System.getenv("KEY_PASSWORD")
+//            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
+//            storePassword = "147369"
+//            keyAlias = "key0"
+//            keyPassword = "147369"
+//
 //        }
 //    }
+    signingConfigs {
+        create("prerelease") {
+            storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"
