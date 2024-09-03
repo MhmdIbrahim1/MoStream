@@ -202,21 +202,6 @@ open class ResultFragmentPhone : FullScreenPlayer() {
         }
 
 
-        //player_view?.apply {
-        //alpha = 0.0f
-        //ObjectAnimator.ofFloat(player_view, "alpha", 1f).apply {
-        //    duration = 200
-        //    start()
-        //}
-
-        //val fadeIn: Animation = AlphaAnimation(0.0f, 1f).apply {
-        //    interpolator = DecelerateInterpolator()
-        //    duration = 2000
-        //    fillAfter = true
-        //}
-        //startAnimation(fadeIn)
-        // }
-
 
     }
 
@@ -377,25 +362,7 @@ open class ResultFragmentPhone : FullScreenPlayer() {
                 nextLeft = FOCUS_SELF,
                 nextRight = FOCUS_SELF
             )
-            /*resultCastItems.layoutManager = object : LinearListLayout(view.context) {
-                override fun onRequestChildFocus(
-                    parent: RecyclerView,
-                    state: RecyclerView.State,
-                    child: View,
-                    focused: View?
-                ): Boolean {
-                    // Make the cast always focus the first visible item when focused
-                    // from somewhere else. Otherwise it jumps to the last item.
-                    return if (parent.focusedChild == null) {
-                        scrollToPosition(this.findFirstCompletelyVisibleItemPosition())
-                        true
-                    } else {
-                        super.onRequestChildFocus(parent, state, child, focused)
-                    }
-                }
-            }.apply {
-                this.orientation = RecyclerView.HORIZONTAL
-            }*/
+
             resultCastItems.adapter = ActorAdaptor()
 
             resultEpisodes.adapter =
