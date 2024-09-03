@@ -33,9 +33,7 @@ jobs:
           echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
 
       - name: Run Gradle
-        run: |
-          ./gradlew assemblePrerelease build androidSourcesJar
-          ./gradlew makeJar # for classes.jar, has to be done after assemblePrerelease
+        run: ./gradlew assemblePrereleaseRelease build androidSourcesJar
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
