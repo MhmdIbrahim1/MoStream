@@ -47,14 +47,16 @@ android {
 //
 //        }
 //    }
+
     signingConfigs {
         create("prerelease") {
             storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storePassword = System.getenv("RELEASE_STORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
         }
     }
+
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"

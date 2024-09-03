@@ -25,7 +25,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Copy keystore to runner
-        run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
+        run: echo "${{ secrets.RELEASE_STORE_FILE }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
 
       - name: Verify keystore creation
         run: ls -la $RUNNER_TEMP
@@ -33,9 +33,9 @@ jobs:
       - name: Run Gradle Build
         run: ./gradlew assemblePrereleaseRelease
         env:
-          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
 
       - name: Print Environment Variables
         run: |
@@ -43,9 +43,9 @@ jobs:
          echo "SIGNING_KEY_PASSWORD: $SIGNING_KEY_PASSWORD"
          echo "SIGNING_STORE_PASSWORD: $SIGNING_STORE_PASSWORD"
         env:
-         SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-         SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-         SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+         SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+         SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+         SIGNING_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
