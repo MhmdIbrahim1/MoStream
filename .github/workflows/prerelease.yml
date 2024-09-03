@@ -29,15 +29,13 @@ jobs:
 
       - name: Copy keystore to runner
         run: |
-          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
-
-      - name: Verify keystore creation
-        run: ls -la $RUNNER_TEMP
+          mkdir -p ~/.android/
+          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
 
       - name: Run Gradle
         run: |
-          ./gradlew assemblePrereleaseRelease build androidSourcesJar
-          ./gradlew makeJar # for classes.jar, has to be done after assemblePrereleaseRelease
+          ./gradlew assemblePrerelease build androidSourcesJar
+          ./gradlew makeJar # for classes.jar, has to be done after assemblePrerelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
