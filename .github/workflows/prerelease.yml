@@ -29,9 +29,8 @@ jobs:
 
     - name: Copy keystore to runner
       run: |
-        mkdir -p ~/.android/
-        echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
-
+        echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
+      
     - name: Run Gradle
       run: |
         ./gradlew assemblePrerelease build androidSourcesJar
