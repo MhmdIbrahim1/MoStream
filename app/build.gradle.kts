@@ -49,16 +49,13 @@ android {
 //    }
     signingConfigs {
         create("prerelease") {
-            storeFile = if (System.getenv("GITHUB_ACTIONS") == "true") {
-                file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
-            } else {
-                file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
-            }
+            storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
         }
     }
+
 
 
     compileSdk = 34
