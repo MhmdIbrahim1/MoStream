@@ -2,15 +2,11 @@ name: Pre-release
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths-ignore:
       - '*.md'
       - '*.json'
       - '**/wcokey.txt'
-
-concurrency:
-  group: "pre-release"
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -27,26 +23,24 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Setup Google Services for Prerelease
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_PRERELEASE }}" > $GITHUB_WORKSPACE/app/google-services.json
+
       - name: Copy keystore to runner
-        run: |
-          mkdir -p ~/.android/
-          echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
+        run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > $RUNNER_TEMP/mostreamkey.jks
+
+      - name: Verify keystore creation
+        run: ls -la $RUNNER_TEMP
 
       - name: Run Gradle
-        run: ./gradlew assemblePrereleaseRelease build androidSourcesJar
+        run: ./gradlew assemblePrereleaseRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
-      - name: Create pre-release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "pre-release"
-          prerelease: true
-          title: "Pre-release Build"
-          files: |
-            app/build/outputs/apk/prerelease/release/*.apk
-            app/build/libs/app-sources.jar
-            app/build/classes.jar
+          name: app-prerelease-release
+          path: app/build/outputs/apk/prerelease/release/*.apk
