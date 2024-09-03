@@ -16,41 +16,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Generate access token
-      id: generate_token
-      uses: tibdex/github-app-token@v1
-      with:
-        app_id: ${{ secrets.GH_APP_ID }}
-        private_key: ${{ secrets.GH_APP_KEY }}
-        repository: "recloudstream/secrets"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'adopt'
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Fetch keystore
-      id: fetch_keystore
+
+    - name: Copy keystore to runner
       run: |
-        TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
-        mkdir -p "${TMP_KEYSTORE_FILE_PATH}"
-        curl -H "Authorization: token ${{ steps.generate_token.outputs.token }}" -o "${TMP_KEYSTORE_FILE_PATH}/prerelease_keystore.keystore" "https://raw.githubusercontent.com/recloudstream/secrets/master/keystore.jks"
-        curl -H "Authorization: token ${{ steps.generate_token.outputs.token }}" -o "keystore_password.txt" "https://raw.githubusercontent.com/recloudstream/secrets/master/keystore_password.txt"
-        KEY_PWD="$(cat keystore_password.txt)"
-        echo "::add-mask::${KEY_PWD}"
-        echo "key_pwd=$KEY_PWD" >> $GITHUB_OUTPUT
+        mkdir -p ~/.android/
+        echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > ~/.android/mostreamkey.jks
+
     - name: Run Gradle
       run: |
         ./gradlew assemblePrerelease build androidSourcesJar
         ./gradlew makeJar # for classes.jar, has to be done after assemblePrerelease
       env:
-        SIGNING_KEY_ALIAS: "key0"
-        SIGNING_KEY_PASSWORD: ${{ steps.fetch_keystore.outputs.key_pwd }}
-        SIGNING_STORE_PASSWORD: ${{ steps.fetch_keystore.outputs.key_pwd }}
-        SIMKL_CLIENT_ID: ${{ secrets.SIMKL_CLIENT_ID }}
-        SIMKL_CLIENT_SECRET: ${{ secrets.SIMKL_CLIENT_SECRET }}
+        SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
     - name: Create pre-release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
