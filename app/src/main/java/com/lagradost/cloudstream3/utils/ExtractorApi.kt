@@ -12,6 +12,8 @@ import com.lagradost.cloudstream3.extractors.Ahvsh
 import com.lagradost.cloudstream3.extractors.Aico
 import com.lagradost.cloudstream3.extractors.AsianLoad
 import com.lagradost.cloudstream3.extractors.Bestx
+import com.lagradost.cloudstream3.extractors.GamoVideo
+import com.lagradost.cloudstream3.extractors.Playerwish
 import com.lagradost.cloudstream3.extractors.Blogger
 import com.lagradost.cloudstream3.extractors.BullStream
 import com.lagradost.cloudstream3.extractors.ByteShare
@@ -863,7 +865,8 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     MoviehabNet(),
     Jeniusplay(),
     StreamoUpload(),
-
+    GamoVideo(),
+    Playerwish(),
     Gdriveplayerapi(),
     Gdriveplayerapp(),
     Gdriveplayerfun(),

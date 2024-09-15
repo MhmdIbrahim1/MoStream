@@ -28,6 +28,7 @@ import com.lagradost.cloudstream3.MainActivity
 import com.lagradost.cloudstream3.R
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
+import com.lagradost.cloudstream3.mvvm.launchSafe
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.mvvm.normalSafeApiCall
 import com.lagradost.cloudstream3.services.VideoDownloadService
@@ -42,6 +43,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -1790,6 +1793,36 @@ object VideoDownloadManager {
         } catch (e: Exception) {
             logError(e)
             return null
+        }
+    }
+
+    fun deleteFilesAndUpdateSettings(
+        context: Context,
+        ids: Set<Int>,
+        scope: CoroutineScope,
+        onComplete: (Set<Int>) -> Unit = {}
+    ) {
+        scope.launchSafe(Dispatchers.IO) {
+            val deleteJobs = ids.map { id ->
+                async {
+                    id to deleteFileAndUpdateSettings(context, id)
+                }
+            }
+            val results = deleteJobs.awaitAll()
+
+            val (successfulResults, failedResults) = results.partition { it.second }
+            val successfulIds = successfulResults.map { it.first }.toSet()
+
+            if (failedResults.isNotEmpty()) {
+                failedResults.forEach { (id, _) ->
+                    // TODO show a toast if some failed?
+                    Log.e("FileDeletion", "Failed to delete file with ID: $id")
+                }
+            } else {
+                Log.i("FileDeletion", "All files deleted successfully")
+            }
+
+            onComplete.invoke(successfulIds)
         }
     }
 

@@ -38,27 +38,23 @@ android {
         }
     }*/
 
+    signingConfigs {
+        create("prerelease") {
+            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
+            storePassword = "147369"
+            keyAlias = "key0"
+            keyPassword = "147369"
+        }
+    }
+
 //    signingConfigs {
 //        create("prerelease") {
-//            storeFile = file("D:\\AndroidStudioProjects\\MoStream\\mostreamkey.jks")
-//            storePassword = "147369"
-//            keyAlias = "key0"
-//            keyPassword = "147369"
-////            storeFile = file(project.properties["RELEASE_STORE_FILE"].toString())
+//            storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
 //            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
 //            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
 //            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
 //        }
 //    }
-
-    signingConfigs {
-        create("prerelease") {
-            storeFile = file(System.getenv("RUNNER_TEMP") + "/mostreamkey.jks")
-            storePassword = project.properties["RELEASE_STORE_PASSWORD"].toString()
-            keyAlias = project.properties["RELEASE_KEY_ALIAS"].toString()
-            keyPassword = project.properties["RELEASE_KEY_PASSWORD"].toString()
-        }
-    }
 
     compileSdk = 34
     buildToolsVersion = "34.0.0"
@@ -221,7 +217,7 @@ dependencies {
     // PlayBack
     implementation("com.jaredrummler:colorpicker:1.1.0") // Subtitle Color Picker
     implementation("com.github.recloudstream:media-ffmpeg:1.1.0") // Custom FF-MPEG Lib for Audio Codecs
-    implementation("com.github.teamnewpipe:NewPipeExtractor:176da72") // NewPipe Extractor
+    implementation("com.github.teamnewpipe:NewPipeExtractor:v0.24.2") // NewPipe Extractor
     implementation("com.github.albfernandez:juniversalchardet:2.5.0") // Subtitle Decoding
 
 

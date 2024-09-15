@@ -8,12 +8,15 @@ import com.lagradost.cloudstream3.utils.ExtractorUri
 import com.lagradost.cloudstream3.utils.VideoDownloadManager
 import kotlin.math.max
 import kotlin.math.min
+import com.lagradost.cloudstream3.CommonActivity.activity
+import com.lagradost.cloudstream3.utils.VideoDownloadManager.getDownloadFileInfoAndUpdateSettings
 
 class DownloadFileGenerator(
     private val episodes: List<ExtractorUri>,
     private var currentIndex: Int = 0
 ) : IGenerator {
     override val hasCache = false
+    override val canSkipLoading = false
 
     override fun hasNext(): Boolean {
         return currentIndex < episodes.size - 1
@@ -62,7 +65,17 @@ class DownloadFileGenerator(
         offset: Int
     ): Boolean {
         val meta = episodes[currentIndex + offset]
-        callback(null to meta)
+
+        val info = meta.id?.let { id ->
+            activity?.let { act ->
+                getDownloadFileInfoAndUpdateSettings(act, id)
+            }
+        }
+
+        if (info != null) {
+            val newMeta = meta.copy(uri = info.path)
+            callback(null to newMeta)
+        } else callback(null to meta)
 
         val ctx = context ?: return true
         val relative = meta.relativePath ?: return true
