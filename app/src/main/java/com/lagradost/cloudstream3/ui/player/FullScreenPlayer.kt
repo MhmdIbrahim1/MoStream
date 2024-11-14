@@ -31,9 +31,12 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.view.isGone
+import android.view.WindowInsets
+import androidx.annotation.OptIn
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.media3.common.util.UnstableApi
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lagradost.cloudstream3.CommonActivity.keyEventListener
@@ -194,17 +197,29 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
     }
 
     /** Returns false if the touch is on the status bar or navigation bar*/
-    private fun isValidTouch(rawX: Float, rawY: Float): Boolean {
-        val statusHeight = statusBarHeight ?: 0
-        // val navHeight = navigationBarHeight ?: 0
-        // nav height is removed because screenWidth already takes into account that
-        return rawY > statusHeight && rawX < screenWidth //- navHeight
-    }
 
+    private fun View.isValidTouch(rawX: Float, rawY: Float): Boolean {
+        // NOTE: screenWidth is without the navbar width when 3button nav is turned on.
+        if(Build.VERSION.SDK_INT >= 30) {
+            // real = absolute dimen without any default deductions like navbar width
+            val windowMetrics = (context?.getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.currentWindowMetrics
+            val realScreenHeight = windowMetrics?.let { windowMetrics.bounds.bottom - windowMetrics.bounds.top } ?: screenHeight
+            val realScreenWidth = windowMetrics?.let { windowMetrics.bounds.right - windowMetrics.bounds.left } ?: screenWidth
+            val insets = rootWindowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            val isOutsideHeight = rawY < insets.top || rawY > (realScreenHeight - insets.bottom)
+            val isOutsideWidth = if(windowMetrics == null) rawX < screenWidth
+            else rawX < insets.left || rawX > (realScreenWidth - insets.right)
+            return !(isOutsideWidth || isOutsideHeight)
+        } else {
+            val statusHeight = statusBarHeight ?: 0
+            return rawY > statusHeight && rawX < screenWidth
+        }
+    }
     override fun exitedPipMode() {
         animateLayoutChanges()
     }
 
+    @OptIn(UnstableApi::class)
     protected fun animateLayoutChanges() {
         if (isShowing) {
             updateUIVisibility()
@@ -289,6 +304,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
         }
     }
 
+    @OptIn(androidx.media3.common.util.UnstableApi::class)
     override fun subtitlesChanged() {
         val tracks = player.getVideoTracks()
         val isBuiltinSubtitles = tracks.currentTextTracks.all { track ->
@@ -931,7 +947,7 @@ open class FullScreenPlayer : AbstractPlayerFragment() {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // validates if the touch is inside of the player area
-                    isCurrentTouchValid = isValidTouch(currentTouch.x, currentTouch.y)
+                    isCurrentTouchValid = view.isValidTouch(currentTouch.x, currentTouch.y)
                     /*if (isCurrentTouchValid && player_episode_list?.isVisible == true) {
                         player_episode_list?.isVisible = false
                     } else*/ if (isCurrentTouchValid) {

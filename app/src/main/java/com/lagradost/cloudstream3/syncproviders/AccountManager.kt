@@ -4,6 +4,7 @@ import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
 import com.lagradost.cloudstream3.AcraApplication.Companion.removeKeys
 import com.lagradost.cloudstream3.AcraApplication.Companion.setKey
 import com.lagradost.cloudstream3.LoadResponse
+import com.lagradost.cloudstream3.extractors.SubDlApi
 import com.lagradost.cloudstream3.syncproviders.providers.*
 import java.util.concurrent.TimeUnit
 

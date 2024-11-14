@@ -115,6 +115,9 @@ import com.lagradost.cloudstream3.extractors.Odnoklassniki
 import com.lagradost.cloudstream3.extractors.TauVideo
 import com.lagradost.cloudstream3.extractors.SibNet
 import com.lagradost.cloudstream3.extractors.ContentX
+import com.lagradost.cloudstream3.extractors.Ds2play
+import com.lagradost.cloudstream3.extractors.Ds2video
+import com.lagradost.cloudstream3.extractors.Filegram
 import com.lagradost.cloudstream3.extractors.FourCX
 import com.lagradost.cloudstream3.extractors.FourPichive
 import com.lagradost.cloudstream3.extractors.FourPlayRu
@@ -257,6 +260,7 @@ import com.lagradost.cloudstream3.extractors.VidHidePro6
 import com.lagradost.cloudstream3.extractors.Lulustream1
 import com.lagradost.cloudstream3.extractors.Lulustream2
 import com.lagradost.cloudstream3.extractors.Lulustream3
+import com.lagradost.cloudstream3.extractors.MixDropAg
 import com.lagradost.cloudstream3.extractors.Vidguardto3
 
 /**
@@ -938,6 +942,10 @@ val extractorApis: MutableList<ExtractorApi> = arrayListOf(
     Lulustream1(),
     Lulustream2(),
     Lulustream3(),
+    Ds2play(),
+    Ds2video(),
+    Filegram(),
+    MixDropAg(),
 )
 
 

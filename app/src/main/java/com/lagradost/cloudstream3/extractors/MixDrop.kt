@@ -13,7 +13,9 @@ class MixDropCh : MixDrop(){
 class MixDropTo : MixDrop(){
     override var mainUrl = "https://mixdrop.to"
 }
-
+class MixDropAg : MixDrop(){
+    override var mainUrl = "https://mixdrop.ag"
+}
 open class MixDrop : ExtractorApi() {
     override var name = "MixDrop"
     override var mainUrl = "https://mixdrop.co"
